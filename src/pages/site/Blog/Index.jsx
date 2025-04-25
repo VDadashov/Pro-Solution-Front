@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-
 import { Link, Outlet } from "react-router-dom";
 import CategoriesSidebar from "@components/site/Blog/CategoriesSidebar";
 
