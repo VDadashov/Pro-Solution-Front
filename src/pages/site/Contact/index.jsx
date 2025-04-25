@@ -1,0 +1,251 @@
+import React from "react";
+import styled from "styled-components";
+
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f8f8f8;
+  padding: 20px;
+`;
+
+const ContactWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgb(228, 228, 228);
+  padding: 20px;
+  width: 1224px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+`;
+const ContactInfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+`;
+const ContactInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  gap: 15px;
+  font-weight: 400;
+  color: #149295;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    text-align: center;
+  }
+`;
+
+const Title = styled.h2`
+  margin-bottom: 5px;
+  font-size: 30px;
+  font-weight: 400;
+`;
+
+const Position = styled.p`
+  font-size: 22px;
+`;
+
+const Number = styled.p`
+  font-size: 20px;
+`;
+
+const Email = styled.a`
+  text-decoration: none;
+  font-size: 20px;
+  &:hover {
+    color: black;
+  }
+`;
+
+const FormWrapper = styled.div`
+  background: white;
+  padding: 50px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  width: 50%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px); // Div yuxarı qalxır
+  }
+
+  @media (max-width: 768px) {
+    width: 80%;
+    margin-top: 20px;
+  }
+`;
+
+const Label = styled.label`
+  font-weight: bold;
+  display: block;
+  margin-top: 10px;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+`;
+
+const TextArea = styled.textarea`
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: none;
+  font-size: 16px;
+`;
+
+const Button = styled.button`
+  width: 100%;
+  background: teal;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+
+  &:hover {
+    background: darkcyan;
+  }
+`;
+
+const Contact = () => {
+  const validationSchema = Yup.object({
+    name: Yup.string()
+      .required("Ad soyad boş buraxıla bilməz")
+      .max(100, "100 simvoldan çox ola bilməz"),
+    email: Yup.string()
+      .email("Düzgün email daxil edin")
+      .required("Email boş buraxıla bilməz"),
+    heading: Yup.string()
+      .required("Başlıq boş buraxıla bilməz")
+      .max(100, "Başlıq 100 simvoldan artıq ola bilməz"),
+    message: Yup.string().max(500, "İsmarıc 500 simvoldan artıq ola bilməz"),
+  });
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      heading: "",
+      message:""
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values, {resetForm}) => {
+      console.log(values);
+      resetForm()
+    },
+  });
+  return (
+    <Container>
+      <ContactWrapper>
+        <ContactInfoContainer>
+          <ContactInfo>
+            <Title>Teymur Şirəliyev</Title>
+            <Position>Satış Direktoru</Position>
+            <Number>+994-70-327-90-94</Number>
+            <Email href="mailto:sh.teymur@prosolution.ltd">
+              sh.teymur@prosolution.ltd
+            </Email>
+          </ContactInfo>
+          <ContactInfo>
+            <Title>Fizuli Tağıyev</Title>
+            <Position>Satış Meneceri</Position>
+            <Number>+994-70-329-90-94</Number>
+            <Email href="mailto:t.fizuli@prosolution.ltd">
+              t.fizuli@prosolution.ltd
+            </Email>
+          </ContactInfo>
+        </ContactInfoContainer>
+        <FormWrapper>
+          <form onSubmit={formik.handleSubmit}>
+            <Label htmlFor="name">Ad Soyadınız</Label>
+            <Input
+              id="name"
+              name="name"
+              type="text"
+              maxLength={100}
+              onChange={formik.handleChange}
+              value={formik.values.name}
+            />
+            {formik.touched.name && formik.errors.name && (
+              <div style={{ color: "red", fontSize: "14px" }}>
+                {formik.errors.name}
+              </div>
+            )}
+
+            <Label htmlFor="email">Sizin email</Label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              maxLength={100}
+              onChange={formik.handleChange}
+              value={formik.values.email}
+            />
+            {formik.touched.email && formik.errors.email && (
+              <div style={{ color: "red", fontSize: "14px" }}>
+                {formik.errors.email}
+              </div>
+            )}
+
+            <Label htmlFor="heading">Başlıq</Label>
+            <Input
+              id="heading"
+              name="heading"
+              type="text"
+              onChange={formik.handleChange}
+              maxLength={100}
+              value={formik.values.heading}
+            />
+            {formik.touched.heading && formik.errors.heading && (
+              <div style={{ color: "red", fontSize: "14px" }}>
+                {formik.errors.heading}
+              </div>
+            )}
+
+            <Label htmlFor="message">İsmarıc (seçimlə)</Label>
+            <TextArea
+              id="message"
+              name="message"
+              maxLength={500}
+              onChange={formik.handleChange}
+              value={formik.values.message}
+              rows="4"
+            />
+            {formik.touched.message && formik.errors.message && (
+              <div style={{ color: "red", fontSize: "14px" }}>
+                {formik.errors.message}
+              </div>
+            )}
+
+            <Button type="submit">GÖNDƏR</Button>
+          </form>
+        </FormWrapper>
+      </ContactWrapper>
+    </Container>
+  );
+};
+
+export default Contact;

@@ -1,0 +1,540 @@
+{
+  "categories": [
+    {
+      "name": "Noutbuklar",
+      "id": 1,
+      "link": "https://prosolution.ltd/product-category/nb/",
+      "subcategories": [
+        {
+          "name": "Acer",
+          "link": "https://prosolution.ltd/product-category/nb/acer/"
+        },
+        {
+          "name": "Asus",
+          "link": "https://prosolution.ltd/product-category/nb/asus/"
+        },
+        {
+          "name": "Apple",
+          "link": "https://prosolution.ltd/product-category/nb/apple/"
+        },
+        {
+          "name": "Dell",
+          "link": "https://prosolution.ltd/product-category/nb/dell/"
+        },
+        {
+          "name": "HP",
+          "link": "https://prosolution.ltd/product-category/nb/hp/"
+        },
+        {
+          "name": "Gateway",
+          "link": "https://prosolution.ltd/product-category/nb/gateway/"
+        },
+        {
+          "name": "Gigabyte",
+          "link": "https://prosolution.ltd/product-category/nb/gigabyte/"
+        },
+        {
+          "name": "Lenovo",
+          "link": "https://prosolution.ltd/product-category/nb/lenovo/"
+        },
+        {
+          "name": "Microsoft",
+          "link": "https://prosolution.ltd/product-category/nb/mcsurface/"
+        },
+        {
+          "name": "MSI",
+          "link": "https://prosolution.ltd/product-category/nb/msi/"
+        }
+      ]
+    },
+    {
+      "name": "Masaüstü Kompüter",
+      "link": "https://prosolution.ltd/product-category/pc/",
+      "id": 2,
+      "subcategories": [
+        {
+          "name": "Monobloklar",
+          "link": "https://prosolution.ltd/product-category/pc/monoblk/"
+        },
+        {
+          "name": "Workstation",
+          "link": "https://prosolution.ltd/product-category/pc/vorkstation/"
+        },
+        {
+          "name": "Zavod istehsalı",
+          "link": "https://prosolution.ltd/product-category/pc/manufact/"
+        },
+        {
+          "name": "Hazır yığımlar",
+          "link": "https://prosolution.ltd/product-category/pc/white/"
+        },
+        {
+          "name": "Mini PC",
+          "link": "https://prosolution.ltd/product-category/pc/minpc/"
+        }
+      ]
+    },
+    {
+      "name": "Kompüter Hissələri",
+      "id": 3,
+      "link": "https://prosolution.ltd/product-category/pcparts/",
+      "subcategories": [
+        {
+          "name": "Ana Platalar",
+          "link": "https://prosolution.ltd/product-category/pcparts/mb/"
+        },
+        {
+          "name": "Prosessorlar",
+          "link": "https://prosolution.ltd/product-category/pcparts/cpu/"
+        },
+        {
+          "name": "Soyutma Sistemləri",
+          "link": "https://prosolution.ltd/product-category/pcparts/cooling/"
+        },
+        {
+          "name": "Operativ Yaddaşlar",
+          "link": "https://prosolution.ltd/product-category/pcparts/ram/"
+        },
+        {
+          "name": "Video Kartlar",
+          "link": "https://prosolution.ltd/product-category/pcparts/vga/"
+        },
+        {
+          "name": "SSD",
+          "link": "https://prosolution.ltd/product-category/pcparts/ssd/"
+        },
+        {
+          "name": "HDD",
+          "link": "https://prosolution.ltd/product-category/pcparts/hdd/"
+        },
+        {
+          "name": "Qida Blokları",
+          "link": "https://prosolution.ltd/product-category/pcparts/ps/"
+        },
+        {
+          "name": "Disk Oxuducular",
+          "link": "https://prosolution.ltd/product-category/pcparts/discpc/"
+        },
+        {
+          "name": "Keyslər",
+          "link": "https://prosolution.ltd/product-category/pcparts/case/"
+        }
+      ]
+    },
+    {
+      "name": "Kompüter Aksesuarları",
+      "id": 4,
+      "link": "https://prosolution.ltd/product-category/accessor/",
+      "subcategories": [
+        {
+          "name": "Çantalar",
+          "link": "https://prosolution.ltd/product-category/accessor/bags/"
+        },
+        {
+          "name": "Klaviaturalar",
+          "link": "https://prosolution.ltd/product-category/accessor/keyb/"
+        },
+        {
+          "name": "Mauslar",
+          "link": "https://prosolution.ltd/product-category/accessor/mous/"
+        },
+        {
+          "name": "Qulaqlıqlar",
+          "link": "https://prosolution.ltd/product-category/accessor/qlqliq/"
+        },
+        {
+          "name": "Kalonkalar",
+          "link": "https://prosolution.ltd/product-category/accessor/speak/"
+        },
+        {
+          "name": "Kameralar (VEB)",
+          "link": "https://prosolution.ltd/product-category/accessor/wkameralar/"
+        },
+        {
+          "name": "MousePad",
+          "link": "https://prosolution.ltd/product-category/accessor/mspd/"
+        },
+        {
+          "name": "Proyektor və Pərdələri",
+          "link": "https://prosolution.ltd/product-category/accessor/project/"
+        },
+        {
+          "name": "UPS-lər",
+          "link": "https://prosolution.ltd/product-category/accessor/ups/"
+        },
+        {
+          "name": "Kabel",
+          "link": "https://prosolution.ltd/product-category/accessor/kbl/"
+        },
+        {
+          "name": "Digər",
+          "link": "https://prosolution.ltd/product-category/accessor/othera/"
+        }
+      ]
+    },
+    {
+      "name": "Monitorlar",
+      "id": 4,
+      "link": "https://prosolution.ltd/product-category/monitor/",
+      "subcategories": [
+        {
+          "name": "2E",
+          "link": "https://prosolution.ltd/product-category/monitor/2em/"
+        },
+        {
+          "name": "Acer",
+          "link": "https://prosolution.ltd/product-category/monitor/acerm/"
+        },
+        {
+          "name": "Afox",
+          "link": "https://prosolution.ltd/product-category/monitor/afoxm/"
+        },
+        {
+          "name": "Aoc",
+          "link": "https://prosolution.ltd/product-category/monitor/aocm/"
+        },
+        {
+          "name": "Asrock",
+          "link": "https://prosolution.ltd/product-category/monitor/asrockm/"
+        },
+        {
+          "name": "Asus",
+          "link": "https://prosolution.ltd/product-category/monitor/asusm/"
+        },
+        {
+          "name": "Dell",
+          "link": "https://prosolution.ltd/product-category/monitor/dellm/"
+        },
+        {
+          "name": "HP",
+          "link": "https://prosolution.ltd/product-category/monitor/hpm/"
+        },
+        {
+          "name": "Philips",
+          "link": "https://prosolution.ltd/product-category/monitor/philipsm/"
+        },
+        {
+          "name": "Lenovo",
+          "link": "https://prosolution.ltd/product-category/monitor/lenovom/"
+        },
+        {
+          "name": "View Sonic",
+          "link": "https://prosolution.ltd/product-category/monitor/view-sonic/"
+        }
+      ]
+    },
+    {
+      "name": "Məişət Texnikası",
+      "id": 5,
+      "link": "https://prosolution.ltd/product-category/mtx/",
+      "subcategories": [
+        {
+          "name": "TV",
+          "link": "https://prosolution.ltd/product-category/mtx/tv/"
+        },
+        {
+          "name": "Soyuducu",
+          "link": "https://prosolution.ltd/product-category/mtx/soyuducu/"
+        },
+        {
+          "name": "Dondurucu",
+          "link": "https://prosolution.ltd/product-category/mtx/dondurucu/"
+        },
+        {
+          "name": "Paltaryuyan",
+          "link": "https://prosolution.ltd/product-category/mtx/paltaryuyan/"
+        },
+        {
+          "name": "Qabyuyan",
+          "link": "https://prosolution.ltd/product-category/mtx/qabyuyan/"
+        },
+        {
+          "name": "Tozsoran",
+          "link": "https://prosolution.ltd/product-category/mtx/tozsoran/"
+        }
+      ]
+    },
+    {
+      "name": "Mobil Cihazlar",
+      "id": 6,
+      "link": "https://prosolution.ltd/product-category/mobility/",
+      "subcategories": [
+        {
+          "name": "Telefonlar",
+          "link": "https://prosolution.ltd/product-category/mobility/phones/"
+        },
+        {
+          "name": "Planşetlər",
+          "link": "https://prosolution.ltd/product-category/mobility/tablets/"
+        },
+        {
+          "name": "Ağıllı Saat",
+          "link": "https://prosolution.ltd/product-category/mobility/smartwatch/"
+        },
+        {
+          "name": "Adapterlər",
+          "link": "https://prosolution.ltd/product-category/mobility/adpdr/"
+        }
+      ]
+    },
+    {
+      "name": "Printer və Skanerlər",
+      "id": 7,
+      "link": "https://prosolution.ltd/product-category/prsc/",
+      "subcategories": [
+        {
+          "name": "Printerlər",
+          "link": "https://prosolution.ltd/product-category/prsc/print/"
+        },
+        {
+          "name": "Skanerlər",
+          "link": "https://prosolution.ltd/product-category/prsc/scans/"
+        },
+        {
+          "name": "Kartriclər",
+          "link": "https://prosolution.ltd/product-category/prsc/ktrc/"
+        }
+      ]
+    },
+    {
+      "name": "Şəbəkə Avadanlıqları",
+      "id": 8,
+      "link": "https://prosolution.ltd/product-category/network/",
+      "subcategories": [
+        {
+          "name": "Aksespointlər",
+          "link": "https://prosolution.ltd/product-category/network/accessp/"
+        },
+        {
+          "name": "Digər",
+          "link": "https://prosolution.ltd/product-category/network/othern/"
+        },
+        {
+          "name": "Ruterlər",
+          "link": "https://prosolution.ltd/product-category/network/router/"
+        },
+        {
+          "name": "Şəbəkə adapterləri",
+          "link": "https://prosolution.ltd/product-category/network/netadapt/"
+        },
+        {
+          "name": "Sviçlər",
+          "link": "https://prosolution.ltd/product-category/network/switch/"
+        }
+      ]
+    },
+    {
+      "name": "Təhlükəsizlik sistemləri",
+      "id": 9,
+      "link": "https://prosolution.ltd/product-category/təhlukəsizlik-sistemləri/",
+      "subcategories": [
+        {
+          "name": "Kamera",
+          "link": "https://prosolution.ltd/product-category/təhlukəsizlik-sistemləri/kamera/"
+        },
+        {
+          "name": "Kabellər",
+          "link": "https://prosolution.ltd/product-category/təhlukəsizlik-sistemləri/kabellər/"
+        }
+      ]
+    },
+    {
+      "name": "Yaddaş Daşıyıcıları",
+      "id": 10,
+      "link": "https://prosolution.ltd/product-category/flashs/",
+      "subcategories": [
+        {
+          "name": "Flaşkartlar",
+          "link": "https://prosolution.ltd/product-category/flashs/flash/"
+        },
+        {
+          "name": "Xarici HDD",
+          "link": "https://prosolution.ltd/product-category/flashs/exthdd/"
+        },
+        {
+          "name": "Xarici qutular",
+          "link": "https://prosolution.ltd/product-category/flashs/extbox/"
+        },
+        {
+          "name": "Xarici SSD",
+          "link": "https://prosolution.ltd/product-category/flashs/extssd/"
+        }
+      ]
+    },
+    {
+      "name": "Serverlər",
+      "id": 11,
+      "link": "https://prosolution.ltd/product-category/servers/",
+      "subcategories": [
+        {
+          "name": "Dell",
+          "link": "https://prosolution.ltd/product-category/servers/dells/"
+        },
+        {
+          "name": "HPE",
+          "link": "https://prosolution.ltd/product-category/servers/hpes/"
+        },
+        {
+          "name": "Lenovo",
+          "link": "https://prosolution.ltd/product-category/servers/lenovos/"
+        },
+        {
+          "name": "Qnap",
+          "link": "https://prosolution.ltd/product-category/servers/qnap/"
+        }
+      ]
+    },
+    {
+      "name": "Lisenziya",
+      "link": "https://prosolution.ltd/product-category/lic/",
+      "subcategories": [
+        {
+          "name": "Microsoft Office",
+          "link": "https://prosolution.ltd/product-category/lic/moffice/"
+        },
+        {
+          "name": "Microsoft Server",
+          "link": "https://prosolution.ltd/product-category/lic/mserver/"
+        },
+        {
+          "name": "Microsoft Windows",
+          "link": "https://prosolution.ltd/product-category/lic/mwindows/"
+        }
+      ]
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Lexar LNS100 128GB",
+      "image": "21-jpg.webp",
+      "categoryId": 1,
+      "price": {
+        "original": "45.00 ₼",
+        "current": "40.00 ₼"
+      },
+      "link": "https://prosolution.ltd/product/ssd-dasiyici-lexar-lns100-128gb-2-5/"
+    },
+    {
+      "id": 2,
+      "name": "Intel Core i7-11700",
+      "image": "66666666666666-jpg.webp",
+      "categoryId": 2,
+      "price": {
+        "original": "570.00 ₼",
+        "current": "550.00 ₼"
+      },
+      "link": "https://prosolution.ltd/product/prosessor-intel-core-i7-11700/"
+    },
+    {
+      "id": 3,
+      "name": "Ana Plata ASUS PRIME Z590-P",
+      "image": "118-jpg.webp",
+      "categoryId": 2,
+      "price": {
+        "original": "370.00 ₼",
+        "current": "350.00 ₼"
+      },
+      "link": "https://prosolution.ltd/product/ana-plata-asus-prime-z590-p/"
+    },
+    {
+      "id": 4,
+      "name": "Xarici Yaddaş External TRANSCEND 4TB",
+      "image": "902-jpg.webp",
+      "categoryId": 3,
+      "price": {
+        "original": "285.00 ₼",
+        "current": "265.00 ₼"
+      },
+      "link": "https://prosolution.ltd/product/xarici-yaddas-external-transcend-4tb/"
+    },
+    {
+      "id": 5,
+      "name": "Keys DarkFlash DK352 White",
+      "image": "x3-jpg.webp",
+      "categoryId": 4,
+      "price": {
+        "original": "120.00 ₼",
+        "current": "100.00 ₼"
+      },
+      "link": "https://prosolution.ltd/product/keys-darkflash-dk352-white/"
+    },
+    {
+      "id": 6,
+      "name": "HP LaserJet MFP179 FNW",
+      "image": "c5-jpg.webp",
+      "categoryId": 5,
+      "price": {
+        "original": "850.00 ₼",
+        "current": "800.00 ₼"
+      },
+      "link": "https://prosolution.ltd/product/printer-hp-laserjet-mfp179-fnw/"
+    },
+    {
+      "id": 7,
+      "name": "Lexar LNS100 128GB",
+      "image": "21-jpg.webp",
+      "categoryId": 1,
+      "price": {
+        "original": "45.00 ₼",
+        "current": "40.00 ₼"
+      },
+      "link": "https://prosolution.ltd/product/ssd-dasiyici-lexar-lns100-128gb-2-5/"
+    },
+    {
+      "id": 8,
+      "name": "Intel Core i7-11700",
+      "image": "66666666666666-jpg.webp",
+      "categoryId": 2,
+      "price": {
+        "original": "570.00 ₼",
+        "current": "550.00 ₼"
+      },
+      "link": "https://prosolution.ltd/product/prosessor-intel-core-i7-11700/"
+    },
+    {
+      "id": 9,
+      "name": "Ana Plata ASUS PRIME Z590-P",
+      "image": "118-jpg.webp",
+      "categoryId": 2,
+      "price": {
+        "original": "370.00 ₼",
+        "current": "350.00 ₼"
+      },
+      "link": "https://prosolution.ltd/product/ana-plata-asus-prime-z590-p/"
+    },
+    {
+      "id": 10,
+      "name": "Xarici Yaddaş External TRANSCEND 4TB",
+      "image": "902-jpg.webp",
+      "categoryId": 3,
+      "price": {
+        "original": "285.00 ₼",
+        "current": "265.00 ₼"
+      },
+      "link": "https://prosolution.ltd/product/xarici-yaddas-external-transcend-4tb/"
+    },
+    {
+      "id": 11,
+      "name": "Keys DarkFlash DK352 White",
+      "image": "x3-jpg.webp",
+      "categoryId": 4,
+      "price": {
+        "original": "120.00 ₼",
+        "current": "100.00 ₼"
+      },
+      "link": "https://prosolution.ltd/product/keys-darkflash-dk352-white/"
+    },
+    {
+      "id": 12,
+      "name": "HP LaserJet MFP179 FNW",
+      "image": "c5-jpg.webp",
+      "categoryId": 5,
+      "price": {
+        "original": "850.00 ₼",
+        "current": "800.00 ₼"
+      },
+      "link": "https://prosolution.ltd/product/printer-hp-laserjet-mfp179-fnw/"
+    }
+  ]
+}

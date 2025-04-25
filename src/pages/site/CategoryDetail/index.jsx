@@ -1,0 +1,701 @@
+import { useContext, useEffect, useState } from "react";
+import { MdOutlineZoomOutMap } from "react-icons/md";
+import styled from "styled-components";
+import { CiHeart } from "react-icons/ci";
+import {
+  FaFacebookF,
+  FaTwitter,
+  FaPinterest,
+  FaLinkedin,
+  FaChevronLeft,
+  FaChevronRight,
+} from "react-icons/fa";
+import { TfiEmail } from "react-icons/tfi";
+import { IoCloseOutline } from "react-icons/io5";
+import { FiZoomIn } from "react-icons/fi";
+import { FaRegHeart, FaXTwitter } from "react-icons/fa6";
+import { Link, useParams } from "react-router-dom";
+import { useGet, useGetOne } from "@utils/hooks/useCustomQuery";
+import { ENDPOINTS } from "@utils/constants/Endpoints";
+import ProductDetailTabs from "@components/site/CategoryDetail/ProductDetailTabs";
+import ProductSection from "@components/site/Home/Products";
+import { WishlistContext } from "@Context/wishlistContext";
+const images = [
+  "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2023/12/3-4-jpg.webp?resize=768%2C768&ssl=1",
+  "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2023/12/1-4-jpg.webp?resize=768%2C768&ssl=1",
+  "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2023/12/333333-jpg.webp?resize=768%2C768&ssl=1",
+  "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2023/12/3-4-jpg.webp?resize=768%2C768&ssl=1",
+  "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2023/12/3-4-jpg.webp?resize=768%2C768&ssl=1",
+];
+const CategoryDetail = () => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const { id } = useParams();
+  const [loading, setLoading] = useState(true);
+  const { addToWishlist } = useContext(WishlistContext);
+
+  const { data: product } = useGetOne("products", ENDPOINTS.products, id);
+  const { data: categories } = useGet("category", ENDPOINTS.categories);
+
+  const getCategoryName = (categoryId) => {
+    const category = categories?.find((cat) => cat.id == categoryId);
+    return category ? category.name : "Unknown Category";
+  };
+
+  loading ? <div>Loading...</div> : setLoading(false);
+
+  if (!product) {
+    return <div>Product not found</div>;
+  }
+
+  const nextImage = () => {
+    setSelectedIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const prevImage = () => {
+    setSelectedIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  return (
+    <DetailWrapper>
+      <Wrapper>
+        <DetailHead>
+          <Nav>
+            <li>
+              <a href="">Əsas səhifə /</a>
+            </li>
+            <li>
+              <a href="">Noutbuklar</a>
+            </li>
+          </Nav>
+          <SwitchProduct>
+            <li>
+              <Link>
+                <FaChevronLeft />
+              </Link>
+            </li>
+            <li>
+              <Link>
+                <FaChevronRight />
+              </Link>
+            </li>
+          </SwitchProduct>
+        </DetailHead>
+        <DetailBody>
+          <DetailCard>
+            <ThumbnailList>
+              {images.map((img, i) => (
+                <Thumbnail
+                  key={i}
+                  src={img}
+                  active={i === selectedIndex}
+                  onClick={() => setSelectedIndex(i)}
+                />
+              ))}
+            </ThumbnailList>
+            <MainImageWrapper>
+              <MainImage src={images[selectedIndex]} />
+              <HoverIcons>
+                <ArrowLeft onClick={prevImage}>
+                  <FaChevronLeft />
+                </ArrowLeft>
+                <ArrowRight onClick={nextImage}>
+                  <FaChevronRight />
+                </ArrowRight>
+                <LikeIcon
+                  onClick={(() => setLiked(!liked), () => addToWishlist(product))}
+                >
+                  <CiHeart />
+                </LikeIcon>
+              </HoverIcons>
+              <ZoomIcon onClick={() => setIsModalOpen(true)}>
+                <MdOutlineZoomOutMap />
+              </ZoomIcon>
+            </MainImageWrapper>
+
+            {isModalOpen && (
+              <Modal
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setIsZoomed(false);
+                }}
+              >
+                <ModalArrowLeft
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    prevImage();
+                  }}
+                >
+                  <FaChevronLeft />
+                </ModalArrowLeft>
+
+                <ModalArrowRight
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    nextImage();
+                  }}
+                >
+                  <FaChevronRight />
+                </ModalArrowRight>
+
+                <ModalImage
+                  src={images[selectedIndex]}
+                  style={{
+                    transform: isZoomed ? "scale(1.5)" : "scale(1)",
+                    transition: "transform 0.3s ease",
+                    cursor: isZoomed ? "zoom-out" : "zoom-in",
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                />
+                <ModalBtn onClick={(e) => e.stopPropagation()}>
+                  <CloseBtn
+                    onClick={() => {
+                      setIsModalOpen(false);
+                      setIsZoomed(false);
+                    }}
+                  >
+                    <IoCloseOutline />
+                  </CloseBtn>
+                  <ZoomBtn onClick={() => setIsZoomed(!isZoomed)}>
+                    <FiZoomIn />
+                  </ZoomBtn>
+                </ModalBtn>
+              </Modal>
+            )}
+          </DetailCard>
+          <DetailInfo>
+            <div className="DetailInfoHead">
+              <h2> {product?.name}</h2>
+              <hr />
+              <div className="price">
+                <p className="old">{product?.price.original}</p>
+                <p className="new">{product?.price.current}</p>
+              </div>
+              <DetailList>
+                <li>
+                  <span>CPU:</span>
+                  <span>AMD Ryzen 3™ 5300U</span>
+                </li>
+                <li>
+                  <span>RAM:</span>
+                  <span>AMD Ryzen 3™ 5300U</span>
+                </li>
+                <li>
+                  <span>SSD:</span>
+                  <span>AMD Ryzen 3™ 5300U</span>
+                </li>
+                <li>
+                  <span>GFX:</span>
+                  <span>AMD Ryzen 3™ 5300U</span>
+                </li>
+                <li>
+                  <span>LCD:</span>
+                  <span>AMD Ryzen 3™ 5300U</span>
+                </li>
+                <li>
+                  <span>OS:</span>
+                  <span>AMD Ryzen 3™ 5300U</span>
+                </li>
+                <li>
+                  <span>Çəki::</span>
+                  <span>AMD Ryzen 3™ 5300U</span>
+                </li>
+                <li>
+                  <span>Rəng:</span>
+                  <span>AMD Ryzen 3™ 5300U</span>
+                </li>
+                <li>
+                  <span>P/N::</span>
+                  <span>AMD Ryzen 3™ 5300U</span>
+                </li>
+                <li>
+                  <span>Zəmanət:</span>
+                  <span>AMD Ryzen 3™ 5300U</span>
+                </li>
+                <WishContainer>
+                  <WishIcon liked={liked}>
+                    <FaRegHeart />
+                  </WishIcon>
+                  <WishText>
+                    {liked ? "Product added" : "Add to wishlist"}
+                  </WishText>
+                </WishContainer>
+              </DetailList>
+              <DetailFoot>
+                <p>
+                  Kateqoriya: <span>Acer,Noutbuklar </span>
+                </p>
+                <Socials>
+                  <li className="facebook" data-tooltip="Share on Facebook">
+                    <Link>
+                      <FaFacebookF />
+                    </Link>
+                  </li>
+                  <li className="twitter" data-tooltip="Share on Twitter">
+                    <Link>
+                      <FaXTwitter />
+                    </Link>
+                  </li>
+                  <li className="email" data-tooltip="Send via Email">
+                    <Link>
+                      <TfiEmail />
+                    </Link>
+                  </li>
+                  <li className="pinterest" data-tooltip="Pin it on Pinterest">
+                    <Link>
+                      <FaPinterest />
+                    </Link>
+                  </li>
+                  <li className="linkedin" data-tooltip="Share on LinkedIn">
+                    <Link>
+                      <FaLinkedin />
+                    </Link>
+                  </li>
+                </Socials>
+              </DetailFoot>
+            </div>
+          </DetailInfo>
+        </DetailBody>
+      </Wrapper>
+
+      <ProductDetailTabs />
+      <SimilarProducts>
+        <ProductSection sectionHeader={"Oxşar məhsullar"} />
+      </SimilarProducts>
+    </DetailWrapper>
+  );
+};
+
+export default CategoryDetail;
+
+const DetailWrapper = styled.section`
+  min-height: 100vh;
+`;
+const Wrapper = styled.div`
+  padding-top: 2rem;
+`;
+const DetailHead = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 77%;
+  margin: 0px 0px 2rem 10rem;
+  @media (max-width: 850px) {
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0px;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+const Nav = styled.ul`
+  display: flex;
+  gap: 10px;
+  li a {
+    color: hsla(0, 0%, 40%, 0.7);
+    font-weight: 400;
+    line-height: 1.2;
+    text-transform: uppercase;
+    font-size: 1.15em;
+  }
+`;
+
+const SwitchProduct = styled.ul`
+  display: flex;
+  gap: 5px;
+  li {
+    display: flex;
+
+    a {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 100;
+      color: #c0c0c0;
+      padding: 6px;
+      border: 2px solid #c0c0c0;
+      border-radius: 50%;
+    }
+  }
+`;
+const DetailBody = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+
+  @media (max-width: 851px) {
+    flex-direction: column;
+    margin-top: 2rem;
+    gap: 30px;
+  }
+`;
+const DetailCard = styled.div`
+  display: flex;
+  gap: 25px;
+  position: relative;
+  @media (max-width: 851px) {
+    flex-direction: column-reverse;
+  }
+`;
+const DetailInfo = styled.div`
+  width: 20%;
+  @media (max-width: 851px) {
+    width: 100%;
+    padding-left: 1rem;
+    h2 {
+      font-size: 22px;
+      font-weight: 700;
+    }
+  }
+
+  h2 {
+    color: teal;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+  hr {
+    width: 40px;
+    border: 2px solid #dede;
+    margin-bottom: 5px;
+  }
+  .price {
+    align-items: baseline;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 20px;
+    .old {
+      text-decoration: line-through;
+      color: gray;
+      font-weight: 400;
+      font-size: 24px;
+    }
+    .new {
+      font-size: 24px;
+      color: #111;
+      font-weight: 700;
+    }
+  }
+`;
+const DetailList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  li {
+    padding-bottom: 10px;
+    display: flex;
+    color: #666666;
+    gap: 20px;
+    font-size: 0.9em;
+    line-height: 1.3;
+    border-bottom: 1px solid #ececec;
+    text-align: left;
+  }
+
+  /* .wish{
+
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 0px;
+  i{
+    font-size: 22px;
+    color: black;
+
+  }
+  span{
+    font-size: 16px;
+    color: #149295;
+  }
+} */
+`;
+const DetailFoot = styled.div`
+  p {
+    margin-top: 5px;
+    margin-bottom: 15px;
+    color: #777777;
+    font-size: 12.8px;
+  }
+  span {
+    color: #149295;
+    font-size: 12.8px;
+  }
+`;
+const Socials = styled.ul`
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-height: 3vh;
+
+  li {
+    position: relative;
+    border: 2px solid #c0c0c0;
+    color: #c0c0c0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s ease;
+
+    &:hover {
+      color: white;
+    }
+
+    &::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: black;
+      color: white;
+      padding: 6px 10px;
+      white-space: nowrap;
+      font-size: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 1;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      bottom: 97%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 5px;
+      border-style: solid;
+      border-color: black transparent transparent transparent;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1;
+    }
+
+    &:hover::after,
+    &:hover::before {
+      opacity: 1;
+    }
+  }
+
+  .facebook:hover {
+    background-color: #446084;
+    border-color: #446084;
+  }
+
+  .twitter:hover {
+    background-color: #000000;
+    border-color: #000000;
+  }
+
+  .email:hover {
+    background-color: #000000;
+    border-color: #000000;
+  }
+
+  .pinterest:hover {
+    background-color: #cf2e2e;
+    border-color: #cf2e2e;
+  }
+
+  .linkedin:hover {
+    background-color: #0693e3;
+    border-color: #0693e3;
+  }
+`;
+const WishContainer = styled.li`
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 0px;
+  gap: 10px;
+`;
+const WishIcon = styled.i`
+  font-size: 20px;
+  color: black;
+`;
+const WishText = styled.span`
+  font-size: 16px;
+  color: #149295;
+`;
+const ThumbnailList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 450px;
+  overflow-y: auto;
+  @media (max-width: 851px) {
+    flex-direction: row;
+  }
+`;
+const Thumbnail = styled.img`
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border: 1px solid ${({ active }) => (active ? " #666666" : "none")};
+  cursor: pointer;
+  @media (max-width: 851px) {
+    width: 100px;
+    height: 100px;
+  }
+`;
+const MainImageWrapper = styled.div`
+  position: relative;
+  width: 500px;
+  height: 470px;
+  &:hover div {
+    opacity: 1;
+  }
+  @media (max-width: 851px) {
+    width: 100%;
+    height: 100%;
+  }
+`;
+const ZoomIcon = styled.div`
+  position: absolute;
+  bottom: 30px;
+  left: 10px;
+  pointer-events: all;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #c0c0c0;
+  color: #c0c0c0;
+  padding: 8px;
+  font-size: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  &:hover {
+    background-color: #149295;
+    color: white;
+    border: none;
+  }
+`;
+const MainImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+`;
+const HoverIcons = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: 0.3s ease;
+`;
+const ArrowLeft = styled.div`
+  pointer-events: all;
+  color: gray;
+  border-radius: 50%;
+  font-size: 26px;
+  margin-left: 10px;
+  cursor: pointer;
+  @media (max-width: 851px) {
+    margin-left: 20px;
+  }
+`;
+const ArrowRight = styled(ArrowLeft)`
+  margin-left: 0;
+  margin-right: 10px;
+  @media (max-width: 851px) {
+    margin-right: 20px;
+  }
+`;
+const LikeIcon = styled.div`
+  position: absolute;
+  right: 10px;
+  top: 0px;
+  font-size: 24px;
+  background-color: transparent;
+  border: 1px solid gray;
+  border-radius: 50%;
+  padding: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:hover {
+    background-color: #cc0000;
+    color: white;
+    border-color: #cc0000;
+  }
+  @media (max-width: 951px) {
+    right: 60px;
+  }
+`;
+
+const Modal = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  @media (max-width: 951px) {
+  }
+`;
+const ModalArrowLeft = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: white;
+  cursor: pointer;
+  z-index: 10;
+  user-select: none;
+  transition: 0.3s;
+  @media (max-width: 951px) {
+    color: white;
+    left: 5px;
+  }
+`;
+const ModalArrowRight = styled(ModalArrowLeft)`
+  left: auto;
+  right: 20px;
+
+  @media (max-width: 951px) {
+    color: white;
+    right: 5px;
+  }
+`;
+const ModalBtn = styled.div`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+const CloseBtn = styled.div``;
+const ZoomBtn = styled.div``;
+const ModalImage = styled.img`
+  max-width: 90%;
+  max-height: 90%;
+`;
+const SimilarProducts = styled.div`
+  h2 {
+    padding-bottom: 15px;
+    color: #149295;
+    font-size: 20px;
+  }
+`;

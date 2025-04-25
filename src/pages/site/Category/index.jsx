@@ -1,0 +1,746 @@
+import React, { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import { RiEqualizerLine } from "react-icons/ri";
+import { CiHeart } from "react-icons/ci";
+import { getData } from "../../../utils/api/requests";
+import PriceFilter from "@components/site/Category/FilterPrice";
+import ActiveFilter from "@components/site/Category/ActiveFilter";
+import ProcessorSelect from "@components/site/Category/ProcessorSelect";
+import CategoriesSidebar from "@components/site/Blog/CategoriesSideBar";
+import { useGet } from "@utils/hooks/useCustomQuery";
+import { ENDPOINTS } from "@utils/constants/Endpoints";
+import { WishlistContext } from "@Context/wishlistContext";
+
+const Category = () => {
+  const [showFilter, setShowFilter] = useState(false);
+  const [sortOption, setSortOption] = useState("Standart Sıralama");
+  const [priceRange, setPriceRange] = useState({ min: null, max: null });
+  const { data: products } = useGet("products", ENDPOINTS.products);
+  const { data: categories } = useGet("products", ENDPOINTS.categories);
+  const { addToWishlist } = useContext(WishlistContext);
+
+  const handleClearMinPrice = () => {
+    setPriceRange((prev) => ({ ...prev, min: null }));
+  };
+
+  const handleClearMaxPrice = () => {
+    setPriceRange((prev) => ({ ...prev, max: null }));
+  };
+
+  const handlePriceChange = (range) => {
+    setPriceRange(range);
+  };
+
+  const [filterApplied, setFilterApplied] = useState(false);
+
+  useEffect(() => {
+    if (priceRange.min === null && priceRange.max === null) {
+      setFilterApplied(false);
+    }
+  }, [priceRange]);
+  const parsePrice = (value) => {
+    if (typeof value === "string") {
+      return Number(value.replace(/[^\d.]/g, ""));
+    }
+    return Number(value);
+  };
+
+  const filteredProducts = products?.filter((item) => {
+    const price = parsePrice(item.price.current);
+    const minValid = priceRange.min === null || price >= priceRange.min;
+    const maxValid = priceRange.max === null || price <= priceRange.max;
+    return minValid && maxValid;
+  });
+
+  const getCategoryName = (categoryId) => {
+    const category = categories?.find((cat) => cat?.id == categoryId);
+    return category ? category?.name : "Unknown Category";
+  };
+
+  const sortedProducts = (filteredProducts || []).sort((a, b) => {
+    switch (sortOption) {
+      case "Qiymət: aşağıdan yuxarı":
+        return parsePrice(a.price.current) - parsePrice(b.price.current);
+      case "Qiymət: yuxarıdan aşağı":
+        return parsePrice(b.price.current) - parsePrice(a.price.current);
+      case "Ən yüksək reytinq":
+        return b.rating - a.rating;
+      case "Ən yenilər":
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      case "Populyarlığa görə":
+        return b.popularity - a.popularity;
+      default:
+        return 0;
+    }
+  });
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 11;
+
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = sortedProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+
+  const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [priceRange, sortOption]);
+
+  console.log(currentProducts);
+  
+
+  return (
+    <CategoryWrapper>
+      <CategoryContent>
+        <CategoryHead>
+          <div className="category-links">
+            <ul>
+              <li>
+                <Link>Əsas səhifə /</Link>
+              </li>
+              <li>
+                <Link>Noutbuklar</Link>
+              </li>
+            </ul>
+          </div>
+          <ResponsiveFilter onClick={() => setShowFilter(true)}>
+            <i>
+              <RiEqualizerLine />
+            </i>
+            <p>Filtr</p>
+          </ResponsiveFilter>
+
+          <CategorySelect>
+            <p>Lorem ipsum dolor sit amet.</p>
+            <select
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value)}
+            >
+              <option value="Standart Sıralama">Standart Sıralama</option>
+              <option value="Populyarlığa görə">Populyarlığa görə</option>
+              <option value="Ən yüksək reytinq">Ən yüksək reytinq</option>
+              <option value="Ən yenilər">Ən yenilər</option>
+              <option value="Qiymət: aşağıdan yuxarı">
+                Qiymət: aşağıdan yuxarı
+              </option>
+              <option value="Qiymət: yuxarıdan aşağı">
+                Qiymət: yuxarıdan aşağı
+              </option>
+            </select>
+          </CategorySelect>
+        </CategoryHead>
+
+        <CategoryBody>
+          {showFilter && (
+            <>
+              <TransparentBackground
+                onClick={() => setShowFilter(false)}
+                $isOpenModal={showFilter}
+              >
+                <ModalButton onClick={() => setShowFilter(false)}>
+                  ×
+                </ModalButton>
+              </TransparentBackground>
+              <SidebarFilter $isOpenModal={showFilter}>
+                {filterApplied && (
+                  <ActiveFiltr>
+                    <h3>Aktiv Filtrlər</h3>
+                    <hr />
+                    <ActiveFilter
+                      priceRange={priceRange}
+                      onClearMin={() => {
+                        handleClearMinPrice();
+                        if (priceRange.max === null) setFilterApplied(false);
+                      }}
+                      onClearMax={() => {
+                        handleClearMaxPrice();
+                        if (priceRange.min === null) setFilterApplied(false);
+                      }}
+                    />
+                  </ActiveFiltr>
+                )}
+                <div className="price-section">
+                  <h3>QIYMƏT</h3>
+                  <hr />
+                  <PriceFilter
+                    onChange={handlePriceChange}
+                    onSubmit={() => setFilterApplied(true)}
+                  />
+                </div>
+                <Processor>
+                  <h3>PROSESSOR-AMD</h3>
+                  <hr />
+                  <select>
+                    <option>AMD Ryzen 5tm 5600H</option>
+                    <option>AMD Ryzen 7tm 6800H</option>
+                  </select>
+                </Processor>
+                <ProcessorSelect />
+                <Categories>
+                  <CategoriesSidebar />
+                </Categories>
+              </SidebarFilter>
+            </>
+          )}
+
+          <CategoryCardsWrapper>
+            <CategoryCards>
+              {currentProducts?.map((item) => (
+                <CategoryCard>
+                  <CategoryCardHeadImage>
+                    <img
+                      src="https://i0.wp.com/prosolution.ltd/wp-content/uploads/2023/10/Untitled-1-32-jpg.webp?zoom=2&resize=247%2C296&ssl=1"
+                      alt="notebook"
+                    />
+                    <div className="heartIcon" onClick={()=>addToWishlist(item)}>
+                      <CiHeart />
+                    </div>
+                  </CategoryCardHeadImage>
+
+                  <CategoryCardBody>
+                    <span>{item.category}</span>
+                    <ProductName>{item.name}</ProductName>
+                    <PriceBox>
+                      <OldPrice>{item.price.original}</OldPrice>
+                      <NewPrice>{item.price.current}</NewPrice>
+                    </PriceBox>
+                    <Link to={`/category/${item.id}`}>Davamını oxu</Link>
+                  </CategoryCardBody>
+                </CategoryCard>
+                // </CategoryCardLink>
+              ))}
+            </CategoryCards>
+
+            {totalPages > 1 && (
+              <PaginationWrapper>
+                <PageButton
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  hidden={currentPage === 1}
+                >
+                  &laquo;
+                </PageButton>
+
+                {[...Array(totalPages)].map((_, index) => (
+                  <PageButton
+                    key={index}
+                    onClick={() => handlePageChange(index + 1)}
+                    active={currentPage === index + 1}
+                  >
+                    {index + 1}
+                  </PageButton>
+                ))}
+
+                <PageButton
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  hidden={currentPage === totalPages}
+                >
+                  &raquo;
+                </PageButton>
+              </PaginationWrapper>
+            )}
+          </CategoryCardsWrapper>
+          <CategoryFilter>
+            {filterApplied && (
+              <ActiveFiltr>
+                <h3>Aktiv Filtrlər</h3>
+                <hr />
+                <ActiveFilter
+                  priceRange={priceRange}
+                  onClearMin={() => {
+                    handleClearMinPrice();
+                    if (priceRange.max === null) setFilterApplied(false);
+                  }}
+                  onClearMax={() => {
+                    handleClearMaxPrice();
+                    if (priceRange.min === null) setFilterApplied(false);
+                  }}
+                />
+              </ActiveFiltr>
+            )}
+            <Price>
+              <h3>Qiymət</h3>
+              <hr />
+              <PriceFilter
+                onChange={handlePriceChange}
+                onSubmit={() => setFilterApplied(true)}
+              />
+            </Price>
+            <Processor>
+              <h3>PROSESSOR-AMD</h3>
+              <hr />
+              <select name="" id="">
+                <option value="">AMD Ryzen 5tm 5600H</option>
+                <option value="">AMD Ryzen 7tm 6800H</option>
+              </select>
+            </Processor>
+            <ProcessorSelect />
+            <Categories>
+              <CategoriesSidebar />
+            </Categories>
+          </CategoryFilter>
+        </CategoryBody>
+      </CategoryContent>
+    </CategoryWrapper>
+  );
+};
+
+export default Category;
+
+const PageButton = styled.button`
+  display: ${(props) => (props.hidden ? "none" : "inline-block")};
+  background: ${(props) => (props.active ? "#00A6A6" : "#fff")};
+  color: ${(props) => (props.active ? "#fff" : "#333")};
+  border: 1px solid #ddd;
+  padding: 8px 14px;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 16px;
+  min-width: 40px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover:not(:disabled):not([hidden]) {
+    background-color: #00a6a6;
+    color: #fff;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+const PaginationWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+  gap: 10px;
+`;
+const CategoryWrapper = styled.section`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const CategoryContent = styled.div`
+  min-height: 100vh;
+  width: 90%;
+  padding: 20px;
+  @media (max-width: 950px) {
+    width: 100%;
+  }
+`;
+const CategoryHead = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+  padding-bottom: 1rem;
+  @media (max-width: 850px) {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+  .category-links ul {
+    display: flex;
+    gap: 10px;
+    li a {
+      color: hsla(0, 0%, 40%, 0.7);
+      font-weight: 400;
+      line-height: 1.2;
+      text-transform: uppercase;
+      font-size: 1.15em;
+    }
+  }
+
+  .category-select {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+  .category-links ul {
+    display: flex;
+    gap: 10px;
+    li a {
+      color: hsla(0, 0%, 40%, 0.7);
+      font-weight: 400;
+      line-height: 1.2;
+      text-transform: uppercase;
+      font-size: 1.15em;
+    }
+  }
+`;
+const CategorySelect = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: gray;
+  p {
+    color: #777;
+    line-height: 1.6;
+  }
+  @media (max-width: 850px) {
+    p {
+      display: none;
+    }
+  }
+
+  select {
+    color: #777;
+    min-width: 280px;
+    color: gray;
+    width: 200px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #dedede;
+    box-shadow: #dedede;
+    outline: none;
+  }
+`;
+
+const TransparentBackground = styled.div`
+  visibility: ${({ $isOpenModal }) => ($isOpenModal ? "visible" : "hidden")};
+  opacity: ${({ $isOpenModal }) => ($isOpenModal ? "0.6" : "0")};
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  background-color: #0b0b0b;
+  z-index: 2;
+  transition: 0.3s ease;
+`;
+const CategoryBody = styled.div`
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  @media (max-width: 850px) {
+    flex-direction: column-reverse;
+  }
+`;
+const CategoryCardsWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const CategoryCards = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 30px;
+  width: 100%;
+  @media (max-width: 950px) {
+    width: 100%;
+  }
+`;
+
+const ModalButton = styled.button`
+  color: rgba(255, 255, 255, 0.51);
+  position: absolute;
+  right: 5px;
+  top: 0px;
+  cursor: pointer;
+  font-size: 40px;
+  font-weight: 100;
+  line-height: 40px;
+  background-color: transparent;
+  border: none;
+  z-index: 3;
+`;
+const SidebarFilter = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 280px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  z-index: 3;
+  padding: 20px;
+  overflow-y: auto;
+  transition: transform 0.5s ease-in-out;
+  transform: ${({ $isOpenModal }) =>
+    $isOpenModal ? "translateX(0)" : "translateX(-270px)"};
+  .price-section {
+    padding-top: 1rem;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    h3 {
+      font-size: 1em;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #777;
+    }
+
+    hr {
+      width: 40px;
+      margin: 11px 0;
+      border: 2px solid #0000001a;
+    }
+  }
+  select {
+    width: 100%;
+  }
+`;
+
+const CategoryCard = styled.div`
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #fff;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  width: 200px;
+
+  &:hover img {
+    transform: scale(1.1);
+  }
+  @media (max-width: 930px) {
+    width: 150px;
+  }
+`;
+
+const ProductName = styled.h5`
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 15px;
+  color: #149295;
+  margin: 10px 0;
+  font-weight: 500;
+  overflow: hidden;
+  &:hover {
+    color: black;
+  }
+`;
+
+const CategoryCardLink = styled(Link)``;
+const CategoryCardHeadImage = styled.div`
+  position: relative;
+  overflow: hidden;
+  padding-top: 10px;
+  img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    @media (max-width: 930px) {
+      height: 130px;
+    }
+  }
+  @media (max-width: 900px) {
+    height: 140px;
+  }
+
+  .heartIcon {
+    position: absolute;
+    right: 10px;
+    top: 0px;
+    font-size: 24px;
+    color: gray;
+    background-color: transparent;
+    border: 1px solid gray;
+    border-radius: 50%;
+    padding: 5px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    @media (max-width: 930px) {
+      font-size: 18px;
+    }
+  }
+  .heartIcon:hover {
+    color: white;
+    background-color: #cc0000;
+  }
+  ${CategoryCard}:hover & .heartIcon {
+    opacity: 1;
+  }
+`;
+const CategoryCardBody = styled.div`
+  padding: 10px;
+  @media (max-width: 930px) {
+    line-height: 0.9;
+    padding: 5px;
+  }
+  span {
+    font-size: 13px;
+    color: gray;
+    opacity: 0.7;
+    @media (max-width: 930px) {
+      font-size: 10px;
+      font-weight: 600;
+    }
+  }
+
+  h5 {
+    @media (max-width: 850px) {
+      font-size: 12px;
+      font-weight: 600;
+    }
+  }
+
+  a {
+    margin-top: 10px;
+    width: 65%;
+    background-color: #149295;
+    color: white;
+    border: none;
+    padding: 8px;
+    display: flex;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    &:hover {
+      background-color: rgb(16, 114, 116);
+    }
+    @media (max-width: 930px) {
+      padding: 5px;
+      width: 70%;
+      font-size: 12px;
+    }
+  }
+`;
+const PriceBox = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  margin: 8px 0;
+`;
+const OldPrice = styled.p`
+  text-decoration: line-through;
+  color: gray;
+  font-size: 14px;
+  @media (max-width: 930px) {
+    font-size: 11px;
+  }
+`;
+const NewPrice = styled.p`
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+  @media (max-width: 930px) {
+    font-size: 13px;
+  }
+`;
+const CategoryFilter = styled.div`
+  width: 30%;
+  @media (max-width: 850px) {
+    display: none;
+  }
+`;
+const ActiveFiltr = styled.div`
+  padding-left: 20px;
+  h3 {
+    font-size: 1em;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    line-height: 1.05;
+    text-transform: uppercase;
+    color: #777;
+  }
+  hr {
+    width: 40px;
+    margin: 11px 0px;
+    border: 2px solid #0000001a;
+  }
+`;
+const Price = styled.div`
+  padding-left: 20px;
+  padding-bottom: 20px;
+  h3 {
+    font-size: 1em;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    line-height: 1.05;
+    text-transform: uppercase;
+    color: #777;
+  }
+  hr {
+    width: 40px;
+    margin: 11px 0px;
+    border: 2px solid #0000001a;
+  }
+`;
+const Categories = styled.div``;
+const Processor = styled.div`
+  padding-left: 20px;
+  margin-bottom: 1rem;
+  line-height: 2.5;
+  max-width: 280px;
+  h3 {
+    font-size: 1em;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    line-height: 1.05;
+    text-transform: uppercase;
+    color: #777;
+  }
+  hr {
+    width: 40px;
+    margin: 11px 0px;
+    border: 2px solid #0000001a;
+  }
+
+  select {
+    display: block;
+    width: 100%;
+    color: #999;
+    background-color: #fff;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    line-height: 28px;
+    font-size: 0.97em;
+    padding: 5px 55px 5px 8px;
+    outline: none;
+    option {
+      width: 100%;
+    }
+  }
+`;
+const ResponsiveFilter = styled.div`
+  cursor: pointer;
+  display: none;
+  color: #777777;
+
+  p {
+    font-size: 16px;
+    font-weight: bolder;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+  i {
+    font-size: 20px;
+  }
+  @media (max-width: 850px) {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+  }
+`;

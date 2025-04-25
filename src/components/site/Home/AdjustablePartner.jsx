@@ -1,0 +1,151 @@
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { Swiper, SwiperSlide } from "swiper/react";
+import {
+  Navigation,
+  Pagination,
+  Scrollbar,
+  A11y,
+  FreeMode,
+  Autoplay,
+} from "swiper/modules";
+
+// Swiper Css Imports
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+import { useGet } from "@utils/hooks/useCustomQuery";
+import { ENDPOINTS } from "@utils/constants/Endpoints";
+import { LayoutContainer } from "@styles/common/LayoutContainer";
+
+const AdjustablePartnerSection = ({ headerName, imageSrc }) => {
+  const { data: products } = useGet("products", ENDPOINTS.products);
+
+  return (
+    <AdjustableContainer>
+      <LayoutContainer>
+        <BrandBox>
+          <StyledH2>{headerName}</StyledH2>
+          <BrandsAndPartners>
+            <Swiper
+              navigation={true}
+              spaceBetween={20}
+              slidesPerView={3}
+              modules={[FreeMode, Navigation, Autoplay, Pagination]}
+              breakpoints={{
+                0: {
+                  slidesPerView: 1,
+                },
+                450: {
+                  slidesPerView: 2,
+                },
+                650: {
+                  slidesPerView: 3,
+                },
+                850: {
+                  slidesPerView: 4,
+                },
+                1024: {
+                  slidesPerView: 5,
+                },
+                1200: {
+                  slidesPerView: 6,
+                },
+              }}
+            >
+              {products?.map((item) => (
+                <SwiperSlide>
+                  <ImageContainer key={"1"}>
+                    <StyledImage src={`./images/${imageSrc}`} />
+                  </ImageContainer>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </BrandsAndPartners>
+        </BrandBox>
+      </LayoutContainer>
+    </AdjustableContainer>
+  );
+};
+
+const AdjustableContainer = styled.section`
+  padding: 30px 0px 50px;
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: black;
+    transition: color 0.3s ease;
+    transform: scale(0.7);
+  }
+
+  .swiper-button-next:hover,
+  .swiper-button-prev:hover {
+    color: #149295;
+  }
+
+  @media (max-width: 650px) {
+    .swiper-button-next,
+    .swiper-button-prev {
+      font-size: 2rem;
+      width: 60px;
+      height: 60px;
+    }
+
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+      font-size: 2rem;
+    }
+  }
+`;
+
+const BrandBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  width: 100%;
+`;
+
+const StyledH2 = styled.h2`
+  font-family: Manrope-Bold;
+  text-align: center;
+  color: #149295;
+`;
+
+const BrandsAndPartners = styled.div``;
+
+const StyledImage = styled.img`
+  width: 100%;
+`;
+const ImageContainer = styled.div`
+  position: relative;
+  cursor: pointer;
+  &:hover > div {
+    top: 85%;
+  }
+  &:hover > div > p {
+    opacity: 1;
+  }
+`;
+
+const DescriptionContainer = styled.div`
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 100%;
+  transition: 0.3s;
+`;
+
+const NameBox = styled.h5`
+  color: #fff;
+`;
+
+const CountBox = styled.p`
+  opacity: 0;
+  color: #f1f1f1;
+  width: 100%;
+  transition: 0.3s;
+`;
+
+export default AdjustablePartnerSection;
