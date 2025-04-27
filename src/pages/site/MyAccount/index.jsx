@@ -1,13 +1,20 @@
 import React from "react";
 import styled from "styled-components";
 import LoginRegister from "@components/site/MyAccount/LoginRegister";
+import { LayoutContainer } from "@styles/common/LayoutContainer";
+import AccountSideBar from "@components/site/MyAccount/AccountSideBar";
 
 const MyAccount = () => {
   return (
     <AccountPage>
       <PageHeader>My account</PageHeader>
       <PageBottom>
-        <LoginRegister />
+        {/* <LoginRegister /> */}
+        <AccountInfo>
+          <LayoutContainer>
+            <AccountSideBar></AccountSideBar>
+          </LayoutContainer>
+        </AccountInfo>
       </PageBottom>
     </AccountPage>
   );
@@ -32,6 +39,11 @@ const PageBottom = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const AccountInfo = styled.div`
+  width: 100%;
+  padding: 30px 0px;
 `;
 
 export default MyAccount;
