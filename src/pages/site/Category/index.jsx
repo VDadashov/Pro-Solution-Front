@@ -196,10 +196,12 @@ const Category = () => {
               {currentProducts?.map((item) => (
                 <CategoryCard>
                   <CategoryCardHeadImage>
-                    <img
+                   <CategoryCardLink to={`/category/${item.id}`}>
+                   <img
                       src="https://i0.wp.com/prosolution.ltd/wp-content/uploads/2023/10/Untitled-1-32-jpg.webp?zoom=2&resize=247%2C296&ssl=1"
                       alt="notebook"
                     />
+                   </CategoryCardLink>
                     <div className="heartIcon" onClick={()=>addToWishlist(item)}>
                       <CiHeart />
                     </div>
@@ -207,15 +209,17 @@ const Category = () => {
 
                   <CategoryCardBody>
                     <span>{item.category}</span>
-                    <ProductName>{item.name}</ProductName>
+                   <Link to={`/category/${item.id}`}>
+                   <ProductName>{item.name}</ProductName>
+                   </Link>
                     <PriceBox>
                       <OldPrice>{item.price.original}</OldPrice>
                       <NewPrice>{item.price.current}</NewPrice>
                     </PriceBox>
-                    <Link to={`/category/${item.id}`}>Davamını oxu</Link>
+                    <ButtonLink to={`/category/${item.id}`}>Davamını oxu</ButtonLink>
                   </CategoryCardBody>
                 </CategoryCard>
-                // </CategoryCardLink>
+             
               ))}
             </CategoryCards>
 
@@ -453,6 +457,10 @@ const CategoryCards = styled.div`
   @media (max-width: 950px) {
     width: 100%;
   }
+  @media (max-width: 850px) {
+    width: 100%;
+    justify-content: center;
+  }
 `;
 
 const ModalButton = styled.button`
@@ -604,8 +612,9 @@ const CategoryCardBody = styled.div`
     }
   }
 
-  a {
-    margin-top: 10px;
+`;
+const ButtonLink=styled(Link)`
+ margin-top: 10px;
     width: 65%;
     background-color: #149295;
     color: white;
@@ -623,8 +632,7 @@ const CategoryCardBody = styled.div`
       width: 70%;
       font-size: 12px;
     }
-  }
-`;
+`
 const PriceBox = styled.div`
   display: flex;
   gap: 10px;
