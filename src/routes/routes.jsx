@@ -9,6 +9,12 @@ import Blog from "@pages/site/Blog/Index";
 import BlogList from "@components/site/Blog/BlogCardsContainer";
 import BlogDetail from "@components/site/Blog/BlogDetail";
 import ErrorPage from "@pages/site/Error";
+import Orders from "@components/site/MyAccount/Orders";
+import LoginRegister from "@components/site/MyAccount/LoginRegister";
+import ControlPanel from "@components/site/MyAccount/ControlPanel";
+import Downloads from "@components/site/MyAccount/Downloads";
+import Address from "@components/site/MyAccount/Address";
+import AccountDetails from "@components/site/MyAccount/AccountDetails";
 
 const ROUTES = [
   {
@@ -30,13 +36,32 @@ const ROUTES = [
       {
         path: "/category/:id",
         element: <CategoryDetail />,
-
-
       },
       {
-
         path: "/myaccount",
         element: <MyAccount />,
+        children: [
+          {
+            index:true,
+            element:<ControlPanel/>
+          },
+          {
+            path: "orders",
+            element: <Orders />,
+          },
+          {
+            path: "downloads",
+            element: <Downloads />,
+          },
+          {
+            path: "address",
+            element: <Address />,
+          },
+          {
+            path: "account_details",
+            element: <AccountDetails />,
+          },
+        ],
       },
       {
         path: "/wishlist",

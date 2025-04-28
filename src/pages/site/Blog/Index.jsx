@@ -45,7 +45,6 @@ const SidebarContainer = styled.div`
   @media (max-width: 850px) {
     width: 100%;
   }
-
 `;
 
 const VerticalLine = styled.div`

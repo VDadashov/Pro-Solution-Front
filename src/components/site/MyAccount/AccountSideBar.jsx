@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { myAccount } from "./ControlPanel";
 
 const AccountSideBar = () => {
   return (
@@ -14,23 +15,23 @@ const AccountSideBar = () => {
       </ProfileContainer>
       <AccountNavigation>
         <NavigationItem style={{border:"none"}}>
-          <AccountLink>İdarə panelİ</AccountLink>
+          <AccountLink to={"/myaccount"}>İdarə panelİ</AccountLink>
           <VerticalLine />
         </NavigationItem>
         <NavigationItem>
-          <AccountLink>Sifarişlər</AccountLink>
+          <AccountLink to={`${myAccount}/orders`}>Sifarişlər</AccountLink>
           <VerticalLine />
         </NavigationItem>
         <NavigationItem>
-          <AccountLink>Endirmələr</AccountLink>
+          <AccountLink to={`${myAccount}/downloads`}>Endirmələr</AccountLink>
           <VerticalLine />
         </NavigationItem>
         <NavigationItem>
-          <AccountLink>Ünvanlar</AccountLink>
+          <AccountLink to={`${myAccount}/address`}>Ünvanlar</AccountLink>
           <VerticalLine />
         </NavigationItem>
         <NavigationItem>
-          <AccountLink>Hesab Detalları</AccountLink>
+          <AccountLink to={`${myAccount}/account_details`}>Hesab Detalları</AccountLink>
           <VerticalLine />
         </NavigationItem>
         <NavigationItem>
@@ -48,9 +49,13 @@ const AccountSideBar = () => {
 const SideBarWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 25%;
+  width: 25%;
   gap: 15px;
   border-right: 1px solid #ececec;
+  @media (max-width: 850px) {
+    width: 100%;
+    border: none;
+  }
 `;
 
 const ProfileContainer = styled.div`
