@@ -27,3 +27,15 @@ a {
 button {
   cursor: pointer;
 }
+
+/* .activeAccountItem {
+  a {
+    color: hsla(0, 0%, 7%, 0.85);
+  }
+
+  background-color: red;
+
+  span {
+    opacity: 1;
+  }
+} */

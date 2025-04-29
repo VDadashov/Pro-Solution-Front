@@ -15,7 +15,7 @@ const AccountSideBar = () => {
       </ProfileContainer>
       <AccountNavigation>
         <NavigationItem style={{border:"none"}}>
-          <AccountLink to={"/myaccount"}>İdarə panelİ</AccountLink>
+          <AccountLink exact="true" to={"/myaccount"} activeclassname="activeAccountItem">İdarə panelİ</AccountLink>
           <VerticalLine />
         </NavigationItem>
         <NavigationItem>

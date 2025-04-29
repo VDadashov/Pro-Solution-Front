@@ -15,11 +15,16 @@ import ControlPanel from "@components/site/MyAccount/ControlPanel";
 import Downloads from "@components/site/MyAccount/Downloads";
 import Address from "@components/site/MyAccount/Address";
 import AccountDetails from "@components/site/MyAccount/AccountDetails";
+import ScrollToTop from "@components/site/common/ScrollToTop/ScrollToTop";
 
 const ROUTES = [
   {
     path: "/",
-    element: <SiteRoot />,
+    element: (
+      <ScrollToTop>
+        <SiteRoot />
+      </ScrollToTop>
+    ),
     children: [
       {
         path: "",
@@ -42,8 +47,8 @@ const ROUTES = [
         element: <MyAccount />,
         children: [
           {
-            index:true,
-            element:<ControlPanel/>
+            index: true,
+            element: <ControlPanel />,
           },
           {
             path: "orders",

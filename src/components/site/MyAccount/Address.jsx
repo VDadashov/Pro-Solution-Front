@@ -46,6 +46,10 @@ const AccountLink = styled(Link)`
 const AddressesWrapper = styled.div`
   display: flex;
   gap: 30px;
+  @media (max-width: 850px) {
+    flex-direction: column;
+    padding:30px 0px;
+  }
 `;
 
 const AccountContent = styled.div`

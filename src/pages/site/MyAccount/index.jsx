@@ -34,9 +34,12 @@ const AccountPage = styled.main`
 `;
 
 const PageHeader = styled.h1`
+  max-width: 1224px;
+  width: 100%;
   color: #149295;
-  padding: 15px 0px;
+  padding: 15px 20px;
   text-transform: uppercase;
+  text-align: left;
 `;
 
 const PageBottom = styled.div`
