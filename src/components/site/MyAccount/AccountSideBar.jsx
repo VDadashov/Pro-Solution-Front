@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { myAccount } from "./ControlPanel";
 
@@ -14,8 +14,10 @@ const AccountSideBar = () => {
         </UserName>
       </ProfileContainer>
       <AccountNavigation>
-        <NavigationItem style={{border:"none"}}>
-          <AccountLink exact="true" to={"/myaccount"} activeclassname="activeAccountItem">İdarə panelİ</AccountLink>
+        <NavigationItem style={{ border: "none" }}>
+          <AccountLink exact="true" to={"/myaccount/control_panel"} activeclassname="active">
+            İdarə panelİ
+          </AccountLink>
           <VerticalLine />
         </NavigationItem>
         <NavigationItem>
@@ -31,7 +33,9 @@ const AccountSideBar = () => {
           <VerticalLine />
         </NavigationItem>
         <NavigationItem>
-          <AccountLink to={`${myAccount}/account_details`}>Hesab Detalları</AccountLink>
+          <AccountLink to={`${myAccount}/account_details`}>
+            Hesab Detalları
+          </AccountLink>
           <VerticalLine />
         </NavigationItem>
         <NavigationItem>
@@ -39,7 +43,7 @@ const AccountSideBar = () => {
           <VerticalLine />
         </NavigationItem>
         <NavigationItem>
-          <AccountLink>Çıxış</AccountLink>
+          <AccountLink to={"/"}>Çıxış</AccountLink>
           <VerticalLine />
         </NavigationItem>
       </AccountNavigation>
@@ -86,7 +90,7 @@ const AccountNavigation = styled.ul`
 `;
 
 const NavigationItem = styled.li`
-border-top: 1px solid #ececec;
+  border-top: 1px solid #ececec;
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -100,7 +104,7 @@ border-top: 1px solid #ececec;
   }
 `;
 
-const AccountLink = styled(Link)`
+const AccountLink = styled(NavLink)`
   display: block;
   padding: 15px 0px;
   width: 100%;
@@ -110,6 +114,10 @@ const AccountLink = styled(Link)`
   color: hsla(0, 0%, 40%, 0.85);
   letter-spacing: 0.3px;
   transition: all 0.3s;
+  &.active {
+    color: hsla(0, 0%, 7%, 0.85);
+    background-color: red;
+  }
 `;
 
 const VerticalLine = styled.span`

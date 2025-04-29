@@ -47,7 +47,7 @@ const ROUTES = [
         element: <MyAccount />,
         children: [
           {
-            index: true,
+            path: "control_panel",
             element: <ControlPanel />,
           },
           {
