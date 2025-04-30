@@ -131,9 +131,11 @@ const FooterRow = styled.div`
 
 const ValueInfo = styled.div`
   font-size: 0.9rem;
-  color: #444;
+
+  color: #777;
   span {
     font-weight: 600;
+    
     margin: 0 4px;
   }
 `;

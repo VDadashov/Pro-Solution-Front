@@ -9,6 +9,7 @@ import Blog from "@pages/site/Blog/Index";
 import BlogList from "@components/site/Blog/BlogCardsContainer";
 import BlogDetail from "@components/site/Blog/BlogDetail";
 import ErrorPage from "@pages/site/Error";
+import Discount from "@pages/site/Discount/Discount";
 
 const ROUTES = [
   {
@@ -26,6 +27,10 @@ const ROUTES = [
       {
         path: "/category",
         element: <Category />,
+      },
+      {
+        path: "/discount",
+        element: <Discount />,
       },
       {
         path: "/category/:id",

@@ -20,6 +20,8 @@ import { ENDPOINTS } from "@utils/constants/Endpoints";
 import ProductDetailTabs from "@components/site/CategoryDetail/ProductDetailTabs";
 import ProductSection from "@components/site/Home/Products";
 import { WishlistContext } from "@Context/wishlistContext";
+import { FaHeart } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
 const images = [
   "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2023/12/3-4-jpg.webp?resize=768%2C768&ssl=1",
   "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2023/12/1-4-jpg.webp?resize=768%2C768&ssl=1",
@@ -34,10 +36,20 @@ const CategoryDetail = () => {
   const [liked, setLiked] = useState(false);
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
-  const { addToWishlist } = useContext(WishlistContext);
+  // const { addToWishlist } = useContext(WishlistContext);
+  const { wishlist, addToWishlist } = useContext(WishlistContext);
+
+  
+
 
   const { data: product } = useGetOne("products", ENDPOINTS.products, id);
   const { data: categories } = useGet("category", ENDPOINTS.categories);
+  useEffect(() => {
+    if (product) {
+      const isLiked = wishlist.some(item => item.id === product.id);
+      setLiked(isLiked);
+    }
+  }, [wishlist, product]);
 
   const getCategoryName = (categoryId) => {
     const category = categories?.find((cat) => cat.id == categoryId);
@@ -85,6 +97,7 @@ const CategoryDetail = () => {
         </DetailHead>
         <DetailBody>
           <DetailCard>
+
             <ThumbnailList>
               {images.map((img, i) => (
                 <Thumbnail
@@ -105,10 +118,20 @@ const CategoryDetail = () => {
                   <FaChevronRight />
                 </ArrowRight>
                 <LikeIcon
-                  onClick={(() => setLiked(!liked), () => addToWishlist(product))}
+                  onClick={() => {
+                    if (!liked) {
+                      setLiked(true);
+                      addToWishlist(product);
+                      toast.success("Product added to wishlist!");
+                    } else {
+                      toast.info("This product is already in your wishlist.");
+                    }
+                  }}
                 >
                   <CiHeart />
                 </LikeIcon>
+
+
               </HoverIcons>
               <ZoomIcon onClick={() => setIsModalOpen(true)}>
                 <MdOutlineZoomOutMap />
@@ -214,14 +237,29 @@ const CategoryDetail = () => {
                   <span>Zəmanət:</span>
                   <span>AMD Ryzen 3™ 5300U</span>
                 </li>
-                <WishContainer>
-                  <WishIcon liked={liked}>
-                    <FaRegHeart />
+
+                <WishContainer onClick={() => {
+                  setLiked(true);
+                  addToWishlist(product);
+                }}>
+                  <WishIcon>
+                    {liked ? <FaHeart style={{ color: "black" }} /> : <FaRegHeart />}
                   </WishIcon>
+
                   <WishText>
-                    {liked ? "Product added" : "Add to wishlist"}
+                    {liked ? (
+                      <>
+                        <Gray>Product added</Gray>
+                      <BrowseLink to="/wishlist" onClick={(e) => e.stopPropagation()}>
+  Browse wishlist
+</BrowseLink>
+                      </>
+                    ) : (
+                      <Blue>Add to wishlist</Blue>
+                    )}
                   </WishText>
                 </WishContainer>
+
               </DetailList>
               <DetailFoot>
                 <p>
@@ -261,6 +299,7 @@ const CategoryDetail = () => {
       </Wrapper>
 
       <ProductDetailTabs />
+
       <SimilarProducts>
         <ProductSection sectionHeader={"Oxşar məhsullar"} />
       </SimilarProducts>
@@ -392,24 +431,6 @@ const DetailList = styled.ul`
     border-bottom: 1px solid #ececec;
     text-align: left;
   }
-
-  /* .wish{
-
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-bottom: 0px;
-  i{
-    font-size: 22px;
-    color: black;
-
-  }
-  span{
-    font-size: 16px;
-    color: #149295;
-  }
-} */
 `;
 const DetailFoot = styled.div`
   p {
@@ -514,6 +535,7 @@ const WishContainer = styled.li`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
   padding-bottom: 0px;
   gap: 10px;
 `;
@@ -524,6 +546,9 @@ const WishIcon = styled.i`
 const WishText = styled.span`
   font-size: 16px;
   color: #149295;
+  &:hover{
+    color:black;
+  }
 `;
 const ThumbnailList = styled.div`
   display: flex;
@@ -630,14 +655,27 @@ const LikeIcon = styled.div`
   justify-content: center;
   align-items: center;
   &:hover {
-    background-color: #cc0000;
+    background-color: #b20000;
     color: white;
-    border-color: #cc0000;
+    border-color: #b20000;
   }
   @media (max-width: 951px) {
     right: 60px;
   }
 `;
+const BrowseLink = styled(Link)`
+text-decoration: none;
+color:  #149295;
+&:hover{
+  color: black;
+}
+`
+const Gray = styled.p`
+color: gray;
+`
+const Blue = styled.span`
+color:  #149295;
+`
 
 const Modal = styled.div`
   position: fixed;

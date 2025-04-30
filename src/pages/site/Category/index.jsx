@@ -11,6 +11,7 @@ import CategoriesSidebar from "@components/site/Blog/CategoriesSideBar";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { WishlistContext } from "@Context/wishlistContext";
+import CategoryProductCard from "@components/site/Category/CategoryCard";
 
 const Category = () => {
   const [showFilter, setShowFilter] = useState(false);
@@ -18,7 +19,6 @@ const Category = () => {
   const [priceRange, setPriceRange] = useState({ min: null, max: null });
   const { data: products } = useGet("products", ENDPOINTS.products);
   const { data: categories } = useGet("products", ENDPOINTS.categories);
-  const { addToWishlist } = useContext(WishlistContext);
 
   const handleClearMinPrice = () => {
     setPriceRange((prev) => ({ ...prev, min: null }));
@@ -94,12 +94,11 @@ const Category = () => {
     setCurrentPage(1);
   }, [priceRange, sortOption]);
 
-  console.log(currentProducts);
-  
 
   return (
     <CategoryWrapper>
       <CategoryContent>
+      
         <CategoryHead>
           <div className="category-links">
             <ul>
@@ -149,6 +148,7 @@ const Category = () => {
                   ×
                 </ModalButton>
               </TransparentBackground>
+
               <SidebarFilter $isOpenModal={showFilter}>
                 {filterApplied && (
                   <ActiveFiltr>
@@ -194,31 +194,7 @@ const Category = () => {
           <CategoryCardsWrapper>
             <CategoryCards>
               {currentProducts?.map((item) => (
-                <CategoryCard>
-                  <CategoryCardHeadImage>
-                   <CategoryCardLink to={`/category/${item.id}`}>
-                   <img
-                      src="https://i0.wp.com/prosolution.ltd/wp-content/uploads/2023/10/Untitled-1-32-jpg.webp?zoom=2&resize=247%2C296&ssl=1"
-                      alt="notebook"
-                    />
-                   </CategoryCardLink>
-                    <div className="heartIcon" onClick={()=>addToWishlist(item)}>
-                      <CiHeart />
-                    </div>
-                  </CategoryCardHeadImage>
-
-                  <CategoryCardBody>
-                    <span>{item.category}</span>
-                   <Link to={`/category/${item.id}`}>
-                   <ProductName>{item.name}</ProductName>
-                   </Link>
-                    <PriceBox>
-                      <OldPrice>{item.price.original}</OldPrice>
-                      <NewPrice>{item.price.current}</NewPrice>
-                    </PriceBox>
-                    <ButtonLink to={`/category/${item.id}`}>Davamını oxu</ButtonLink>
-                  </CategoryCardBody>
-                </CategoryCard>
+              <CategoryProductCard key={item.id} item={item}/>
              
               ))}
             </CategoryCards>
@@ -253,6 +229,7 @@ const Category = () => {
               </PaginationWrapper>
             )}
           </CategoryCardsWrapper>
+
           <CategoryFilter>
             {filterApplied && (
               <ActiveFiltr>
@@ -292,7 +269,9 @@ const Category = () => {
               <CategoriesSidebar />
             </Categories>
           </CategoryFilter>
+
         </CategoryBody>
+        
       </CategoryContent>
     </CategoryWrapper>
   );
@@ -350,6 +329,7 @@ const CategoryHead = styled.div`
   justify-content: space-between;
   flex-wrap: wrap;
   align-items: center;
+  max-width: 93%;
   padding-bottom: 1rem;
   @media (max-width: 850px) {
     display: flex;
@@ -420,7 +400,6 @@ const CategorySelect = styled.div`
     outline: none;
   }
 `;
-
 const TransparentBackground = styled.div`
   visibility: ${({ $isOpenModal }) => ($isOpenModal ? "visible" : "hidden")};
   opacity: ${({ $isOpenModal }) => ($isOpenModal ? "0.6" : "0")};
@@ -447,22 +426,16 @@ const CategoryCardsWrapper = styled.div`
   flex-direction: column;
   justify-content: space-between;
 `;
-
 const CategoryCards = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
   gap: 30px;
   width: 100%;
-  @media (max-width: 950px) {
-    width: 100%;
-  }
-  @media (max-width: 850px) {
-    width: 100%;
+  @media (max-width: 1093px) {
     justify-content: center;
   }
 `;
-
 const ModalButton = styled.button`
   color: rgba(255, 255, 255, 0.51);
   position: absolute;
@@ -512,149 +485,6 @@ const SidebarFilter = styled.div`
     width: 100%;
   }
 `;
-
-const CategoryCard = styled.div`
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: #fff;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  width: 200px;
-
-  &:hover img {
-    transform: scale(1.1);
-  }
-  @media (max-width: 930px) {
-    width: 150px;
-  }
-`;
-
-const ProductName = styled.h5`
-  max-width: 100%;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 15px;
-  color: #149295;
-  margin: 10px 0;
-  font-weight: 500;
-  overflow: hidden;
-  &:hover {
-    color: black;
-  }
-`;
-
-const CategoryCardLink = styled(Link)``;
-const CategoryCardHeadImage = styled.div`
-  position: relative;
-  overflow: hidden;
-  padding-top: 10px;
-  img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-    @media (max-width: 930px) {
-      height: 130px;
-    }
-  }
-  @media (max-width: 900px) {
-    height: 140px;
-  }
-
-  .heartIcon {
-    position: absolute;
-    right: 10px;
-    top: 0px;
-    font-size: 24px;
-    color: gray;
-    background-color: transparent;
-    border: 1px solid gray;
-    border-radius: 50%;
-    padding: 5px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    @media (max-width: 930px) {
-      font-size: 18px;
-    }
-  }
-  .heartIcon:hover {
-    color: white;
-    background-color: #cc0000;
-  }
-  ${CategoryCard}:hover & .heartIcon {
-    opacity: 1;
-  }
-`;
-const CategoryCardBody = styled.div`
-  padding: 10px;
-  @media (max-width: 930px) {
-    line-height: 0.9;
-    padding: 5px;
-  }
-  span {
-    font-size: 13px;
-    color: gray;
-    opacity: 0.7;
-    @media (max-width: 930px) {
-      font-size: 10px;
-      font-weight: 600;
-    }
-  }
-
-  h5 {
-    @media (max-width: 850px) {
-      font-size: 12px;
-      font-weight: 600;
-    }
-  }
-
-`;
-const ButtonLink=styled(Link)`
- margin-top: 10px;
-    width: 65%;
-    background-color: #149295;
-    color: white;
-    border: none;
-    padding: 8px;
-    display: flex;
-    font-size: 14px;
-    font-family: inherit;
-    cursor: pointer;
-    &:hover {
-      background-color: rgb(16, 114, 116);
-    }
-    @media (max-width: 930px) {
-      padding: 5px;
-      width: 70%;
-      font-size: 12px;
-    }
-`
-const PriceBox = styled.div`
-  display: flex;
-  gap: 10px;
-  align-items: baseline;
-  margin: 8px 0;
-`;
-const OldPrice = styled.p`
-  text-decoration: line-through;
-  color: gray;
-  font-size: 14px;
-  @media (max-width: 930px) {
-    font-size: 11px;
-  }
-`;
-const NewPrice = styled.p`
-  color: black;
-  font-size: 16px;
-  font-weight: bold;
-  @media (max-width: 930px) {
-    font-size: 13px;
-  }
-`;
 const CategoryFilter = styled.div`
   width: 30%;
   @media (max-width: 850px) {
@@ -695,6 +525,9 @@ const Price = styled.div`
   }
 `;
 const Categories = styled.div``;
+
+
+
 const Processor = styled.div`
   padding-left: 20px;
   margin-bottom: 1rem;
@@ -725,8 +558,9 @@ const Processor = styled.div`
     font-size: 0.97em;
     padding: 5px 55px 5px 8px;
     outline: none;
-    option {
-      width: 100%;
+    option{
+ max-width: 280px !important;
+
     }
   }
 `;
@@ -752,3 +586,4 @@ const ResponsiveFilter = styled.div`
     font-size: 25px;
   }
 `;
+ 
