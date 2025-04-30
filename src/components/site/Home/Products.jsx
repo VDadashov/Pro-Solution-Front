@@ -16,8 +16,7 @@ import { LayoutContainer } from "@styles/common/LayoutContainer";
 const ProductSection = ({ sectionHeader }) => {
   const { data: categories } = useGet("categories", ENDPOINTS.categories);
   const { data: products } = useGet("products", ENDPOINTS.products);
-  console.log(products);
-  console.log(categories);
+
 
   const getCategoryName = (categoryId) => {
     const category = categories?.find((cat) => cat?.id == categoryId);

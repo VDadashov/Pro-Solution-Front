@@ -1,22 +1,3 @@
-// import axios from 'axios';
-
-// const MAIN_URL = "http://localhost:3000";
-
-// const axiosInstance = axios.create({
-//     baseURL: MAIN_URL,
-// });
-
-// axiosInstance.interceptors.request.use(
-//     (config) => {
-//         return config;
-//     },
-//     (error) => {
-//         return Promise.reject(error);
-//     }
-// );
-
-// export default axiosInstance;
-
 
 import axios from 'axios';
 import Cookies from "js-cookie";

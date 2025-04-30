@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import AuthorsWrapper from "@components/site/Blog/Authors";
+
 const CategoriesSidebar = ({}) => {
   // const [data,setData]=useState([])
 
@@ -74,7 +74,7 @@ const CategoriesSidebar = ({}) => {
 
   return (
     <SidebarWrapper>
-      <AuthorsWrapper />
+     
       <CategoriesHead>
         <h4>KATEQORİYALAR</h4>
         <hr />
@@ -102,7 +102,6 @@ const CategoriesSidebar = ({}) => {
 export default CategoriesSidebar;
 
 const SidebarWrapper = styled.div`
-  // width: 250px;
   padding: 20px;
   display:flex;
   align-items:flex-start;
@@ -134,7 +133,6 @@ const CategoriesSection = styled.div`
   flex-wrap: wrap;
   justify-content: flex-start;
   gap: 5px;
-  // background-color: red;
 
   height: 90%;
 `;
