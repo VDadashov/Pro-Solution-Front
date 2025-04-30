@@ -15,36 +15,40 @@ const AccountSideBar = () => {
       </ProfileContainer>
       <AccountNavigation>
         <NavigationItem style={{ border: "none" }}>
-          <AccountLink exact="true" to={"/myaccount/control_panel"} activeclassname="active">
+          <AccountLink
+            exact="true"
+            to={"/myaccount/control_panel"}
+            activeclassname="active"
+          >
             İdarə panelİ
           </AccountLink>
-          <VerticalLine />
+          {/* <VerticalLine /> */}
         </NavigationItem>
         <NavigationItem>
           <AccountLink to={`${myAccount}/orders`}>Sifarişlər</AccountLink>
-          <VerticalLine />
+          {/* <VerticalLine /> */}
         </NavigationItem>
         <NavigationItem>
           <AccountLink to={`${myAccount}/downloads`}>Endirmələr</AccountLink>
-          <VerticalLine />
+          {/* <VerticalLine /> */}
         </NavigationItem>
         <NavigationItem>
           <AccountLink to={`${myAccount}/address`}>Ünvanlar</AccountLink>
-          <VerticalLine />
+          {/* <VerticalLine /> */}
         </NavigationItem>
         <NavigationItem>
           <AccountLink to={`${myAccount}/account_details`}>
             Hesab Detalları
           </AccountLink>
-          <VerticalLine />
+          {/* <VerticalLine /> */}
         </NavigationItem>
         <NavigationItem>
           <AccountLink to={"/wishlist"}>Wishlist</AccountLink>
-          <VerticalLine />
+          {/* <VerticalLine /> */}
         </NavigationItem>
         <NavigationItem>
           <AccountLink to={"/"}>Çıxış</AccountLink>
-          <VerticalLine />
+          {/* <VerticalLine /> */}
         </NavigationItem>
       </AccountNavigation>
     </SideBarWrapper>
@@ -113,18 +117,23 @@ const AccountLink = styled(NavLink)`
   font-weight: bolder;
   color: hsla(0, 0%, 40%, 0.85);
   letter-spacing: 0.3px;
-  transition: all 0.3s;
   &.active {
     color: hsla(0, 0%, 7%, 0.85);
-    background-color: red;
+    border-right: 2px solid #149295;
   }
+  &:hover {
+    border-right: 2px solid #149295;
+  }
+  /* &:not(.active):hover {
+    border-right: 2px solid #149295 !important;
+  } */
 `;
 
-const VerticalLine = styled.span`
-  opacity: 0;
-  width: 2px;
-  background-color: #149295;
-  transition: all 0.3s;
-`;
+// const VerticalLine = styled.span`
+//   opacity: 0;
+//   width: 2px;
+//   background-color: #149295;
+//   transition: all 0.3s;
+// `;
 
 export default AccountSideBar;
