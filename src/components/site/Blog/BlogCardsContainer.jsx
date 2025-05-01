@@ -141,7 +141,9 @@ const BlogCardsContainer = styled.div`
     flex-direction:column;
     justify-content:space-between;
     min-height:130vh;
-    padding-top:30px;
+    padding:30px 0 30px 0;
+    background-color:red;
+    
 
 `;
 
