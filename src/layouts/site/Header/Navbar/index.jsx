@@ -4,7 +4,7 @@ import { FaBars } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 import { FaRegHeart } from "react-icons/fa";
-import { Link, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { WishlistContext } from "@Context/wishlistContext";
@@ -63,29 +63,29 @@ const Navbar = () => {
                 </CategoryListContainer>
               </ProductsLi>
               <StyledNavigationLi>
-                <Link to={"/category"}>
+                <NavbarLink to={"/category"} activeclassname="active">
                   <SeperaterLine>
                     <SeperatorLineBorder>Endirimlər</SeperatorLineBorder>
                   </SeperaterLine>
-                </Link>
+                </NavbarLink>
               </StyledNavigationLi>
               <StyledNavigationLi>
-                <Link to={"/blog"}>
+                <NavbarLink to={"/blog"} activeclassname="active">
                   <SeperaterLine>
                     <SeperatorLineBorder>Bloq</SeperatorLineBorder>
                   </SeperaterLine>
-                </Link>
+                </NavbarLink>
               </StyledNavigationLi>
               <StyledNavigationLi>
-                <Link to={"/contact"}>
+                <NavbarLink to={"/contact"} activeclassname="active">
                   <SeperaterLine>
                     <SeperatorLineBorder>Əlaqə</SeperatorLineBorder>
                   </SeperaterLine>
-                </Link>
+                </NavbarLink>
               </StyledNavigationLi>
             </HeaderNav>
           </NavLeft>
-          <Link to={"/wishlist"}>
+          <NavbarLink to={"/wishlist"} activeclassname="active">
             <WishlistButton>
               <WishlistText>
                 Seçilmişlər
@@ -97,12 +97,18 @@ const Navbar = () => {
               </WishlistText>
               <HeartIcon />
             </WishlistButton>
-          </Link>
+          </NavbarLink>
         </NavContainer>
       </StyledNavbarContainer>
     </NavigationBar>
   );
 };
+
+const NavbarLink = styled(NavLink)`
+  &.active {
+    color: #fff;
+  }
+`;
 
 const StyledNavbarContainer = styled.div`
   max-width: 1224px;

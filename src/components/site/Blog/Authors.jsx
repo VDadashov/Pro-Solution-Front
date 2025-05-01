@@ -67,12 +67,32 @@ export default Authors;
 const AuthorsWrapper = styled.div`
   min-height: 10vh;
   padding-bottom: 30px;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  h4 {
+    color: gray;
+    margin-bottom: 10px;
+  }
+  hr {
+    width: 50px;
+    border-top: 2px solid #ececec;
+  }
+  button {
+    background-color: transparent;
+    border: 1px solid #149295;
+    color: #149295;
+    height: 30px;
+    border-radius: 3px;
+    padding: 5px;
+  }
 `;
 const CategoriesHead = styled.div``;
 const AuthorsSection = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  gap: 3px;
+  gap: 5px;
   padding-top: 20px;
 `;
