@@ -106,7 +106,6 @@ const SidebarWrapper = styled.div`
   display:flex;
   align-items:flex-start;
   flex-direction:column;
-  
   h4 {
     color: gray;
     margin-bottom: 10px;
@@ -115,15 +114,19 @@ const SidebarWrapper = styled.div`
   width:50px;
   border-top: 2px solid #ececec
   }
-  button{
-  background-color:transparent;
-  border:1px solid  #149295;
-  color: #149295;
-  height:30px;
-  border-radius:3px;
-  padding:5px;
-  }
 
+  button {
+    background-color: transparent;
+    border: 1px solid #149295;
+    color: #149295;
+    border-radius: 3px;
+    padding: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    &:hover {
+      background-color: #149295;
+      color: #fff;
+    }
 
   }
 `;
@@ -141,3 +144,4 @@ const CategoriesHead = styled.div`
   flex-shrink: 0;
   padding-bottom: 30px;
 `;
+
