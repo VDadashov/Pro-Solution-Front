@@ -6,15 +6,16 @@ import styled from "styled-components";
 const LoginForm = () => {
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
+      userName: "",
       email: "",
+      password: "",
     },
     validationSchema: Yup.object({
       userName: Yup.string()
         .max(20, "Must be 20 characters or less")
         .required("Required"),
       email: Yup.string().email("Invalid email address").required("Required"),
+      password: Yup.string().required("Required"),
     }),
     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
@@ -22,20 +23,34 @@ const LoginForm = () => {
   });
   return (
     <>
-      <StyledForm>
+      <StyledForm onSubmit={formik.handleSubmit}>
         <StyledFormParagraph>
           <StyledLabel>İstifadəçi adı və ya e-poçt ünvanı *</StyledLabel>
-          <StyledInput />
+          <StyledInput
+            id="userName"
+            name="userName"
+            type="text"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.userName}
+          />
         </StyledFormParagraph>
         <StyledFormParagraph>
           <StyledLabel for="password">Parol *</StyledLabel>
-          <StyledInput id="password" name="password" />
+          <StyledInput
+            id="password"
+            name="password"
+            type="password"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.password}
+          />
         </StyledFormParagraph>
         <RememberMe>
           <input type="checkbox" />
           <RememberMeSpan>Məni unutma</RememberMeSpan>
         </RememberMe>
-        <StyledButton>Giriş</StyledButton>
+        <StyledButton type="submit">Giriş</StyledButton>
         <ForgetPassword href="https://prosolution.ltd/my-account/lost-password/">
           Parolunuzu unutdunuzmu?
         </ForgetPassword>
