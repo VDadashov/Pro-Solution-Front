@@ -61,7 +61,6 @@ const PriceFilter = ({ onChange, onSubmit }) => {
 export default PriceFilter
 
 const Wrapper = styled.div`
-  /* width: 100%; */
   max-width: 280px;
   font-family: sans-serif;
 `;
@@ -81,7 +80,7 @@ const Track = styled.div`
   height: 4px;
   background: #aaa;
   border-radius: 2px;
-  z-index: 1;
+  /* z-index: 1; */
 `;
 
 const Thumb = styled.span`
@@ -92,7 +91,7 @@ const Thumb = styled.span`
   background: #444;
   border: 2px solid white;
   border-radius: 50%;
-  z-index: 2;
+  /* z-index: 2; */
   transform: translateX(-50%);
 `;
 

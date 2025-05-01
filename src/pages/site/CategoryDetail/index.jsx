@@ -109,7 +109,8 @@ const CategoryDetail = () => {
               ))}
             </ThumbnailList>
             <MainImageWrapper>
-              <MainImage src={images[selectedIndex]} />
+              <MainImage  src={images[selectedIndex]}
+               />
               <HoverIcons>
                 <ArrowLeft onClick={prevImage}>
                   <FaChevronLeft />
@@ -130,8 +131,6 @@ const CategoryDetail = () => {
                 >
                   <CiHeart />
                 </LikeIcon>
-
-
               </HoverIcons>
               <ZoomIcon onClick={() => setIsModalOpen(true)}>
                 <MdOutlineZoomOutMap />
@@ -170,7 +169,9 @@ const CategoryDetail = () => {
                     transition: "transform 0.3s ease",
                     cursor: isZoomed ? "zoom-out" : "zoom-in",
                   }}
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={(e) =>{e.stopPropagation();
+                    setIsZoomed(!isZoomed)
+                  } }
                 />
                 <ModalBtn onClick={(e) => e.stopPropagation()}>
                   <CloseBtn
@@ -341,7 +342,6 @@ const Nav = styled.ul`
     font-size: 1.15em;
   }
 `;
-
 const SwitchProduct = styled.ul`
   display: flex;
   gap: 5px;
@@ -676,7 +676,6 @@ color: gray;
 const Blue = styled.span`
 color:  #149295;
 `
-
 const Modal = styled.div`
   position: fixed;
   inset: 0;

@@ -110,15 +110,10 @@ const CategoriesSidebar = ({  }) => {
 export default CategoriesSidebar;
 
 const SidebarWrapper = styled.div`
-
-  width: 250px;
   padding: 20px;
   display:flex;
   align-items:flex-start;
   flex-direction:column;
-
-  height: 100%;
-
   h4 {
     color: gray;
     margin-bottom: 10px;
@@ -127,7 +122,6 @@ const SidebarWrapper = styled.div`
   width:50px;
   border-top: 2px solid #ececec
   }
-
   button {
     background-color: transparent;
     border: 1px solid #149295;
@@ -148,7 +142,6 @@ const CategoriesSection = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-
   gap: 5px;
   height: 90%;
 
@@ -160,4 +153,3 @@ const CategoriesHead = styled.div`
   padding-bottom: 30px;
 `;
 
-// const

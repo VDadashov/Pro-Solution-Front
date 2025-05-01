@@ -68,7 +68,7 @@ export default ProcessorSelect;
 const Container = styled.div`
   padding-left: 20px;
   font-family: Arial, sans-serif;
-  max-width: 280px;
+  max-width: 300px;
 
   h3 {
     font-size: 1em;

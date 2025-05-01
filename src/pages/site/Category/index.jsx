@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { RiEqualizerLine } from "react-icons/ri";
-import { CiHeart } from "react-icons/ci";
-import { getData } from "../../../utils/api/requests";
 import PriceFilter from "@components/site/Category/FilterPrice";
 import ActiveFilter from "@components/site/Category/ActiveFilter";
 import ProcessorSelect from "@components/site/Category/ProcessorSelect";
@@ -98,7 +96,7 @@ const Category = () => {
   return (
     <CategoryWrapper>
       <CategoryContent>
-      
+
         <CategoryHead>
           <div className="category-links">
             <ul>
@@ -194,8 +192,8 @@ const Category = () => {
           <CategoryCardsWrapper>
             <CategoryCards>
               {currentProducts?.map((item) => (
-              <CategoryProductCard key={item.id} item={item}/>
-             
+                <CategoryProductCard key={item.id} item={item} />
+
               ))}
             </CategoryCards>
 
@@ -269,9 +267,7 @@ const Category = () => {
               <CategoriesSidebar />
             </Categories>
           </CategoryFilter>
-
         </CategoryBody>
-        
       </CategoryContent>
     </CategoryWrapper>
   );
@@ -525,14 +521,11 @@ const Price = styled.div`
   }
 `;
 const Categories = styled.div``;
-
-
-
 const Processor = styled.div`
   padding-left: 20px;
   margin-bottom: 1rem;
   line-height: 2.5;
-  max-width: 280px;
+  max-width: 300px;
   h3 {
     font-size: 1em;
     font-weight: 600;
@@ -586,4 +579,3 @@ const ResponsiveFilter = styled.div`
     font-size: 25px;
   }
 `;
- 
