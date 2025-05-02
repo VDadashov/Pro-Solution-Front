@@ -9,13 +9,14 @@ import CategoriesSidebar from "@components/site/Blog/CategoriesSideBar";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { WishlistContext } from "@Context/wishlistContext";
-import CategoryProductCard from "@components/site/Category/CategoryCard";
+import CategoryProductCard, { CategoryProductCardSkelaton } from "@components/site/Category/CategoryCard";
 
 const Category = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [sortOption, setSortOption] = useState("Standart Sıralama");
   const [priceRange, setPriceRange] = useState({ min: null, max: null });
-  const { data: products } = useGet("products", ENDPOINTS.products);
+
+  const { data: products ,isLoading } = useGet("products", ENDPOINTS.products);
   const { data: categories } = useGet("products", ENDPOINTS.categories);
 
   const handleClearMinPrice = () => {
@@ -192,8 +193,8 @@ const Category = () => {
           <CategoryCardsWrapper>
             <CategoryCards>
               {currentProducts?.map((item) => (
-                <CategoryProductCard key={item.id} item={item} />
 
+                isLoading ?  <CategoryProductCardSkelaton/> : <CategoryProductCard key={item.id} item={item} />
               ))}
             </CategoryCards>
 

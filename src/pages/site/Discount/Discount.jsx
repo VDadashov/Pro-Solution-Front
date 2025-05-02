@@ -1,12 +1,12 @@
 import CategoriesSidebar from '@components/site/Blog/CategoriesSideBar';
-import CategoryProductCard from '@components/site/Category/CategoryCard'
+import CategoryProductCard, { CategoryProductCardSkelaton } from '@components/site/Category/CategoryCard'
 import { ENDPOINTS } from '@utils/constants/Endpoints';
 import { useGet } from '@utils/hooks/useCustomQuery';
 import React, { useState } from 'react'
 import styled from 'styled-components';
 
 const Discount = () => {
-      const { data: products } = useGet("products", ENDPOINTS.products);
+ const { data: products,isLoading } = useGet("products", ENDPOINTS.products);
 
   const [currentPage, setCurrentPage] = useState(1);
    const postsPerPage = 10;
@@ -26,9 +26,9 @@ const Discount = () => {
     <CategoryCardsWrapper>
             <CategoryCards>
               {currentPosts?.map((item) => (
-              <CategoryProductCard key={item.id} item={item}/>
-             
-              ))}
+
+isLoading ?  <CategoryProductCardSkelaton/> : <CategoryProductCard key={item.id} item={item} />
+))}
             </CategoryCards>
 
             {totalPages > 1 && (
