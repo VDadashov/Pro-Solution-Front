@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { RiEqualizerLine } from "react-icons/ri";
@@ -8,7 +8,6 @@ import ProcessorSelect from "@components/site/Category/ProcessorSelect";
 import CategoriesSidebar from "@components/site/Blog/CategoriesSideBar";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
-import { WishlistContext } from "@Context/wishlistContext";
 import CategoryProductCard, { CategoryProductCardSkelaton } from "@components/site/Category/CategoryCard";
 
 const Category = () => {
