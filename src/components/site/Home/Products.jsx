@@ -13,7 +13,7 @@ import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
 
-const ProductSection = ({ sectionHeader }) => {
+const ProductSection = ({ sectionHeader, display }) => {
   const { data: categories } = useGet("categories", ENDPOINTS.categories);
   const { data: products } = useGet("products", ENDPOINTS.products);
 
@@ -27,8 +27,8 @@ const ProductSection = ({ sectionHeader }) => {
     <SectionContainer>
       <LayoutContainer>
         <ProductsContainer>
-          <ContainerHeader>
-            <ContainerSpan>{sectionHeader}</ContainerSpan>
+          <ContainerHeader style={{ display: display }}>
+            <ContainerSpan >{sectionHeader}</ContainerSpan>
           </ContainerHeader>
           <ProductsMenu>
             <Swiper

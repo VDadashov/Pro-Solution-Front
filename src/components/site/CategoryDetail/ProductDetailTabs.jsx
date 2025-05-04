@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { IoStar } from "react-icons/io5";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import ProductSection from '../Home/Products';
 const ProductDetailTabs = () => {
   const [activeTab, setActiveTab] = useState('info');
   const [rating, setRating] = useState(0);
@@ -19,26 +20,15 @@ const ProductDetailTabs = () => {
     <Container>
       <Tabs>
         <TabButton active={activeTab === 'info'} onClick={() => setActiveTab('info')}>
-          ƏLAVƏ MƏLUMAT
+        Oxşar Məhsullar
         </TabButton>
         <TabButton active={activeTab === 'reviews'} onClick={() => setActiveTab('reviews')}>
           RƏYLƏR (0)
         </TabButton>
       </Tabs>
       {activeTab === 'info' && (
-        <InfoTable>
-          <tbody>
-            <tr><th>PROSESSOR - INTEL</th><td>Intel® Core™ i3-1215U</td></tr>
-            <tr><th>RAM - SDDDR4</th><td>8 GB</td></tr>
-            <tr><th>SSD M.2</th><td>512 GB</td></tr>
-            <tr><th>EKRAN</th><td>15.6″ ▪ FHD (1920x1080p) ▪ IPS</td></tr>
-            <tr><th>VİDEO KART - INTEL</th><td>Intel® UHD Graphics</td></tr>
-            <tr><th>ƏMƏLİYYAT SİSTEMİ</th><td>FreeDOS</td></tr>
-            <tr><th>ÇƏKİSİ</th><td>1.70 kg</td></tr>
-            <tr><th>WEB-KAMERA</th><td>Var</td></tr>
-            <tr><th>ZƏMANƏT</th><td>1 – il</td></tr>
-          </tbody>
-        </InfoTable>
+          <ProductSection  display={"none"}/>
+
       )}
       {activeTab === 'reviews' && (
         <>
@@ -140,7 +130,7 @@ align-items: flex-start;
 const TabButton = styled.button`
   background: none;
   border: none;
-  font-size: 13px;
+  font-size: 15px;
   padding: 10px 20px;
   font-weight: bold;
   cursor: pointer;
@@ -149,31 +139,6 @@ const TabButton = styled.button`
   @media (max-width: 550px) {
     width: 100%;
     text-align: left;
-  }
-`;
-
-const InfoTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  font-family: sans-serif;
-
-  th {
-    border-bottom: 1px solid #e0e0e0; 
-    text-align: left;
-    font-weight: bold;
-    padding: 20px 10px;
-    letter-spacing: .05em;
-    line-height: 1.05;
-    text-transform: uppercase;
-    color: #777777;
-    width: 40%;
-  }
-
-  td {
-
-    border-bottom: 1px solid #e0e0e0; 
-    padding: 10px;
-    color: #666666;
   }
 `;
 

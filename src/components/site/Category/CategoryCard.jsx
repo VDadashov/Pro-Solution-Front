@@ -4,12 +4,68 @@ import { useContext } from "react";
 import { CiHeart } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+const pulse = keyframes`
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
+
+const LoadingSkeleton = styled(Skeleton)`
+  width: 100%;
+  animation: ${pulse} 1.5s infinite ease-in-out;
+`;
+
+
+export const CategoryProductCardSkelaton = () => {
+  return (
+
+    <>
+      <CategoryCard>
+        <CategoryCardHeadImage>
+          <LoadingSkeleton height={"100%"} />
+
+        </CategoryCardHeadImage>
+
+        <CategoryCardBody>
+          <LoadingSkeleton height={"10"} width={"40%"} />
+
+
+          <ProductName>
+
+            <LoadingSkeleton height={"10"} width={"60%"} />
+
+          </ProductName>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <PriceBox>
+              <LoadingSkeleton height={"10"} width="40px" />
+            </PriceBox> <PriceBox>
+              <LoadingSkeleton height={"10"} width="40px" />
+            </PriceBox>
+          </div>
+          <LoadingSkeleton height={"35px"} width={"100px"} />
+
+        </CategoryCardBody>
+      </CategoryCard>
+
+    </>
+  )
+}
+
 
 const CategoryProductCard = ({ item }) => {
   const { wishlist, addToWishlist } = useContext(WishlistContext);
   const [liked, setLiked] = useState(false);
-  
+
   useEffect(() => {
     const isLiked = wishlist.some(x => x.id === item.id);
     setLiked(isLiked);
@@ -27,15 +83,14 @@ const CategoryProductCard = ({ item }) => {
         </CategoryCardLink>
         <div className="heartIcon"
           onClick={() => {
+            addToWishlist(item);
             if (!liked) {
-              setLiked(true);
-              addToWishlist(item);
               toast.success("Product added to wishlist!");
             } else {
-              toast.info("This product is already in your wishlist.");
+              toast.error("Product removed from wishlist.");
             }
+            setLiked(!liked);
           }}
-
         >
           <CiHeart />
         </div>
@@ -60,12 +115,16 @@ export default CategoryProductCard
 
 const CategoryCard = styled.div`
   border-radius: 8px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  padding: 10px;
   overflow: hidden;
   background-color: #fff;
   transition: all 0.3s ease;
   cursor: pointer;
   width: 200px;
-
+&:hover{
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
   &:hover img {
     transform: scale(1.1);
   }
@@ -95,9 +154,10 @@ const CategoryCardHeadImage = styled.div`
   position: relative;
   overflow: hidden;
   padding-top: 10px;
+  height: 180px;
   img {
     width: 100%;
-    height: 180px;
+    height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
     @media (max-width: 1100px) {
@@ -147,14 +207,14 @@ const CategoryCardBody = styled.div`
     font-size: 13px;
     color: gray;
     opacity: 0.7;
-    @media (max-width: 930px) {
+    @media (max-width: 997px) {
       font-size: 10px;
       font-weight: 600;
     }
   }
 
   h5 {
-    @media (max-width: 850px) {
+    @media (max-width: 997px) {
       font-size: 12px;
       font-weight: 600;
     }
@@ -175,7 +235,7 @@ const ButtonLink = styled(Link)`
     &:hover {
       background-color: rgb(16, 114, 116);
     }
-    @media (max-width: 930px) {
+    @media (max-width:1095px) {
       padding: 5px;
       width: 70%;
       font-size: 12px;
@@ -196,7 +256,7 @@ const OldPrice = styled.p`
   text-decoration: line-through;
   color: gray;
   font-size: 14px;
-  @media (max-width: 930px) {
+  @media (max-width: 1095px) {
     font-size: 11px;
   }
 `;
@@ -204,7 +264,7 @@ const NewPrice = styled.p`
   color: black;
   font-size: 16px;
   font-weight: bold;
-  @media (max-width: 930px) {
+  @media (max-width: 1095px) {
     font-size: 13px;
   }
 `;
