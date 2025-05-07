@@ -20,6 +20,8 @@ import { ENDPOINTS } from "@utils/constants/Endpoints";
 import ProductDetailTabs from "@components/site/CategoryDetail/ProductDetailTabs";
 import ProductSection from "@components/site/Home/Products";
 import { WishlistContext } from "@Context/wishlistContext";
+import { FaHeart } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
 const images = [
   "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2023/12/3-4-jpg.webp?resize=768%2C768&ssl=1",
   "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2023/12/1-4-jpg.webp?resize=768%2C768&ssl=1",
@@ -34,10 +36,20 @@ const CategoryDetail = () => {
   const [liked, setLiked] = useState(false);
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
-  const { addToWishlist } = useContext(WishlistContext);
+  // const { addToWishlist } = useContext(WishlistContext);
+  const { wishlist, addToWishlist } = useContext(WishlistContext);
+
+  
+
 
   const { data: product } = useGetOne("products", ENDPOINTS.products, id);
   const { data: categories } = useGet("category", ENDPOINTS.categories);
+  useEffect(() => {
+    if (product) {
+      const isLiked = wishlist.some(item => item.id === product.id);
+      setLiked(isLiked);
+    }
+  }, [wishlist, product]);
 
   const getCategoryName = (categoryId) => {
     const category = categories?.find((cat) => cat.id == categoryId);
@@ -85,6 +97,7 @@ const CategoryDetail = () => {
         </DetailHead>
         <DetailBody>
           <DetailCard>
+
             <ThumbnailList>
               {images.map((img, i) => (
                 <Thumbnail
@@ -95,8 +108,10 @@ const CategoryDetail = () => {
                 />
               ))}
             </ThumbnailList>
+
             <MainImageWrapper>
-              <MainImage src={images[selectedIndex]} />
+              <MainImage  src={images[selectedIndex]}
+               />
               <HoverIcons>
                 <ArrowLeft onClick={prevImage}>
                   <FaChevronLeft />
@@ -104,11 +119,21 @@ const CategoryDetail = () => {
                 <ArrowRight onClick={nextImage}>
                   <FaChevronRight />
                 </ArrowRight>
+                
                 <LikeIcon
-                  onClick={(() => setLiked(!liked), () => addToWishlist(product))}
-                >
-                  <CiHeart />
-                </LikeIcon>
+  onClick={() => {
+    addToWishlist(product);
+    if (!liked) {
+      toast.success("Product added to wishlist!");
+    } else {
+      toast.error("Product removed from wishlist.");
+    }
+    setLiked(!liked);
+  }}
+>
+  <CiHeart />
+</LikeIcon>
+
               </HoverIcons>
               <ZoomIcon onClick={() => setIsModalOpen(true)}>
                 <MdOutlineZoomOutMap />
@@ -147,7 +172,9 @@ const CategoryDetail = () => {
                     transition: "transform 0.3s ease",
                     cursor: isZoomed ? "zoom-out" : "zoom-in",
                   }}
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={(e) =>{e.stopPropagation();
+                    setIsZoomed(!isZoomed)
+                  } }
                 />
                 <ModalBtn onClick={(e) => e.stopPropagation()}>
                   <CloseBtn
@@ -214,14 +241,29 @@ const CategoryDetail = () => {
                   <span>Zəmanət:</span>
                   <span>AMD Ryzen 3™ 5300U</span>
                 </li>
-                <WishContainer>
-                  <WishIcon liked={liked}>
-                    <FaRegHeart />
+
+                <WishContainer onClick={() => {
+                  setLiked(true);
+                  addToWishlist(product);
+                }}>
+                  <WishIcon>
+                    {liked ? <FaHeart style={{ color: "black" }} /> : <FaRegHeart />}
                   </WishIcon>
+
                   <WishText>
-                    {liked ? "Product added" : "Add to wishlist"}
+                    {liked ? (
+                      <>
+                        <Gray>Product added</Gray>
+                      <BrowseLink to="/wishlist" onClick={(e) => e.stopPropagation()}>
+  Browse wishlist
+</BrowseLink>
+                      </>
+                    ) : (
+                      <Blue>Add to wishlist</Blue>
+                    )}
                   </WishText>
                 </WishContainer>
+
               </DetailList>
               <DetailFoot>
                 <p>
@@ -261,9 +303,6 @@ const CategoryDetail = () => {
       </Wrapper>
 
       <ProductDetailTabs />
-      <SimilarProducts>
-        <ProductSection sectionHeader={"Oxşar məhsullar"} />
-      </SimilarProducts>
     </DetailWrapper>
   );
 };
@@ -302,7 +341,6 @@ const Nav = styled.ul`
     font-size: 1.15em;
   }
 `;
-
 const SwitchProduct = styled.ul`
   display: flex;
   gap: 5px;
@@ -392,24 +430,6 @@ const DetailList = styled.ul`
     border-bottom: 1px solid #ececec;
     text-align: left;
   }
-
-  /* .wish{
-
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-bottom: 0px;
-  i{
-    font-size: 22px;
-    color: black;
-
-  }
-  span{
-    font-size: 16px;
-    color: #149295;
-  }
-} */
 `;
 const DetailFoot = styled.div`
   p {
@@ -514,6 +534,7 @@ const WishContainer = styled.li`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
   padding-bottom: 0px;
   gap: 10px;
 `;
@@ -524,20 +545,54 @@ const WishIcon = styled.i`
 const WishText = styled.span`
   font-size: 16px;
   color: #149295;
+  &:hover{
+    color:black;
+  }
 `;
+// const ThumbnailList = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   gap: 10px;
+//   max-height: 450px;
+//   overflow-y: auto;
+//   @media (max-width: 851px) {
+//     flex-direction: row;
+//   }
+// `;
 const ThumbnailList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
   max-height: 450px;
   overflow-y: auto;
+  padding-right: 7px;
+  &::-webkit-scrollbar {
+    width: 2px; 
+  }
+
+  &::-webkit-scrollbar-track {
+    background:rgba(240, 240, 240, 0.8); 
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color:rgba(204, 204, 204, 0.83);
+    border-radius: 3px;
+  }
+
   @media (max-width: 851px) {
     flex-direction: row;
+    overflow-y: hidden;
+    overflow-x: auto;
+
+    &::-webkit-scrollbar {
+      height: 6px; 
+    }
   }
 `;
+
 const Thumbnail = styled.img`
-  width: 70px;
-  height: 70px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
   border: 1px solid ${({ active }) => (active ? " #666666" : "none")};
   cursor: pointer;
@@ -630,15 +685,27 @@ const LikeIcon = styled.div`
   justify-content: center;
   align-items: center;
   &:hover {
-    background-color: #cc0000;
+    background-color: #b20000;
     color: white;
-    border-color: #cc0000;
+    border-color: #b20000;
   }
   @media (max-width: 951px) {
     right: 60px;
   }
 `;
-
+const BrowseLink = styled(Link)`
+text-decoration: none;
+color:  #149295;
+&:hover{
+  color: black;
+}
+`
+const Gray = styled.p`
+color: gray;
+`
+const Blue = styled.span`
+color:  #149295;
+`
 const Modal = styled.div`
   position: fixed;
   inset: 0;
@@ -692,10 +759,4 @@ const ModalImage = styled.img`
   max-width: 90%;
   max-height: 90%;
 `;
-const SimilarProducts = styled.div`
-  h2 {
-    padding-bottom: 15px;
-    color: #149295;
-    font-size: 20px;
-  }
-`;
+

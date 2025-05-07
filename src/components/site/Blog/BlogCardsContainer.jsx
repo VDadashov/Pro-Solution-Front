@@ -141,7 +141,7 @@ const BlogCardsContainer = styled.div`
     flex-direction:column;
     justify-content:space-between;
     min-height:130vh;
-    padding-top:30px;
+    padding:30px 0 30px 0;
 
 `;
 
@@ -197,9 +197,8 @@ const BlogCard = styled.div`
   width: 90%;
   justify-content: space-between;
   align-items: center;
-
   padding-left: 50px;
-  padding-right:50px;
+  padding-right: 50px;
 
   &:hover ${BlogDate} {
     background-color: #149295;
@@ -209,6 +208,10 @@ const BlogCard = styled.div`
     flex-direction: column;
     padding: 0;
     width: 100%;
+  }
+  @media (max-width: 650px) {
+    // gap: 10px;
+    width:100%;
   }
 `;
 

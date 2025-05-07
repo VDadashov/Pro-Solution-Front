@@ -1,11 +1,8 @@
-
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import AuthorsWrapper from "@components/site/Blog/Authors";
 
-const CategoriesSidebar = ({  }) => {
+const CategoriesSidebar = ({}) => {
   // const [data,setData]=useState([])
-
 
   const categories = [
     { name: "Acer", count: 17 },
@@ -45,15 +42,7 @@ const CategoriesSidebar = ({  }) => {
     { name: "Sviçlər", count: 19 },
     { name: "Telefonlar", count: 52 },
     { name: "TV", count: 9 },
-    { name: "Xarici HDD", count: 13 }, // Added
-    { name: "Yaddaş Daşıyıcıları", count: 35 }, // Added
-    { name: "Zavod istehsalı", count: 12 }, // Added
-    { name: "Çantalar", count: 14 }, // Added
-    { name: "Şəbəkə adapterləri", count: 14 }, // Added
-    { name: "Şəbəkə Avadanlıqları", count: 50 }, // Added
   ];
-
-
 
   // const [products, setProducts]= useState([])
   // const [categories, setCategories]= useState([])
@@ -73,7 +62,7 @@ const CategoriesSidebar = ({  }) => {
   //       setCategories(cat)
   //     })
   //   },[])
-    
+
   //  const productCount = products.filter(
   //    (product) => product.categoryId === categories.id
   //  ).length;
@@ -83,23 +72,26 @@ const CategoriesSidebar = ({  }) => {
   //    ...new Set(products.map((product) => product.category)),
   //  ];
 
-   
-
-
-
-
   return (
     <SidebarWrapper>
-      <AuthorsWrapper/>
+     
       <CategoriesHead>
         <h4>KATEQORİYALAR</h4>
         <hr />
       </CategoriesHead>
       <CategoriesSection>
         {categories.map((category, index) => (
-          
           <React.Fragment key={index}>
-            <button>{category.name} ({category.count})</button>
+            <button>{category.name}</button>
+            {/* {category.subcategories?.map((sub, subIndex) => (
+              <button key={`${index}-${subIndex}`}>{sub.name}</button>
+            ))} */}
+            {/* {
+              products.map((pro, proindex)=>(
+               
+                <button key={proindex}>{pro.category}({productCount})</button>
+              ))
+            } */}
           </React.Fragment>
         ))}
       </CategoriesSection>
@@ -110,15 +102,10 @@ const CategoriesSidebar = ({  }) => {
 export default CategoriesSidebar;
 
 const SidebarWrapper = styled.div`
-
-  width: 250px;
   padding: 20px;
   display:flex;
   align-items:flex-start;
   flex-direction:column;
-
-  height: 100%;
-
   h4 {
     color: gray;
     margin-bottom: 10px;
@@ -148,11 +135,9 @@ const CategoriesSection = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-
   gap: 5px;
+
   height: 90%;
-
-
 `;
 
 const CategoriesHead = styled.div`
@@ -160,4 +145,3 @@ const CategoriesHead = styled.div`
   padding-bottom: 30px;
 `;
 
-// const

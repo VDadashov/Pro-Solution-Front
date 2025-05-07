@@ -1,22 +1,14 @@
 import React from "react";
-import * as Yup from 'yup';
+import * as Yup from "yup";
 import { useFormik } from "formik";
 import styled from "styled-components";
 
 const RegisterForm = () => {
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
       email: "",
     },
     validationSchema: Yup.object({
-      firstName: Yup.string()
-        .max(15, "Must be 15 characters or less")
-        .required("Required"),
-      lastName: Yup.string()
-        .max(20, "Must be 20 characters or less")
-        .required("Required"),
       email: Yup.string().email("Invalid email address").required("Required"),
     }),
     onSubmit: (values) => {
@@ -25,10 +17,17 @@ const RegisterForm = () => {
   });
   return (
     <>
-      <StyledForm>
+      <StyledForm onSubmit={formik.handleSubmit}>
         <StyledFormParagraph>
-          <StyledLabel for="password">E-poçt ünvanı *</StyledLabel>
-          <StyledInput name="password" />
+          <StyledLabel for="email">E-poçt ünvanı *</StyledLabel>
+          <StyledInput
+            id="email"
+            name="email"
+            type="email"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.email}
+          />
         </StyledFormParagraph>
         <ThickerP>
           A link to set a new password will be sent to your email address.
@@ -39,7 +38,7 @@ const RegisterForm = () => {
           described in our
           <ParagraphSpan> gizlilik siyasəti.</ParagraphSpan>
         </ThinnerP>
-        <StyledButton>Qeydiyyat</StyledButton>
+        <StyledButton type="submit">Qeydiyyat</StyledButton>
       </StyledForm>
     </>
   );

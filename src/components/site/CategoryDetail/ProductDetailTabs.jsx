@@ -3,61 +3,48 @@ import styled from 'styled-components';
 import { IoStar } from "react-icons/io5";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import ProductSection from '../Home/Products';
 const ProductDetailTabs = () => {
-    const [activeTab, setActiveTab] = useState('info');
-    const [rating, setRating] = useState(0);
+  const [activeTab, setActiveTab] = useState('info');
+  const [rating, setRating] = useState(0);
 
-    const ReviewSchema = Yup.object().shape({
-      review: Yup.string()
-        .max(500, 'Ən çox 500 hərf yaza bilərsiniz')
-        .required('Rəy yazmaq məcburidir'),
-      name: Yup.string().required('Ad tələb olunur'),
-      email: Yup.string().email('Düzgün e-poçt deyil').required('E-poçt tələb olunur'),
-      save: Yup.boolean()
-    });
-    return (
-      <Container>
-      
-        <Tabs>
-          <TabButton active={activeTab === 'info'} onClick={() => setActiveTab('info')}>
-            ƏLAVƏ MƏLUMAT
-          </TabButton>
-          <TabButton active={activeTab === 'reviews'} onClick={() => setActiveTab('reviews')}>
-            RƏYLƏR (0)
-          </TabButton>
-        </Tabs>
-  
-        {activeTab === 'info' && (
-          <InfoTable>
-            <tbody>
-              <tr><th>PROSESSOR - INTEL</th><td>Intel® Core™ i3-1215U</td></tr>
-              <tr><th>RAM - SDDDR4</th><td>8 GB</td></tr>
-              <tr><th>SSD M.2</th><td>512 GB</td></tr>
-              <tr><th>EKRAN</th><td>15.6″ ▪ FHD (1920x1080p) ▪ IPS</td></tr>
-              <tr><th>VİDEO KART - INTEL</th><td>Intel® UHD Graphics</td></tr>
-              <tr><th>ƏMƏLİYYAT SİSTEMİ</th><td>FreeDOS</td></tr>
-              <tr><th>ÇƏKİSİ</th><td>1.70 kg</td></tr>
-              <tr><th>WEB-KAMERA</th><td>Var</td></tr>
-              <tr><th>ZƏMANƏT</th><td>1 – il</td></tr>
-            </tbody>
-          </InfoTable>
-        )}
-        {activeTab === 'reviews' && (
-  <>
-    <Review>
-      <h2>Rəylər</h2>
-      <p>Hələ ki, rəy yoxdur.</p>
-    </Review>
+  const ReviewSchema = Yup.object().shape({
+    review: Yup.string()
+      .max(500, 'Ən çox 500 hərf yaza bilərsiniz')
+      .required('Rəy yazmaq məcburidir'),
+    name: Yup.string().required('Ad tələb olunur'),
+    email: Yup.string().email('Düzgün e-poçt deyil').required('E-poçt tələb olunur'),
+    save: Yup.boolean()
+  });
+  return (
+    <Container>
+      <Tabs>
+        <TabButton active={activeTab === 'info'} onClick={() => setActiveTab('info')}>
+        Oxşar Məhsullar
+        </TabButton>
+        <TabButton active={activeTab === 'reviews'} onClick={() => setActiveTab('reviews')}>
+          RƏYLƏR (0)
+        </TabButton>
+      </Tabs>
+      {activeTab === 'info' && (
+          <ProductSection  display={"none"}/>
 
-    <Formik
-      initialValues={{
-        review: '',
-        name: '',
-        email: '',
-        save: false
-      }}
-      validationSchema={ReviewSchema}
-      onSubmit={(values, actions) => {
+      )}
+      {activeTab === 'reviews' && (
+        <>
+          <Review>
+            <h2>Rəylər</h2>
+            <p>Hələ ki, rəy yoxdur.</p>
+          </Review>
+          <Formik
+            initialValues={{
+              review: '',
+              name: '',
+              email: '',
+              save: false
+            }}
+            validationSchema={ReviewSchema}
+            onSubmit={(values, actions) => {
               const formData = {
                 ...values,
                 rating: rating
@@ -66,62 +53,62 @@ const ProductDetailTabs = () => {
               actions.resetForm();
               setRating(0);
             }}
-    >
-      {({ handleChange, handleBlur, values }) => (
-        <ReviewForm as={Form}>
-          <h3>Be the first to review “Acer Aspire 3 A315-59 Slim (NX.K6SER.002-N)”</h3>
+          >
+            {() => (
+              <ReviewForm as={Form}>
+                <h3>Be the first to review “Acer Aspire 3 A315-59 Slim (NX.K6SER.002-N)”</h3>
 
-          <label>Sizin reytinqiniz *</label>
-          <Stars>
-  {[1, 2, 3, 4, 5].map((starValue) => (
-    <Star
-      key={starValue}
-      onClick={() => setRating(starValue)}
-      active={rating >= starValue}
-    >
-      <IoStar />
-    </Star>
-  ))}
-</Stars>
+                <label>Sizin reytinqiniz *</label>
+                <Stars>
+                  {[1, 2, 3, 4, 5].map((starValue) => (
+                    <Star
+                      key={starValue}
+                      onClick={() => setRating(starValue)}
+                      active={rating >= starValue}
+                    >
+                      <IoStar />
+                    </Star>
+                  ))}
+                </Stars>
 
 
-          <label>Sizin rəyiniz *</label>
-          <Field as="textarea" name="review" rows="5" />
-          <ErrorMessage name="review" component="div" style={{ color: 'red', fontSize: '0.9rem' }} />
+                <label>Sizin rəyiniz *</label>
+                <Field as="textarea" name="review" rows="5" />
+                <ErrorMessage name="review" component="div" style={{ color: 'red', fontSize: '0.9rem' }} />
 
-          <InputRow>
-            <div>
-              <label>Ad *</label>
-              <Field type="text" name="name" />
-              <ErrorMessage name="name" component="div" style={{ color: 'red', fontSize: '0.9rem' }} />
-            </div>
-            <div>
-              <label>E-poçt *</label>
-              <Field type="email" name="email" />
-              <ErrorMessage name="email" component="div" style={{ color: 'red', fontSize: '0.9rem' }} />
-            </div>
-          </InputRow>
+                <InputRow>
+                  <div>
+                    <label>Ad *</label>
+                    <Field type="text" name="name" />
+                    <ErrorMessage name="name" component="div" style={{ color: 'red', fontSize: '0.9rem' }} />
+                  </div>
+                  <div>
+                    <label>E-poçt *</label>
+                    <Field type="email" name="email" />
+                    <ErrorMessage name="email" component="div" style={{ color: 'red', fontSize: '0.9rem' }} />
+                  </div>
+                </InputRow>
 
-          <CheckboxRow>
-            <Field type="checkbox" name="save" id="save" />
-            <label htmlFor="save">
-              Save my name, email, and website in this browser for the next time I comment.
-            </label>
-          </CheckboxRow>
+                <CheckboxRow>
+                  <Field type="checkbox" name="save" id="save" />
+                  <label htmlFor="save">
+                    Save my name, email, and website in this browser for the next time I comment.
+                  </label>
+                </CheckboxRow>
 
-          <SubmitButton type="submit">GÖNDƏR</SubmitButton>
-        </ReviewForm>
+                <SubmitButton type="submit">GÖNDƏR</SubmitButton>
+              </ReviewForm>
+            )}
+          </Formik>
+        </>
       )}
-    </Formik>
-  </>
-)}
 
 
-      </Container>
-    );
-  };
-  
- export default ProductDetailTabs;
+    </Container>
+  );
+};
+
+export default ProductDetailTabs;
 
 
 const Container = styled.div`
@@ -143,7 +130,7 @@ align-items: flex-start;
 const TabButton = styled.button`
   background: none;
   border: none;
-  font-size: 13px;
+  font-size: 15px;
   padding: 10px 20px;
   font-weight: bold;
   cursor: pointer;
@@ -155,32 +142,7 @@ const TabButton = styled.button`
   }
 `;
 
-const InfoTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  font-family: sans-serif;
-
-  th {
-    border-bottom: 1px solid #e0e0e0; 
-    text-align: left;
-    font-weight: bold;
-    padding: 20px 10px;
-    letter-spacing: .05em;
-    line-height: 1.05;
-    text-transform: uppercase;
-    color: #777777;
-    width: 40%;
-  }
-
-  td {
-
-    border-bottom: 1px solid #e0e0e0; 
-    padding: 10px;
-    color: #666666;
-  }
-`;
-
-const Review=styled.div`
+const Review = styled.div`
 line-height: 2;
 padding-bottom: 3rem;
 h2{

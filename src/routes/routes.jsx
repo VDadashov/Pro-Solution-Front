@@ -10,10 +10,25 @@ import BlogList from "@components/site/Blog/BlogCardsContainer";
 import BlogDetail from "@components/site/Blog/BlogDetail";
 import ErrorPage from "@pages/site/Error";
 
+import Discount from "@pages/site/Discount/Discount";
+
+import Orders from "@components/site/MyAccount/Orders";
+import LoginRegister from "@components/site/MyAccount/LoginRegister";
+import ControlPanel from "@components/site/MyAccount/ControlPanel";
+import Downloads from "@components/site/MyAccount/Downloads";
+import Address from "@components/site/MyAccount/Address";
+import AccountDetails from "@components/site/MyAccount/AccountDetails";
+import ScrollToTop from "@components/site/common/ScrollToTop/ScrollToTop";
+
+
 const ROUTES = [
   {
     path: "/",
-    element: <SiteRoot />,
+    element: (
+      <ScrollToTop>
+        <SiteRoot />
+      </ScrollToTop>
+    ),
     children: [
       {
         path: "",
@@ -28,15 +43,38 @@ const ROUTES = [
         element: <Category />,
       },
       {
-        path: "/category/:id",
-        element: <CategoryDetail />,
-
-
+        path: "/discount",
+        element: <Discount />,
       },
       {
-
+        path: "/category/:id",
+        element: <CategoryDetail />,
+      },
+      {
         path: "/myaccount",
         element: <MyAccount />,
+        children: [
+          {
+            path: "control_panel",
+            element: <ControlPanel />,
+          },
+          {
+            path: "orders",
+            element: <Orders />,
+          },
+          {
+            path: "downloads",
+            element: <Downloads />,
+          },
+          {
+            path: "address",
+            element: <Address />,
+          },
+          {
+            path: "account_details",
+            element: <AccountDetails />,
+          },
+        ],
       },
       {
         path: "/wishlist",

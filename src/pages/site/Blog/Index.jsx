@@ -1,8 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-
-import { Link, Outlet } from "react-router-dom";
-import CategoriesSidebar from "@components/site/Blog/CategoriesSidebar";
+import { Outlet } from "react-router-dom";
+import SideBar from "@components/site/Blog/SideBar";
 
 const Blog = () => {
   return (
@@ -13,7 +12,7 @@ const Blog = () => {
         </ScrollContent>
         <VerticalLine></VerticalLine>
         <SidebarContainer>
-          <CategoriesSidebar />
+          <SideBar/>
         </SidebarContainer>
       </ContentArea>
     </BlogWrapper>
@@ -24,7 +23,7 @@ export default Blog;
 
 
 const BlogWrapper = styled.div`
-  height: 140vh !important;
+  // height: 140vh !important;
 
   width: 100%;
   display: flex;
@@ -33,19 +32,13 @@ const BlogWrapper = styled.div`
 `;
 
 
-const BlogContainer = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+
 
 const SidebarContainer = styled.div`
   width: 21%;
   @media (max-width: 850px) {
     width: 100%;
   }
-
 `;
 
 const VerticalLine = styled.div`
