@@ -108,6 +108,7 @@ const CategoryDetail = () => {
                 />
               ))}
             </ThumbnailList>
+
             <MainImageWrapper>
               <MainImage  src={images[selectedIndex]}
                />
@@ -118,19 +119,21 @@ const CategoryDetail = () => {
                 <ArrowRight onClick={nextImage}>
                   <FaChevronRight />
                 </ArrowRight>
+                
                 <LikeIcon
-                  onClick={() => {
-                    if (!liked) {
-                      setLiked(true);
-                      addToWishlist(product);
-                      toast.success("Product added to wishlist!");
-                    } else {
-                      toast.info("This product is already in your wishlist.");
-                    }
-                  }}
-                >
-                  <CiHeart />
-                </LikeIcon>
+  onClick={() => {
+    addToWishlist(product);
+    if (!liked) {
+      toast.success("Product added to wishlist!");
+    } else {
+      toast.error("Product removed from wishlist.");
+    }
+    setLiked(!liked);
+  }}
+>
+  <CiHeart />
+</LikeIcon>
+
               </HoverIcons>
               <ZoomIcon onClick={() => setIsModalOpen(true)}>
                 <MdOutlineZoomOutMap />
@@ -300,10 +303,6 @@ const CategoryDetail = () => {
       </Wrapper>
 
       <ProductDetailTabs />
-
-      <SimilarProducts>
-        <ProductSection sectionHeader={"Oxşar məhsullar"} />
-      </SimilarProducts>
     </DetailWrapper>
   );
 };
@@ -550,19 +549,50 @@ const WishText = styled.span`
     color:black;
   }
 `;
+// const ThumbnailList = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   gap: 10px;
+//   max-height: 450px;
+//   overflow-y: auto;
+//   @media (max-width: 851px) {
+//     flex-direction: row;
+//   }
+// `;
 const ThumbnailList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
   max-height: 450px;
   overflow-y: auto;
+  padding-right: 7px;
+  &::-webkit-scrollbar {
+    width: 2px; 
+  }
+
+  &::-webkit-scrollbar-track {
+    background:rgba(240, 240, 240, 0.8); 
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color:rgba(204, 204, 204, 0.83);
+    border-radius: 3px;
+  }
+
   @media (max-width: 851px) {
     flex-direction: row;
+    overflow-y: hidden;
+    overflow-x: auto;
+
+    &::-webkit-scrollbar {
+      height: 6px; 
+    }
   }
 `;
+
 const Thumbnail = styled.img`
-  width: 70px;
-  height: 70px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
   border: 1px solid ${({ active }) => (active ? " #666666" : "none")};
   cursor: pointer;
@@ -729,10 +759,4 @@ const ModalImage = styled.img`
   max-width: 90%;
   max-height: 90%;
 `;
-const SimilarProducts = styled.div`
-  h2 {
-    padding-bottom: 15px;
-    color: #149295;
-    font-size: 20px;
-  }
-`;
+
