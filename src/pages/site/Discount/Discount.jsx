@@ -3,6 +3,7 @@ import CategoryProductCard, { CategoryProductCardSkelaton } from '@components/si
 import { ENDPOINTS } from '@utils/constants/Endpoints';
 import { useGet } from '@utils/hooks/useCustomQuery';
 import React, { useState } from 'react'
+import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 
 const Discount = () => {
@@ -20,17 +21,19 @@ const Discount = () => {
    const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <CategoryWrapper>
+    <>
+    <Helmet>
+    <title>Discount</title>
+    </Helmet>
+        <CategoryWrapper>
  <CategoryContent>
     <CategoryBody>
     <CategoryCardsWrapper>
             <CategoryCards>
               {currentPosts?.map((item) => (
-
 isLoading ?  <CategoryProductCardSkelaton/> : <CategoryProductCard key={item.id} item={item} />
 ))}
             </CategoryCards>
-
             {totalPages > 1 && (
               <PaginationWrapper>
                 <PageButton
@@ -70,6 +73,9 @@ isLoading ?  <CategoryProductCardSkelaton/> : <CategoryProductCard key={item.id}
            
     </CategoryContent>
     </CategoryWrapper>
+
+    </>
+
    
   
   )
