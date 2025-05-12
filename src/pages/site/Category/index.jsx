@@ -9,6 +9,7 @@ import CategoriesSidebar from "@components/site/Blog/CategoriesSideBar";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import CategoryProductCard, { CategoryProductCardSkelaton } from "@components/site/Category/CategoryCard";
+import { Helmet } from "react-helmet";
 
 const Category = () => {
   const [showFilter, setShowFilter] = useState(false);
@@ -94,7 +95,11 @@ const Category = () => {
 
 
   return (
-    <CategoryWrapper>
+  <>
+  <Helmet>
+    <title>Products</title>
+  </Helmet>
+      <CategoryWrapper>
       <CategoryContent>
 
         <CategoryHead>
@@ -270,6 +275,8 @@ const Category = () => {
         </CategoryBody>
       </CategoryContent>
     </CategoryWrapper>
+  </>
+
   );
 };
 
