@@ -61,6 +61,64 @@ const staticBlogs = [
   },
 ];
 
+const BlogListSkeleton= ()=>{
+  return (
+
+    <div>
+      <BlogCardsContainer>
+        {currentPosts.map((blog, index) => (
+          <BlogCard key={index}>
+            <BlogDetail>
+              <BlogDate>
+                <h3>{blog.date}</h3>
+                <p>{blog.month}</p>
+              </BlogDate>
+              <BlogImg>
+                <img src={blog.img} alt={blog.title} />
+              </BlogImg>
+            </BlogDetail>
+            <BlogContent>
+              <Question to={blog.to}>{blog.title}</Question>
+              <hr />
+              <p>{blog.excerpt}</p>
+            </BlogContent>
+          </BlogCard>
+        ))}
+        {totalPages > 1 && (
+          <PaginationWrapper>
+            <PageButton
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+              hidden={currentPage === 1}
+            >
+              &laquo;
+            </PageButton>
+
+            {[...Array(totalPages)].map((_, index) => (
+              <PageButton
+                key={index}
+                onClick={() => paginate(index + 1)}
+                active={currentPage === index + 1}
+              >
+                {index + 1}
+              </PageButton>
+            ))}
+
+            <PageButton
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              hidden={currentPage === totalPages}
+            >
+              &raquo;
+            </PageButton>
+          </PaginationWrapper>
+        )}
+      </BlogCardsContainer>
+
+     
+    </div>
+  )
+}
 const BlogList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 3;

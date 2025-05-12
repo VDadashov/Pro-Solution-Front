@@ -5,5 +5,6 @@ export const ENDPOINTS = {
   categories: `${MAIN_URL}/categories`,
   products: `${MAIN_URL}/products`,
   about: `${MAIN_URL}/about`,
+  register: `https://prosolution.runasp.net/api/auth/register`,
 };
   
