@@ -7,5 +7,6 @@ export const ENDPOINTS = {
   productsId:`${MAIN_URL}/api/products/getbyid`,
   about: `${MAIN_URL}/about`,
   register: `${MAIN_URL}/api/auth/register`,
+  blogs: `${MAIN_URL}/api/blogs`,
 };
   

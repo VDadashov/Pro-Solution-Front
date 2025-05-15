@@ -13,7 +13,10 @@ const Navbar = () => {
   const location = useLocation();
   const [iScrolled, setIsScrolled] = useState(false);
   const { wishlist } = useContext(WishlistContext);
-  const { data: categories } = useGet("categories", ENDPOINTS.categories);
+    const { data: categories } = useGet("categories", ENDPOINTS.categories);
+
+  console.log(categories);
+  
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,10 +51,10 @@ const Navbar = () => {
                   <CategoryList>
                     {categories?.map((item) => (
                       <CategoryElement key={item.name}>
-                        {item.name}
+                        {item.title}
                         <ArrowForward />
                         <SubCategoryList>
-                          {item?.subcategories.map((subCategory) => (
+                          {item?.subcategories?.map((subCategory) => (
                             <SubCategoryElement key={subCategory.name}>
                               {subCategory.name}
                             </SubCategoryElement>

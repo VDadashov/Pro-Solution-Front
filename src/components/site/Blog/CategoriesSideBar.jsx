@@ -1,48 +1,51 @@
+import { ENDPOINTS } from "@utils/constants/Endpoints";
+import { useGet } from "@utils/hooks/useCustomQuery";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const CategoriesSidebar = ({}) => {
-  // const [data,setData]=useState([])
 
-  const categories = [
-    { name: "Acer", count: 17 },
-    { name: "Aksespointlər", count: 9 },
-    { name: "Ana Platalar", count: 45 },
-    { name: "Asus", count: 24 },
-    { name: "Dell", count: 13 },
-    { name: "Flaşkartlar", count: 19 },
-    { name: "HDD", count: 9 },
-    { name: "HP", count: 59 },
-    { name: "HP", count: 12 },
-    { name: "Kabel", count: 12 },
-    { name: "Kalonkalar", count: 15 },
-    { name: "Keyslər", count: 20 },
-    { name: "Klaviaturalar", count: 22 },
-    { name: "Kompüter Aksesuarları", count: 165 },
-    { name: "Kompüter Hissələri", count: 206 },
-    { name: "Lenovo", count: 23 },
-    { name: "Masaüstü Kompüter", count: 34 },
-    { name: "Mauslar", count: 52 },
-    { name: "Mobil Cihazlar", count: 88 },
-    { name: "Monitorlar", count: 47 },
-    { name: "Monobloklar", count: 17 },
-    { name: "MousePad", count: 10 },
-    { name: "MSI", count: 10 },
-    { name: "Məişət Texnikası", count: 26 },
-    { name: "Noutbuklar", count: 145 },
-    { name: "Operativ Yaddaşlar", count: 26 },
-    { name: "Planşetlər", count: 24 },
-    { name: "Printerlər", count: 24 },
-    { name: "Printer və Skanerlər", count: 31 },
-    { name: "Prosessorlar", count: 25 },
-    { name: "Qida Blokları", count: 17 },
-    { name: "Serverlər", count: 17 },
-    { name: "Soyutma Sistemləri", count: 20 },
-    { name: "SSD", count: 28 },
-    { name: "Sviçlər", count: 19 },
-    { name: "Telefonlar", count: 52 },
-    { name: "TV", count: 9 },
-  ];
+  const { data: categories } = useGet("categories", ENDPOINTS.categories);
+  // console.log(categories)
+  // const categories = [
+  //   { name: "Acer", count: 17 },
+  //   { name: "Aksespointlər", count: 9 },
+  //   { name: "Ana Platalar", count: 45 },
+  //   { name: "Asus", count: 24 },
+  //   { name: "Dell", count: 13 },
+  //   { name: "Flaşkartlar", count: 19 },
+  //   { name: "HDD", count: 9 },
+  //   { name: "HP", count: 59 },
+  //   { name: "HP", count: 12 },
+  //   { name: "Kabel", count: 12 },
+  //   { name: "Kalonkalar", count: 15 },
+  //   { name: "Keyslər", count: 20 },
+  //   { name: "Klaviaturalar", count: 22 },
+  //   { name: "Kompüter Aksesuarları", count: 165 },
+  //   { name: "Kompüter Hissələri", count: 206 },
+  //   { name: "Lenovo", count: 23 },
+  //   { name: "Masaüstü Kompüter", count: 34 },
+  //   { name: "Mauslar", count: 52 },
+  //   { name: "Mobil Cihazlar", count: 88 },
+  //   { name: "Monitorlar", count: 47 },
+  //   { name: "Monobloklar", count: 17 },
+  //   { name: "MousePad", count: 10 },
+  //   { name: "MSI", count: 10 },
+  //   { name: "Məişət Texnikası", count: 26 },
+  //   { name: "Noutbuklar", count: 145 },
+  //   { name: "Operativ Yaddaşlar", count: 26 },
+  //   { name: "Planşetlər", count: 24 },
+  //   { name: "Printerlər", count: 24 },
+  //   { name: "Printer və Skanerlər", count: 31 },
+  //   { name: "Prosessorlar", count: 25 },
+  //   { name: "Qida Blokları", count: 17 },
+  //   { name: "Serverlər", count: 17 },
+  //   { name: "Soyutma Sistemləri", count: 20 },
+  //   { name: "SSD", count: 28 },
+  //   { name: "Sviçlər", count: 19 },
+  //   { name: "Telefonlar", count: 52 },
+  //   { name: "TV", count: 9 },
+  // ];
 
   // const [products, setProducts]= useState([])
   // const [categories, setCategories]= useState([])
@@ -72,6 +75,8 @@ const CategoriesSidebar = ({}) => {
   //    ...new Set(products.map((product) => product.category)),
   //  ];
 
+  console.log(categories);
+  
   return (
     <SidebarWrapper>
      
@@ -80,9 +85,9 @@ const CategoriesSidebar = ({}) => {
         <hr />
       </CategoriesHead>
       <CategoriesSection>
-        {categories.map((category, index) => (
+        {categories?.map((category, index) => (
           <React.Fragment key={index}>
-            <button>{category.name}</button>
+            <button>{category.title}</button>
             {/* {category.subcategories?.map((sub, subIndex) => (
               <button key={`${index}-${subIndex}`}>{sub.name}</button>
             ))} */}

@@ -2,20 +2,26 @@ import React from "react";
 import styled from "styled-components";
 import { Outlet } from "react-router-dom";
 import SideBar from "@components/site/Blog/SideBar";
+import { Helmet } from "react-helmet";
 
 const Blog = () => {
   return (
-    <BlogWrapper>
-      <ContentArea>
-        <ScrollContent>
-          <Outlet />
-        </ScrollContent>
-        <VerticalLine></VerticalLine>
-        <SidebarContainer>
-          <SideBar/>
-        </SidebarContainer>
-      </ContentArea>
-    </BlogWrapper>
+    <>
+      <Helmet>
+        <title>Blog - Shop Pro Solution Aze</title>
+      </Helmet>
+      <BlogWrapper>
+        <ContentArea>
+          <ScrollContent>
+            <Outlet />
+          </ScrollContent>
+          <VerticalLine></VerticalLine>
+          <SidebarContainer>
+            <SideBar />
+          </SidebarContainer>
+        </ContentArea>
+      </BlogWrapper>
+    </>
   );
 };
 

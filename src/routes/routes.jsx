@@ -89,7 +89,7 @@ const ROUTES = [
             element: <BlogList />,
           },
           {
-            path: "ram-nedir",
+            path: ":id",
             element: <BlogDetail />,
           },
         ],
