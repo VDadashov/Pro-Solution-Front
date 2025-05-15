@@ -25,7 +25,6 @@ const LoadingSkeleton = styled(Skeleton)`
   animation: ${pulse} 1.5s infinite ease-in-out;
 `;
 
-
 export const CategoryProductCardSkelaton = () => {
   return (
 
@@ -61,7 +60,6 @@ export const CategoryProductCardSkelaton = () => {
   )
 }
 
-
 const CategoryProductCard = ({ item }) => {
   const { wishlist, addToWishlist } = useContext(WishlistContext);
   const [liked, setLiked] = useState(false);
@@ -70,16 +68,15 @@ const CategoryProductCard = ({ item }) => {
     const isLiked = wishlist.some(x => x.id === item.id);
     setLiked(isLiked);
   }, [wishlist, item]);
-
+  
   return (
-
     <CategoryCard>
       <CategoryCardHeadImage>
         <CategoryCardLink to={`/category/${item.id}`}>
-          <img
-            src="https://i0.wp.com/prosolution.ltd/wp-content/uploads/2023/10/Untitled-1-32-jpg.webp?zoom=2&resize=247%2C296&ssl=1"
-            alt="notebook"
-          />
+       <img
+    src={item.images.find((img) => img.isMain)?.imagePath || ""}
+    alt={item.images.find((img) => img.isMain)?.altText || ""}
+  />
         </CategoryCardLink>
         <div className="heartIcon"
           onClick={() => {
@@ -97,14 +94,20 @@ const CategoryProductCard = ({ item }) => {
       </CategoryCardHeadImage>
 
       <CategoryCardBody>
-        <span>{item.category}</span>
+        <span>{item?.title}</span>
         <Link to={`/category/${item.id}`}>
-          <ProductName>{item.name}</ProductName>
+          <ProductName>{item?.description}</ProductName>
         </Link>
-        <PriceBox>
-          <OldPrice>{item.price.original}</OldPrice>
-          <NewPrice>{item.price.current}</NewPrice>
-        </PriceBox>
+       <PriceBox>
+    {item.discountPrice > 0 ? (
+      <>
+        <OldPrice>{item.price} ₼</OldPrice>
+        <NewPrice>{item.discountPrice} ₼</NewPrice>
+      </>
+    ) : (
+      <NewPrice>{item.price} ₼</NewPrice>
+    )}
+  </PriceBox>
         <ButtonLink to={`/category/${item.id}`}>Davamını oxu</ButtonLink>
       </CategoryCardBody>
     </CategoryCard>

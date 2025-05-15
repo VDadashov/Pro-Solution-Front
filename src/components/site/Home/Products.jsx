@@ -8,14 +8,14 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import ProductsCard from "./ProductCard";
+import ProductsCard, { ProductsCardSkeleton } from "./ProductCard";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
 
 const ProductSection = ({ sectionHeader, display }) => {
   const { data: categories } = useGet("categories", ENDPOINTS.categories);
-  const { data: products } = useGet("products", ENDPOINTS.products);
+  const { data: products, isLoading } = useGet("products", ENDPOINTS.products);
 
 
   const getCategoryName = (categoryId) => {
@@ -53,7 +53,9 @@ const ProductSection = ({ sectionHeader, display }) => {
               }}
             >
               {products?.map((item) => (
-                <SwiperSlide key={item.id}>
+              !isLoading ?
+                <SwiperSlide key={item.id}><ProductsCardSkeleton/></SwiperSlide>
+                : <SwiperSlide key={item.id}>
                   <ProductsCard item={item} categoryName={getCategoryName} />
                 </SwiperSlide>
               ))}
