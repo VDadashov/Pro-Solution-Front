@@ -197,49 +197,18 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
               <hr />
               <div className="price">
                 <p className="old">{product?.price} ₼</p>
-                <p className="new">{getDiscountedPrice(product.price, product.discountPrice)} ₼</p>
+                <p className="new">{product.discountPrice} ₼</p>
               </div>
 <DetailList>
+{
+
+product?.featureOptionItems?.map((item)=>(
   <DetailItem>
-    <span>CPU:</span>
-    <span>AMD Ryzen 3™ 5300U</span>
+    <span>{item.featureOption}:</span>
+    <span>{item.name}</span>
   </DetailItem>
-  <DetailItem>
-    <span>RAM:</span>
-    <span>8GB DDR4</span>
-  </DetailItem>
-  <DetailItem>
-    <span>SSD:</span>
-    <span>256GB NVMe</span>
-  </DetailItem>
-  <DetailItem>
-    <span>GFX:</span>
-    <span>AMD Radeon Graphics</span>
-  </DetailItem>
-  <DetailItem>
-    <span>LCD:</span>
-    <span>15.6" FHD (1920x1080)</span>
-  </DetailItem>
-  <DetailItem>
-    <span>OS:</span>
-    <span>Windows 11 Home</span>
-  </DetailItem>
-  <DetailItem>
-    <span>Çəki:</span>
-    <span>1.65 kg</span>
-  </DetailItem>
-  <DetailItem>
-    <span>Rəng:</span>
-    <span>Gümüş</span>
-  </DetailItem>
-  <DetailItem>
-    <span>P/N:</span>
-    <span>82H8027VSC</span>
-  </DetailItem>
-  <DetailItem>
-    <span>Zəmanət:</span>
-    <span>12 ay</span>
-  </DetailItem>
+))
+}
 
   <WishContainer onClick={() => {
     setLiked(true);

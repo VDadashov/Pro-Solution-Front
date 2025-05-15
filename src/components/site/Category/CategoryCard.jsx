@@ -25,12 +25,6 @@ const LoadingSkeleton = styled(Skeleton)`
   animation: ${pulse} 1.5s infinite ease-in-out;
 `;
 
-const getDiscountedPrice = (price, discountPercent) => {
-  if (typeof price !== "number" || typeof discountPercent !== "number") return price;
-  const discount = (price * discountPercent) / 100;
-  return Math.round(price - discount);
-};
-
 export const CategoryProductCardSkelaton = () => {
   return (
 
@@ -108,7 +102,7 @@ const CategoryProductCard = ({ item }) => {
     {item.discountPrice > 0 ? (
       <>
         <OldPrice>{item.price} ₼</OldPrice>
-        <NewPrice>{getDiscountedPrice(item.price, item.discountPrice)} ₼</NewPrice>
+        <NewPrice>{item.discountPrice} ₼</NewPrice>
       </>
     ) : (
       <NewPrice>{item.price} ₼</NewPrice>
