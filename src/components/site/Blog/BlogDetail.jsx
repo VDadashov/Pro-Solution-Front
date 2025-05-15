@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-
-import { Link } from "react-router-dom";
+import moment from "moment";
+import { Link, useParams } from "react-router-dom";
 import {
   FaFacebookF,
   FaXTwitter,
@@ -12,35 +12,42 @@ import {
 import { MdOutlineEmail } from "react-icons/md";
 import HorizontalLine from "@styles/common/HorizontalLine";
 import CommentForm from "@components/site/Blog/CommentForm";
+import { useGetOne } from "@utils/hooks/useCustomQuery";
+import { ENDPOINTS } from "@utils/constants/Endpoints";
 
 function BlogDetail() {
+  const { id } = useParams();
+
+  const { data } = useGetOne("blogs", ENDPOINTS.blogs, id);
   return (
     <BlogDetailWrapper>
       <QuestionContent>
-        <h6>UNCATEGORIZED</h6>
-        <h1>Ram-nədir?</h1>
+        <h1>{data?.title}?</h1>
         <HorizontalLine />
         <span>
-          POSTED ON <a href="">İYUL 22, 2024</a>, by
-          <a href=""> TAGHIYEV FIZULI</a>
+          POSTED ON <a href="">{moment(data?.createdAt).format("LL")}</a>, by
+          <a href="">
+            {" "}
+            {data?.name} {data?.surname}
+          </a>
         </span>
       </QuestionContent>
 
       <QuestionDetail>
         <BlogDate>
-          <h3>13</h3>
-          <p>iyn</p>
+          <h3>{moment(data?.createdAt).format("MM")}</h3>
+          <p>{moment(data?.createdAt).format("MMMM")}</p>
         </BlogDate>
-        <img
-          src="https://i0.wp.com/prosolution.ltd/wp-content/uploads/2024/07/444444444444444.jpg?w=1080&ssl=1"
-          alt=""
-        />
-        <p>Ram-nədir?</p>
+        <DetailImg>
+          <img src={data?.imageUrl} alt="" loading="lazy" />
+        </DetailImg>
+        <BlogText>
+          <p>{data?.description}</p>
+        </BlogText>
       </QuestionDetail>
 
       <HorizontalLine />
 
-      
       <Socials>
         <li className="facebook" data-tooltip="Share on Facebook">
           <Link>
@@ -70,14 +77,12 @@ function BlogDetail() {
       </Socials>
 
       <HorizontalLine width="100%" />
-
-      <Author>
-        <img
-          src="https://prosolution.ltd/wp-content/litespeed/avatar/ebc5ae1cc393eabd8848ecf7c412ec25.jpg?ver=1744797656"
-          alt=""
-        />
-        <h3>TAGHIYEV FİZULİ</h3>
-      </Author>
+      {data?.blogreviews?.map((item) => (
+        <Author>
+          <img src={item.url} alt="" />
+          <h3>{item.name}</h3>
+        </Author>
+      ))}
 
       <HorizontalLine width="100%" />
       <CommentForm />
@@ -87,26 +92,22 @@ function BlogDetail() {
 
 export default BlogDetail;
 
-
-
 const BlogDetailWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: start;
   align-items: center;
   flex-direction: column;
-
   overflow-y: auto;
   max-height: 100vh;
   padding-top: 30px;
   padding-bottom: 100px;
-  overflow-y: scroll; 
-  -ms-overflow-style: none; 
+  overflow-y: scroll;
+  -ms-overflow-style: none;
   scrollbar-width: none;
   ::-webkit-scrollbar {
     display: none;
   }
-
 `;
 
 const QuestionContent = styled.div`
@@ -117,7 +118,7 @@ const QuestionContent = styled.div`
   flex-direction: column;
   gap: 10px;
   @media (max-width: 620px) {
-      margin-bottom:15px;
+    margin-bottom: 15px;
   }
 
   h1 {
@@ -138,9 +139,27 @@ const QuestionContent = styled.div`
 `;
 
 const QuestionDetail = styled.div`
+  // background-color: red;
+  width: 100%;
+
   img {
-    width: 800px;
+    width: 60%;
+
+    height: 200px;
+    object-fit: cover;
   }
+  @media (max-width: 500px) {
+    img {
+      margin-top: 10px;
+    }
+  }
+`;
+
+const DetailImg = styled.div`
+  // background-color:green;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const BlogDate = styled.div`
@@ -260,4 +279,8 @@ const Author = styled.div`
   h3 {
     padding: 20px;
   }
+`;
+
+const BlogText = styled.div`
+  padding: 20px;
 `;
