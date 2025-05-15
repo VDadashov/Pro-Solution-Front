@@ -256,7 +256,6 @@ const BlogDate = styled(Link)`
 const BlogImg = styled.div`
   height: 150px;
   width: 80%;
-
   overflow: hidden;
   display: flex;
   justify-content: space-between;
@@ -265,6 +264,7 @@ const BlogImg = styled.div`
   img {
     height: 350px;
     cursor: pointer;
+    object-fit: contain;
   }
 `;
 

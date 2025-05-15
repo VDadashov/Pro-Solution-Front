@@ -8,5 +8,6 @@ export const ENDPOINTS = {
   about: `${MAIN_URL}/about`,
   register: `${MAIN_URL}/api/auth/register`,
   blogs: `${MAIN_URL}/api/blogs`,
+  blogsReviews: `${MAIN_URL}/api/blogs/reviews`,
 };
   
