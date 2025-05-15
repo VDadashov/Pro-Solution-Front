@@ -13,7 +13,10 @@ const Navbar = () => {
   const location = useLocation();
   const [iScrolled, setIsScrolled] = useState(false);
   const { wishlist } = useContext(WishlistContext);
-  const { data: categories } = useGet("categories", ENDPOINTS.categories);
+    const { data: categories } = useGet("categories", ENDPOINTS.categories);
+
+  console.log(categories);
+  
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,7 +43,7 @@ const Navbar = () => {
             <HeaderNav>
               <ProductsLi>
                 <FaBars />
-               <Link to={"/discount"}> Məhsullarımız</Link>
+               <Link to={"/category"}> Məhsullarımız</Link>
                 <ArrowDown />
                 <CategoryListContainer
                   className={iScrolled || !isHomePage ? "hoverable" : ""}
@@ -48,10 +51,10 @@ const Navbar = () => {
                   <CategoryList>
                     {categories?.map((item) => (
                       <CategoryElement key={item.name}>
-                        {item.name}
+                        {item.title}
                         <ArrowForward />
                         <SubCategoryList>
-                          {item?.subcategories.map((subCategory) => (
+                          {item?.subcategories?.map((subCategory) => (
                             <SubCategoryElement key={subCategory.name}>
                               {subCategory.name}
                             </SubCategoryElement>
@@ -63,7 +66,7 @@ const Navbar = () => {
                 </CategoryListContainer>
               </ProductsLi>
               <StyledNavigationLi>
-                <NavbarLink to={"/category"} activeclassname="active">
+                <NavbarLink to={"/discount"} activeclassname="active">
                   <SeperaterLine>
                     <SeperatorLineBorder>Endirimlər</SeperatorLineBorder>
                   </SeperaterLine>

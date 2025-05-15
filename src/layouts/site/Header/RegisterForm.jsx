@@ -2,8 +2,12 @@ import React from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import styled from "styled-components";
+import { ENDPOINTS } from "@utils/constants/Endpoints";
+import { usePost } from "@utils/hooks/useCustomMutation";
 
 const RegisterForm = () => {
+  const { data: registerMutation } = usePost("register", ENDPOINTS.register);
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -11,8 +15,19 @@ const RegisterForm = () => {
     validationSchema: Yup.object({
       email: Yup.string().email("Invalid email address").required("Required"),
     }),
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: (values, actions) => {
+      registerMutation(
+        { email: values.email },
+        {
+          onSuccess: () => {
+            actions.resetForm();
+            alert("Email göndərildi!");
+          },
+          onError: (error) => {
+            alert("Xəta baş verdi: " + error.message);
+          },
+        }
+      );
     },
   });
   return (

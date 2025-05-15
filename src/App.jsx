@@ -20,6 +20,7 @@ function AppContent() {
         pauseOnHover={false}
         theme="light"
       />
+   
         <RouterProvider router={router} />
       </WishlistProvider>
     </QueryClientProvider>
