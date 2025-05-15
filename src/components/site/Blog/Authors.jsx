@@ -1,3 +1,5 @@
+import { ENDPOINTS } from "@utils/constants/Endpoints";
+import { useGet } from "@utils/hooks/useCustomQuery";
 import React from "react";
 import styled from "styled-components";
 
@@ -46,7 +48,7 @@ function Authors() {
       books: ["İstifadəçi Təcrübəsi", "Mobil Dizayn Əsasları"],
     },
   ];
-
+const {data:blogs}= useGet("blogs", ENDPOINTS.blogs)
   return (
     <AuthorsWrapper>
       <CategoriesHead>
@@ -54,8 +56,8 @@ function Authors() {
         <hr />
       </CategoriesHead>
       <AuthorsSection>
-        {authors.map((author, index) => (
-          <button key={index}>{author.name}</button>
+        {blogs?.map((author, index) => (
+          <button key={index}>{author.name} {author.surname}</button>
         ))}
       </AuthorsSection>
     </AuthorsWrapper>
@@ -86,6 +88,10 @@ const AuthorsWrapper = styled.div`
     height: 30px;
     border-radius: 3px;
     padding: 5px;
+    &:hover {
+      background-color: #149295;
+      color: #ffffff;
+    }
   }
 `;
 const CategoriesHead = styled.div``;

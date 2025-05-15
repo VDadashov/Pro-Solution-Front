@@ -3,6 +3,55 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { FaRegHeart } from "react-icons/fa";
 import { WishlistContext } from "@Context/wishlistContext";
+import { keyframes } from "styled-components";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+const pulse = keyframes`
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
+
+const LoadingSkeleton = styled(Skeleton)`
+  width: 100%;
+  animation: ${pulse} 1.5s infinite ease-in-out;
+`;
+export const ProductsCardSkeleton=()=>{
+  return (
+<>
+ <ProductCard>
+      <HeightSeperator>
+        <ImageContainer>
+          <LoadingSkeleton height="100%" width="100%" />
+        </ImageContainer>
+        <CategoryLi>
+          <LoadingSkeleton height="14px" width="60%" />
+        </CategoryLi>
+        <ProductNameLi>
+          <LoadingSkeleton height="16px" width="90%" />
+        </ProductNameLi>
+        <PriceLi>
+          <PriceDel>
+            <LoadingSkeleton height="14px" width="50px" />
+          </PriceDel>
+          <DiscountPrice>
+            <LoadingSkeleton height="16px" width="50px" />
+          </DiscountPrice>
+        </PriceLi>
+      </HeightSeperator>
+      <LoadingSkeleton height="30px" width="100px" />
+    </ProductCard>
+</>
+
+  )
+}
 
 const ProductsCard = ({ item, categoryName }) => {
   const { addToWishlist } = useContext(WishlistContext);

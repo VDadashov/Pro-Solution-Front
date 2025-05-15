@@ -17,7 +17,7 @@ const Category = () => {
   const [priceRange, setPriceRange] = useState({ min: null, max: null });
 
   const { data: products ,isLoading } = useGet("products", ENDPOINTS.products);
-  const { data: categories } = useGet("products", ENDPOINTS.categories);
+  // const { data: categories } = useGet("products", ENDPOINTS.categories);
 
   const handleClearMinPrice = () => {
     setPriceRange((prev) => ({ ...prev, min: null }));
@@ -52,10 +52,10 @@ const Category = () => {
     return minValid && maxValid;
   });
 
-  const getCategoryName = (categoryId) => {
-    const category = categories?.find((cat) => cat?.id == categoryId);
-    return category ? category?.name : "Unknown Category";
-  };
+  // const getCategoryName = (categoryId) => {
+  //   const category = categories?.find((cat) => cat?.id == categoryId);
+  //   return category ? category?.name : "Unknown Category";
+  // };
 
   const sortedProducts = (filteredProducts || []).sort((a, b) => {
     switch (sortOption) {
@@ -73,8 +73,6 @@ const Category = () => {
         return 0;
     }
   });
-
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 11;
 
