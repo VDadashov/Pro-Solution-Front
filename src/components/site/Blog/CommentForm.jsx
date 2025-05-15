@@ -2,8 +2,16 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import React from "react";
 import styled from "styled-components";
-
+import { usePost } from "@utils/hooks/useCustomMutation";
+import { ENDPOINTS } from "@utils/constants/Endpoints";
+import { Bounce, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function CommentForm() {
+  const { mutate: commentMutation } = usePost(
+    "blogsReviews",
+    ENDPOINTS.blogsReviews
+  );
+
   const maxChars = 500;
   const validationSchema = Yup.object({
     name: Yup.string().required("Ad boş buraxıla bilməz"),
@@ -22,12 +30,40 @@ function CommentForm() {
       email: "",
       saveInfo: false,
       followUp: false,
-      newPosts:false
+      newPosts: false,
     },
     validationSchema: validationSchema,
-    onSubmit: (values, { resetForm }) => {
-      console.log("Göndərilən dəyərlər:", values);
-      resetForm();
+    onSubmit: (values, actions) => {
+      commentMutation(values, {
+        onSuccess: (res) => {
+          actions.setSubmitting(false);
+          actions.resetForm();
+          toast.success("Serhiniz yaradildi", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+          });
+        },
+        onError: (error) => {
+          actions.setSubmitting(false);
+          actions.resetForm();
+          toast.success(error, {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+          });
+        },
+      });
     },
   });
 
@@ -51,7 +87,7 @@ function CommentForm() {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           rows="5"
-          maxLength={maxChars} 
+          maxLength={maxChars}
         />
         {formik.touched.comment && formik.errors.comment && (
           <div style={{ color: "red", fontSize: "13px" }}>
@@ -68,7 +104,7 @@ function CommentForm() {
             id="name"
             name="name"
             onChange={formik.handleChange}
-            onBlur={formik.handleBlur} 
+            onBlur={formik.handleBlur}
             maxLength={100}
             value={formik.values.name}
           />
@@ -85,7 +121,7 @@ function CommentForm() {
             id="email"
             name="email"
             onChange={formik.handleChange}
-            onBlur={formik.handleBlur} 
+            onBlur={formik.handleBlur}
             maxLength={100}
             value={formik.values.email}
           />
@@ -95,7 +131,6 @@ function CommentForm() {
             </div>
           )}
         </div>
-       
       </FormInputs>
 
       <CheckboxGroup>
@@ -129,7 +164,10 @@ function CommentForm() {
         </label>
       </CheckboxGroup>
 
-      <SubmitButton type="submit" disabled={formik.values.comment.length === 0}>
+      <SubmitButton
+        type="submit"
+        disabled={formik.values.comment.length === 0 || formik.isSubmitting}
+      >
         ŞƏRH GÖNDƏR
       </SubmitButton>
     </FormContainer>

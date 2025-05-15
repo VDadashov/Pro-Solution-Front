@@ -15,7 +15,6 @@ const Navbar = () => {
   const { wishlist } = useContext(WishlistContext);
     const { data: categories } = useGet("categories", ENDPOINTS.categories);
 
-  console.log(categories);
   
 
   useEffect(() => {
@@ -34,7 +33,7 @@ const Navbar = () => {
   }, []);
 
   const isHomePage = location.pathname === "/";
-
+  
   return (
     <NavigationBar>
       <StyledNavbarContainer>
@@ -43,7 +42,7 @@ const Navbar = () => {
             <HeaderNav>
               <ProductsLi>
                 <FaBars />
-               <Link to={"/category"}> Məhsullarımız</Link>
+                <Link to={"/category"}> Məhsullarımız</Link>
                 <ArrowDown />
                 <CategoryListContainer
                   className={iScrolled || !isHomePage ? "hoverable" : ""}
@@ -54,9 +53,9 @@ const Navbar = () => {
                         {item.title}
                         <ArrowForward />
                         <SubCategoryList>
-                          {item?.subcategories?.map((subCategory) => (
-                            <SubCategoryElement key={subCategory.name}>
-                              {subCategory.name}
+                          {item?.categoryItems?.map((categoryItem) => (
+                            <SubCategoryElement key={categoryItem.title}>
+                              {categoryItem.title}
                             </SubCategoryElement>
                           ))}
                         </SubCategoryList>
