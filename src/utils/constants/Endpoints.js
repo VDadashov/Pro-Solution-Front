@@ -1,10 +1,11 @@
-export const MAIN_URL = "http://localhost:3000";
+export const MAIN_URL = "https://prosolution.runasp.net";
 
 
 export const ENDPOINTS = {
   categories: `${MAIN_URL}/categories`,
-  products: `${MAIN_URL}/products`,
+  products: `${MAIN_URL}/api/products/getall`,
+  productsId:`${MAIN_URL}/api/products/getbyid`,
   about: `${MAIN_URL}/about`,
-  register: `https://prosolution.runasp.net/api/auth/register`,
+  register: `${MAIN_URL}/api/auth/register`,
 };
   

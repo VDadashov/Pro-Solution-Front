@@ -15,35 +15,28 @@ import { IoCloseOutline } from "react-icons/io5";
 import { FiZoomIn } from "react-icons/fi";
 import { FaRegHeart, FaXTwitter } from "react-icons/fa6";
 import { Link, useParams } from "react-router-dom";
-import { useGet, useGetOne } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import ProductDetailTabs from "@components/site/CategoryDetail/ProductDetailTabs";
 import ProductSection from "@components/site/Home/Products";
 import { WishlistContext } from "@Context/wishlistContext";
 import { FaHeart } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
-const images = [
-  "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2023/12/3-4-jpg.webp?resize=768%2C768&ssl=1",
-  "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2023/12/1-4-jpg.webp?resize=768%2C768&ssl=1",
-  "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2023/12/333333-jpg.webp?resize=768%2C768&ssl=1",
-  "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2023/12/3-4-jpg.webp?resize=768%2C768&ssl=1",
-  "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2023/12/3-4-jpg.webp?resize=768%2C768&ssl=1",
-];
+import { useGetOne } from "@utils/hooks/useCustomQuery";
+
 const CategoryDetail = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
   const [liked, setLiked] = useState(false);
   const { id } = useParams();
-  const [loading, setLoading] = useState(true);
-  // const { addToWishlist } = useContext(WishlistContext);
+  console.log(id)
+  const { data: product,error } = useGetOne("productsId", ENDPOINTS.productsId, id);
+  console.log(product); 
+  console.log(error)
+
   const { wishlist, addToWishlist } = useContext(WishlistContext);
+  // const [loading, setLoading] = useState(true);
 
-  
-
-
-  const { data: product } = useGetOne("products", ENDPOINTS.products, id);
-  const { data: categories } = useGet("category", ENDPOINTS.categories);
   useEffect(() => {
     if (product) {
       const isLiked = wishlist.some(item => item.id === product.id);
@@ -51,16 +44,13 @@ const CategoryDetail = () => {
     }
   }, [wishlist, product]);
 
-  const getCategoryName = (categoryId) => {
-    const category = categories?.find((cat) => cat.id == categoryId);
-    return category ? category.name : "Unknown Category";
-  };
-
-  loading ? <div>Loading...</div> : setLoading(false);
-
   if (!product) {
     return <div>Product not found</div>;
   }
+
+  const mainImage = product?.images?.find((img) => img.isMain);
+const otherImages = product?.images?.filter((img) => !img.isMain);
+const images = mainImage ? [mainImage, ...otherImages] : [];
 
   const nextImage = () => {
     setSelectedIndex((prev) => (prev + 1) % images.length);
@@ -69,6 +59,12 @@ const CategoryDetail = () => {
   const prevImage = () => {
     setSelectedIndex((prev) => (prev - 1 + images.length) % images.length);
   };
+
+  const getDiscountedPrice = (price, discountPercent) => {
+  if (typeof price !== "number" || typeof discountPercent !== "number") return price;
+  const discount = (price * discountPercent) / 100;
+  return Math.round(price - discount);
+};
 
   return (
     <DetailWrapper>
@@ -100,18 +96,22 @@ const CategoryDetail = () => {
 
             <ThumbnailList>
               {images.map((img, i) => (
-                <Thumbnail
-                  key={i}
-                  src={img}
-                  active={i === selectedIndex}
-                  onClick={() => setSelectedIndex(i)}
-                />
-              ))}
+    <Thumbnail
+     key={img.id || i}
+      src={img.imagePath}
+      active={i === selectedIndex}
+      onClick={() => setSelectedIndex(i)}
+    />
+  ))}
             </ThumbnailList>
 
             <MainImageWrapper>
-              <MainImage  src={images[selectedIndex]}
+            <ImgWrap>
+<MainImage  src={images[selectedIndex]?.imagePath}
                />
+            </ImgWrap>
+
+              
               <HoverIcons>
                 <ArrowLeft onClick={prevImage}>
                   <FaChevronLeft />
@@ -119,7 +119,6 @@ const CategoryDetail = () => {
                 <ArrowRight onClick={nextImage}>
                   <FaChevronRight />
                 </ArrowRight>
-                
                 <LikeIcon
   onClick={() => {
     addToWishlist(product);
@@ -166,7 +165,7 @@ const CategoryDetail = () => {
                 </ModalArrowRight>
 
                 <ModalImage
-                  src={images[selectedIndex]}
+                  src={images[selectedIndex]?.imagePath}
                   style={{
                     transform: isZoomed ? "scale(1.5)" : "scale(1)",
                     transition: "transform 0.3s ease",
@@ -194,77 +193,76 @@ const CategoryDetail = () => {
           </DetailCard>
           <DetailInfo>
             <div className="DetailInfoHead">
-              <h2> {product?.name}</h2>
+              <h2> {product?.title}</h2>
               <hr />
               <div className="price">
-                <p className="old">{product?.price.original}</p>
-                <p className="new">{product?.price.current}</p>
+                <p className="old">{product?.price} ₼</p>
+                <p className="new">{getDiscountedPrice(product.price, product.discountPrice)} ₼</p>
               </div>
-              <DetailList>
-                <li>
-                  <span>CPU:</span>
-                  <span>AMD Ryzen 3™ 5300U</span>
-                </li>
-                <li>
-                  <span>RAM:</span>
-                  <span>AMD Ryzen 3™ 5300U</span>
-                </li>
-                <li>
-                  <span>SSD:</span>
-                  <span>AMD Ryzen 3™ 5300U</span>
-                </li>
-                <li>
-                  <span>GFX:</span>
-                  <span>AMD Ryzen 3™ 5300U</span>
-                </li>
-                <li>
-                  <span>LCD:</span>
-                  <span>AMD Ryzen 3™ 5300U</span>
-                </li>
-                <li>
-                  <span>OS:</span>
-                  <span>AMD Ryzen 3™ 5300U</span>
-                </li>
-                <li>
-                  <span>Çəki::</span>
-                  <span>AMD Ryzen 3™ 5300U</span>
-                </li>
-                <li>
-                  <span>Rəng:</span>
-                  <span>AMD Ryzen 3™ 5300U</span>
-                </li>
-                <li>
-                  <span>P/N::</span>
-                  <span>AMD Ryzen 3™ 5300U</span>
-                </li>
-                <li>
-                  <span>Zəmanət:</span>
-                  <span>AMD Ryzen 3™ 5300U</span>
-                </li>
+<DetailList>
+  <DetailItem>
+    <span>CPU:</span>
+    <span>AMD Ryzen 3™ 5300U</span>
+  </DetailItem>
+  <DetailItem>
+    <span>RAM:</span>
+    <span>8GB DDR4</span>
+  </DetailItem>
+  <DetailItem>
+    <span>SSD:</span>
+    <span>256GB NVMe</span>
+  </DetailItem>
+  <DetailItem>
+    <span>GFX:</span>
+    <span>AMD Radeon Graphics</span>
+  </DetailItem>
+  <DetailItem>
+    <span>LCD:</span>
+    <span>15.6" FHD (1920x1080)</span>
+  </DetailItem>
+  <DetailItem>
+    <span>OS:</span>
+    <span>Windows 11 Home</span>
+  </DetailItem>
+  <DetailItem>
+    <span>Çəki:</span>
+    <span>1.65 kg</span>
+  </DetailItem>
+  <DetailItem>
+    <span>Rəng:</span>
+    <span>Gümüş</span>
+  </DetailItem>
+  <DetailItem>
+    <span>P/N:</span>
+    <span>82H8027VSC</span>
+  </DetailItem>
+  <DetailItem>
+    <span>Zəmanət:</span>
+    <span>12 ay</span>
+  </DetailItem>
 
-                <WishContainer onClick={() => {
-                  setLiked(true);
-                  addToWishlist(product);
-                }}>
-                  <WishIcon>
-                    {liked ? <FaHeart style={{ color: "black" }} /> : <FaRegHeart />}
-                  </WishIcon>
+  <WishContainer onClick={() => {
+    setLiked(true);
+    addToWishlist(product);
+  }}>
+    <WishIcon>
+      {liked ? <FaHeart style={{ color: "black" }} /> : <FaRegHeart />}
+    </WishIcon>
 
-                  <WishText>
-                    {liked ? (
-                      <>
-                        <Gray>Product added</Gray>
-                      <BrowseLink to="/wishlist" onClick={(e) => e.stopPropagation()}>
-  Browse wishlist
-</BrowseLink>
-                      </>
-                    ) : (
-                      <Blue>Add to wishlist</Blue>
-                    )}
-                  </WishText>
-                </WishContainer>
-
-              </DetailList>
+    <WishText>
+      {liked ? (
+        <>
+          <Gray>Product added</Gray>
+          <BrowseLink to="/wishlist" onClick={(e) => e.stopPropagation()}>
+            Browse wishlist
+          </BrowseLink>
+        </>
+      ) : (
+        <Blue>Add to wishlist</Blue>
+      )}
+    </WishText>
+  </WishContainer>
+</DetailList>
               <DetailFoot>
                 <p>
                   Kateqoriya: <span>Acer,Noutbuklar </span>
@@ -301,7 +299,6 @@ const CategoryDetail = () => {
           </DetailInfo>
         </DetailBody>
       </Wrapper>
-
       <ProductDetailTabs />
     </DetailWrapper>
   );
@@ -420,16 +417,17 @@ const DetailList = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  li {
-    padding-bottom: 10px;
-    display: flex;
-    color: #666666;
-    gap: 20px;
-    font-size: 0.9em;
-    line-height: 1.3;
-    border-bottom: 1px solid #ececec;
-    text-align: left;
-  }
+`;
+
+const DetailItem = styled.li`
+  padding-bottom: 10px;
+  display: flex;
+  color: #666666;
+  gap: 20px;
+  font-size: 0.9em;
+  line-height: 1.3;
+  border-bottom: 1px solid #ececec;
+  text-align: left;
 `;
 const DetailFoot = styled.div`
   p {
@@ -549,16 +547,7 @@ const WishText = styled.span`
     color:black;
   }
 `;
-// const ThumbnailList = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   gap: 10px;
-//   max-height: 450px;
-//   overflow-y: auto;
-//   @media (max-width: 851px) {
-//     flex-direction: row;
-//   }
-// `;
+
 const ThumbnailList = styled.div`
   display: flex;
   flex-direction: column;
@@ -602,19 +591,25 @@ const Thumbnail = styled.img`
   }
 `;
 const MainImageWrapper = styled.div`
-  position: relative;
-  width: 500px;
+   position: relative;
+  width: 450px;
   height: 470px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   &:hover div {
     opacity: 1;
   }
+
   @media (max-width: 851px) {
     width: 100%;
-    height: 100%;
+    height: auto;
   }
 `;
 const ZoomIcon = styled.div`
   position: absolute;
+  /* bottom: 30px; */
   bottom: 30px;
   left: 10px;
   pointer-events: all;
@@ -632,7 +627,20 @@ const ZoomIcon = styled.div`
     color: white;
     border: none;
   }
+  @media(max-width:850px){
+    font-size: 18px;
+    bottom: 0;
+  }
 `;
+const ImgWrap=styled.div`
+width: 70%;
+height: 70%;
+margin: 0 auto;
+display: flex;
+justify-content: center;
+align-items: center;
+
+`
 const MainImage = styled.img`
   width: 100%;
   height: 100%;
@@ -691,8 +699,10 @@ const LikeIcon = styled.div`
   }
   @media (max-width: 951px) {
     right: 60px;
+    font-size:20px ;
   }
 `;
+
 const BrowseLink = styled(Link)`
 text-decoration: none;
 color:  #149295;
