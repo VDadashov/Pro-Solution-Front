@@ -15,24 +15,18 @@ const Category = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [sortOption, setSortOption] = useState("Standart Sıralama");
   const [priceRange, setPriceRange] = useState({ min: null, max: null });
-
   const { data: products ,isLoading } = useGet("products", ENDPOINTS.products);
-  // const { data: categories } = useGet("products", ENDPOINTS.categories);
 
   const handleClearMinPrice = () => {
     setPriceRange((prev) => ({ ...prev, min: null }));
   };
-
   const handleClearMaxPrice = () => {
     setPriceRange((prev) => ({ ...prev, max: null }));
   };
-
   const handlePriceChange = (range) => {
     setPriceRange(range);
   };
-
   const [filterApplied, setFilterApplied] = useState(false);
-
   useEffect(() => {
     if (priceRange.min === null && priceRange.max === null) {
       setFilterApplied(false);
@@ -44,25 +38,21 @@ const Category = () => {
     }
     return Number(value);
   };
-
   const filteredProducts = products?.filter((item) => {
-    const price = parsePrice(item.price.current);
+    const price = parsePrice(item.discountPrice > 0 ? item.discountPrice : item.price);
     const minValid = priceRange.min === null || price >= priceRange.min;
     const maxValid = priceRange.max === null || price <= priceRange.max;
     return minValid && maxValid;
   });
 
-  // const getCategoryName = (categoryId) => {
-  //   const category = categories?.find((cat) => cat?.id == categoryId);
-  //   return category ? category?.name : "Unknown Category";
-  // };
-
   const sortedProducts = (filteredProducts || []).sort((a, b) => {
+    const priceA = parsePrice(a.discountPrice > 0 ? a.discountPrice : a.price);
+    const priceB = parsePrice(b.discountPrice > 0 ? b.discountPrice : b.price);
     switch (sortOption) {
       case "Qiymət: aşağıdan yuxarı":
-        return parsePrice(a.price.current) - parsePrice(b.price.current);
+        return priceA - priceB;
       case "Qiymət: yuxarıdan aşağı":
-        return parsePrice(b.price.current) - parsePrice(a.price.current);
+        return priceB - priceA;
       case "Ən yüksək reytinq":
         return b.rating - a.rating;
       case "Ən yenilər":
@@ -73,16 +63,15 @@ const Category = () => {
         return 0;
     }
   });
+
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 11;
-
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = sortedProducts.slice(
     indexOfFirstProduct,
     indexOfLastProduct
   );
-
   const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
