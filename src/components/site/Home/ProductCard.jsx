@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { FaRegHeart } from "react-icons/fa";
@@ -6,6 +6,8 @@ import { WishlistContext } from "@Context/wishlistContext";
 import { keyframes } from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { toast, ToastContainer } from 'react-toastify';
+import { CiHeart } from "react-icons/ci";
 
 const pulse = keyframes`
   0% {
@@ -26,155 +28,250 @@ const LoadingSkeleton = styled(Skeleton)`
 export const ProductsCardSkeleton=()=>{
   return (
 <>
- <ProductCard>
-      <HeightSeperator>
-        <ImageContainer>
-          <LoadingSkeleton height="100%" width="100%" />
-        </ImageContainer>
-        <CategoryLi>
-          <LoadingSkeleton height="14px" width="60%" />
-        </CategoryLi>
-        <ProductNameLi>
-          <LoadingSkeleton height="16px" width="90%" />
-        </ProductNameLi>
-        <PriceLi>
-          <PriceDel>
-            <LoadingSkeleton height="14px" width="50px" />
-          </PriceDel>
-          <DiscountPrice>
-            <LoadingSkeleton height="16px" width="50px" />
-          </DiscountPrice>
-        </PriceLi>
-      </HeightSeperator>
-      <LoadingSkeleton height="30px" width="100px" />
-    </ProductCard>
-</>
+      <ProductCard>
+        <ProductCardHeadImage>
+          <LoadingSkeleton height={"100%"} />
+
+        </ProductCardHeadImage>
+
+        <ProductCardBody>
+          <LoadingSkeleton height={"10"} width={"40%"} />
+
+
+          <ProductName>
+
+            <LoadingSkeleton height={"10"} width={"60%"} />
+
+          </ProductName>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <PriceBox>
+              <LoadingSkeleton height={"10"} width="40px" />
+            </PriceBox> <PriceBox>
+              <LoadingSkeleton height={"10"} width="40px" />
+            </PriceBox>
+          </div>
+          <LoadingSkeleton height={"35px"} width={"100px"} />
+
+        </ProductCardBody>
+      </ProductCard>
+
+    </>
 
   )
 }
 
-const ProductsCard = ({ item, categoryName }) => {
-  const { addToWishlist } = useContext(WishlistContext);
+const ProductsCard = ({ item }) => {
+  const { wishlist, addToWishlist } = useContext(WishlistContext);
+  const [liked, setLiked] = useState(false);
+
+  useEffect(() => {
+    const isLiked = wishlist.some(x => x.id === item.id);
+    setLiked(isLiked);
+  }, [wishlist, item]);
 
   return (
-    <ProductCard>
-      <HeightSeperator>
-        <ImageContainer>
-          <AddWishlist onClick={() => addToWishlist(item)}>
-            <FaRegHeart />
-          </AddWishlist>
-          <Link to={`/category/${item.id}`}>
-            <StyledImage src="/images/laptop.webp" />
-          </Link>
-        </ImageContainer>
-        <CategoryLi>
-          <p>{categoryName(item?.categoryId)}</p>
-        </CategoryLi>
-        <ProductNameLi>
-          <Link to={`/category/${item.id}`}>{item.name}</Link>
-        </ProductNameLi>
-        <PriceLi>
-          <PriceDel>{item.price.original}</PriceDel>
-          <DiscountPrice>{item.price.current}</DiscountPrice>
-        </PriceLi>
-      </HeightSeperator>
-      <Link to={`/category/${item.id}`}>
-        <ProductButton>Davamını oxu</ProductButton>
-      </Link>
-    </ProductCard>
+ 
+      <ProductCard>
+          <ProductCardHeadImage>
+            <ProductCardLink to={`/Product/${item.id}`}>
+              <img
+                src={item.images.find((img) => img.isMain)?.imagePath || ""}
+                alt={item.images.find((img) => img.isMain)?.altText || ""}
+              />
+            </ProductCardLink>
+            <div className="heartIcon"
+              onClick={() => {
+                addToWishlist(item);
+                if (!liked) {
+                  toast.success("Product added to wishlist!");
+                } else {
+                  toast.error("Product removed from wishlist.");
+                }
+                setLiked(!liked);
+              }}
+            >
+              <CiHeart />
+            </div>
+          </ProductCardHeadImage>
+    
+          <ProductCardBody>
+            <span>{item?.title}</span>
+            <Link to={`/Product/${item.id}`}>
+              <ProductName>{item?.description}</ProductName>
+            </Link>
+            <PriceBox>
+              {item.discountPrice > 0 ? (
+                <>
+                  <OldPrice>{item.price} ₼</OldPrice>
+                  <NewPrice>{item.discountPrice} ₼</NewPrice>
+                </>
+              ) : (
+                <NewPrice>{item.price} ₼</NewPrice>
+              )}
+            </PriceBox>
+            <ButtonLink to={`/Product/${item.id}`}>Davamını oxu</ButtonLink>
+          </ProductCardBody>
+        </ProductCard>
   );
 };
 
-const ProductCard = styled.ul`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: start;
-  gap: 10px;
-
-`;
-
-const HeightSeperator = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-`;
-
-const ProductButton = styled.button`
-  border: none;
-  box-shadow: inset -0.01em -0.1em 0 0 rgba(0, 0, 0, 0.15);
-  background-color: #149295;
-  color: #fff;
-  /* max-width: 50%; */
-  padding: 7.5px 10px;
-  &:hover {
-    background-color: #157778;
-  }
-`;
-
-const ImageContainer = styled.li`
+const ProductCard = styled.div`
+  border-radius: 8px;
+  /* box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; */
+  padding: 10px;
   overflow: hidden;
-  position: relative;
-`;
-
-const AddWishlist = styled.button`
-  z-index: 1;
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: silver;
-  background-color: transparent;
-  border: 1px solid silver;
-  border-radius: 100%;
-  padding: 5px;
-  &:hover {
-    background-color: #b20000;
-    border-color: #b20000;
-    color: #fff;
-  }
-`;
-
-const StyledImage = styled.img`
-  transition: 0.3s;
+  background-color: #fff;
+  transition: all 0.3s ease;
   cursor: pointer;
-  &:hover {
-    transform: scale(110%);
+  width: 210px;
+  margin: 10px 0;
+&:hover{
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+  &:hover img {
+    transform: scale(1.1);
   }
-
-  @media (max-width: 550px) {
-    max-width: 200px;
+  @media (max-width: 930px) {
+    width: 150px;
+  }
+  @media (max-width: 1100px) {
+    width: 170px;
   }
 `;
 
-const CategoryLi = styled.li`
-  color: #777;
-  font-size: 13px;
-`;
-
-const ProductNameLi = styled.li`
-  color: #149295;
-  max-width: 200px;
-  overflow: hidden;
+const ProductName = styled.h5`
+  max-width: 100%;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 15px;
+  color: #149295;
+  margin: 10px 0;
+  font-weight: 500;
+  overflow: hidden;
+  &:hover {
+    color: black;
+  }
 `;
+const ProductCardLink = styled(Link)``;
+const ProductCardHeadImage = styled.div`
+  position: relative;
+  overflow: hidden;
+  padding-top: 10px;
+  height: 180px;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    @media (max-width: 1100px) {
+      height: 130px;
+    }
+  }
+  @media (max-width: 900px) {
+    height: 140px;
+  }
 
-const PriceLi = styled.li`
+  .heartIcon {
+    position: absolute;
+    right: 10px;
+    top: 0px;
+    font-size: 24px;
+    color: gray;
+    background-color: transparent;
+    border: 1px solid gray;
+    border-radius: 50%;
+    padding: 5px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    @media (max-width: 930px) {
+      font-size: 18px;
+    }
+  }
+  .heartIcon:hover {
+    color: white;
+    background-color:#b20000;
+    border: #b20000;
+  }
+  ${ProductCard}:hover & .heartIcon {
+    opacity: 1;
+  }
+`;
+const ProductCardBody = styled.div`
+  padding: 5px;
+  @media (max-width: 930px) {
+    line-height: 0.9;
+    padding: 5px;
+  }
+  span {
+    font-size: 13px;
+    color: gray;
+    opacity: 0.7;
+    @media (max-width: 997px) {
+      font-size: 10px;
+      font-weight: 600;
+    }
+  }
+
+  h5 {
+    @media (max-width: 997px) {
+      font-size: 12px;
+      font-weight: 600;
+    }
+  }
+
+`;
+const ButtonLink = styled(Link)`
+ margin-top: 10px;
+    width: 65%;
+    background-color: #149295;
+    color: white;
+    border: none;
+    padding: 8px;
+    display: flex;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    &:hover {
+      background-color: rgb(16, 114, 116);
+    }
+    @media (max-width:1095px) {
+      padding: 5px;
+      width: 70%;
+      font-size: 12px;
+    }
+    @media (max-width: 1100px) {
+      padding: 5px;
+      width: 70%;
+      font-size: 12px;
+    }
+`
+const PriceBox = styled.div`
   display: flex;
-  align-items: center;
   gap: 10px;
+  align-items: baseline;
+  margin: 8px 0;
 `;
-
-const PriceDel = styled.del`
+const OldPrice = styled.p`
   text-decoration: line-through;
-  color: #777;
+  color: gray;
+  font-size: 14px;
+  @media (max-width: 1095px) {
+    font-size: 11px;
+  }
 `;
-
-const DiscountPrice = styled.p`
-  color: #111111;
+const NewPrice = styled.p`
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+  @media (max-width: 1095px) {
+    font-size: 13px;
+  }
 `;
 
 export default ProductsCard;
+
+
