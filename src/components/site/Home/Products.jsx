@@ -14,14 +14,14 @@ import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
 
 const ProductSection = ({ sectionHeader, display }) => {
-  const { data: categories } = useGet("categories", ENDPOINTS.categories);
+  // const { data: categories } = useGet("categories", ENDPOINTS.categories);
   const { data: products, isLoading } = useGet("products", ENDPOINTS.products);
 
 
-  const getCategoryName = (categoryId) => {
-    const category = categories?.find((cat) => cat?.id == categoryId);
-    return category ? category?.name : "Unknown Category";
-  };
+  // const getCategoryName = (categoryId) => {
+  //   const category = categories?.find((cat) => cat?.id == categoryId);
+  //   return category ? category?.name : "Unknown Category";
+  // };
 
   return (
     <SectionContainer>
@@ -42,7 +42,7 @@ const ProductSection = ({ sectionHeader, display }) => {
                   slidesPerView: 1,
                 },
                 400: {
-                  slidesPerView: 2,
+                  slidesPerView: 3,
                 },
                 850: {
                   slidesPerView: 3,
@@ -53,11 +53,11 @@ const ProductSection = ({ sectionHeader, display }) => {
               }}
             >
               {products?.map((item) => (
-              !isLoading ?
-                <SwiperSlide key={item.id}><ProductsCardSkeleton/></SwiperSlide>
-                : <SwiperSlide key={item.id}>
-                  <ProductsCard item={item} categoryName={getCategoryName} />
-                </SwiperSlide>
+                !isLoading ?
+                  <SwiperSlide key={item.id}><ProductsCardSkeleton /></SwiperSlide>
+                  : <SwiperSlide key={item.id}>
+                    <ProductsCard item={item} />
+                  </SwiperSlide>
               ))}
             </Swiper>
           </ProductsMenu>

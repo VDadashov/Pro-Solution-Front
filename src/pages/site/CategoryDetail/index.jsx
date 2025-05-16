@@ -31,11 +31,9 @@ const CategoryDetail = () => {
   const { id } = useParams();
   console.log(id)
   const { data: product,error } = useGetOne("productsId", ENDPOINTS.productsId, id);
-  console.log(product); 
+  console.log(product?.featureOptionItems); 
   console.log(error)
-
   const { wishlist, addToWishlist } = useContext(WishlistContext);
-  // const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (product) {
@@ -60,22 +58,16 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
     setSelectedIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
-  const getDiscountedPrice = (price, discountPercent) => {
-  if (typeof price !== "number" || typeof discountPercent !== "number") return price;
-  const discount = (price * discountPercent) / 100;
-  return Math.round(price - discount);
-};
-
   return (
     <DetailWrapper>
       <Wrapper>
         <DetailHead>
           <Nav>
             <li>
-              <a href="">Əsas səhifə /</a>
+            <Link to="/">Əsas səhifə /</Link>
             </li>
             <li>
-              <a href="">Noutbuklar</a>
+            <Link to="">Noutbuklar</Link>
             </li>
           </Nav>
           <SwitchProduct>
@@ -93,7 +85,6 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
         </DetailHead>
         <DetailBody>
           <DetailCard>
-
             <ThumbnailList>
               {images.map((img, i) => (
     <Thumbnail
@@ -110,8 +101,6 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
 <MainImage  src={images[selectedIndex]?.imagePath}
                />
             </ImgWrap>
-
-              
               <HoverIcons>
                 <ArrowLeft onClick={prevImage}>
                   <FaChevronLeft />
@@ -193,7 +182,7 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
           </DetailCard>
           <DetailInfo>
             <div className="DetailInfoHead">
-              <h2> {product?.title}</h2>
+              <h2> {product?.description}</h2>
               <hr />
               <div className="price">
                 <p className="old">{product?.price} ₼</p>
@@ -201,11 +190,11 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
               </div>
 <DetailList>
 {
-
 product?.featureOptionItems?.map((item)=>(
-  <DetailItem>
-    <span>{item.featureOption}:</span>
-    <span>{item.name}</span>
+  <DetailItem key={item.id || item.name}>
+    <p>{item.parent?.featureOption?.name} :</p>
+    <span>{item?.name}</span>
+    <span>{item?.parent?.name}</span>
   </DetailItem>
 ))
 }
@@ -327,24 +316,28 @@ const SwitchProduct = styled.ul`
 const DetailBody = styled.div`
   display: flex;
   justify-content: center;
-  gap: 20px;
-
+  gap: 3rem;
+  margin: 0 auto;
+  max-width:80%;
   @media (max-width: 851px) {
     flex-direction: column;
     margin-top: 2rem;
     gap: 30px;
   }
+ 
 `;
 const DetailCard = styled.div`
+width: 45%;
   display: flex;
-  gap: 25px;
+  gap: 30px;
   position: relative;
   @media (max-width: 851px) {
     flex-direction: column-reverse;
+    width: 100%;
   }
 `;
 const DetailInfo = styled.div`
-  width: 20%;
+  width: 32%;
   @media (max-width: 851px) {
     width: 100%;
     padding-left: 1rem;
@@ -397,6 +390,11 @@ const DetailItem = styled.li`
   line-height: 1.3;
   border-bottom: 1px solid #ececec;
   text-align: left;
+  p{
+    font-weight: bolder;
+    font-size: 16px;
+    color: #777777;
+  }
 `;
 const DetailFoot = styled.div`
   p {
@@ -562,7 +560,7 @@ const Thumbnail = styled.img`
 const MainImageWrapper = styled.div`
    position: relative;
   width: 450px;
-  height: 470px;
+  height: 440px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -578,7 +576,6 @@ const MainImageWrapper = styled.div`
 `;
 const ZoomIcon = styled.div`
   position: absolute;
-  /* bottom: 30px; */
   bottom: 30px;
   left: 10px;
   pointer-events: all;
@@ -596,15 +593,13 @@ const ZoomIcon = styled.div`
     color: white;
     border: none;
   }
-  @media(max-width:850px){
-    font-size: 18px;
+  @media(max-width:565px){
     bottom: 0;
   }
 `;
 const ImgWrap=styled.div`
-width: 70%;
-height: 70%;
-margin: 0 auto;
+width: 100%;
+height: 100%;
 display: flex;
 justify-content: center;
 align-items: center;
@@ -615,6 +610,9 @@ const MainImage = styled.img`
   height: 100%;
   object-fit: contain;
   border-radius: 6px;
+  @media (max-width: 1420px) {
+   object-fit: cover;
+  }
 `;
 const HoverIcons = styled.div`
   position: absolute;
@@ -668,7 +666,11 @@ const LikeIcon = styled.div`
   }
   @media (max-width: 951px) {
     right: 60px;
-    font-size:20px ;
+
+  }
+  @media(max-width:565px){
+    right: 10px;
+    font-size: 20px;
   }
 `;
 
