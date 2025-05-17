@@ -88,7 +88,7 @@ const CategoryProductCard = ({ item }) => {
       <CategoryCardBody>
         <span>{item?.title}</span>
         <Link to={`/category/${item.id}`}>
-          <ProductName>{item?.description}</ProductName>
+          <ProductName>{item?.description} </ProductName>
         </Link>
         <PriceBox>
           {item.discountPrice > 0 ? (
@@ -116,7 +116,7 @@ const CategoryCard = styled.div`
   background-color: #fff;
   transition: all 0.3s ease;
   cursor: pointer;
-  width: 210px;
+  width: 200px;
 &:hover{
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
