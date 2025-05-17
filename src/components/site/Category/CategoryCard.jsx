@@ -32,17 +32,11 @@ export const CategoryProductCardSkelaton = () => {
       <CategoryCard>
         <CategoryCardHeadImage>
           <LoadingSkeleton height={"100%"} />
-
         </CategoryCardHeadImage>
-
         <CategoryCardBody>
           <LoadingSkeleton height={"10"} width={"40%"} />
-
-
           <ProductName>
-
             <LoadingSkeleton height={"10"} width={"60%"} />
-
           </ProductName>
           <div style={{ display: "flex", gap: "10px" }}>
             <PriceBox>
@@ -52,7 +46,6 @@ export const CategoryProductCardSkelaton = () => {
             </PriceBox>
           </div>
           <LoadingSkeleton height={"35px"} width={"100px"} />
-
         </CategoryCardBody>
       </CategoryCard>
 
@@ -68,15 +61,14 @@ const CategoryProductCard = ({ item }) => {
     const isLiked = wishlist.some(x => x.id === item.id);
     setLiked(isLiked);
   }, [wishlist, item]);
-  
+
   return (
     <CategoryCard>
       <CategoryCardHeadImage>
         <CategoryCardLink to={`/category/${item.id}`}>
-       <img
-    src={item.images.find((img) => img.isMain)?.imagePath || ""}
-    alt={item.images.find((img) => img.isMain)?.altText || ""}
-  />
+          <img
+            src={item.images.find((img) => img.isMain)?.imagePath || ""}
+          />
         </CategoryCardLink>
         <div className="heartIcon"
           onClick={() => {
@@ -98,16 +90,16 @@ const CategoryProductCard = ({ item }) => {
         <Link to={`/category/${item.id}`}>
           <ProductName>{item?.description}</ProductName>
         </Link>
-       <PriceBox>
-    {item.discountPrice > 0 ? (
-      <>
-        <OldPrice>{item.price} ₼</OldPrice>
-        <NewPrice>{item.discountPrice} ₼</NewPrice>
-      </>
-    ) : (
-      <NewPrice>{item.price} ₼</NewPrice>
-    )}
-  </PriceBox>
+        <PriceBox>
+          {item.discountPrice > 0 ? (
+            <>
+              <OldPrice>{item.price} ₼</OldPrice>
+              <NewPrice>{item.discountPrice} ₼</NewPrice>
+            </>
+          ) : (
+            <NewPrice>{item.price} ₼</NewPrice>
+          )}
+        </PriceBox>
         <ButtonLink to={`/category/${item.id}`}>Davamını oxu</ButtonLink>
       </CategoryCardBody>
     </CategoryCard>
@@ -124,7 +116,7 @@ const CategoryCard = styled.div`
   background-color: #fff;
   transition: all 0.3s ease;
   cursor: pointer;
-  width: 200px;
+  width: 210px;
 &:hover{
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
@@ -201,7 +193,7 @@ const CategoryCardHeadImage = styled.div`
   }
 `;
 const CategoryCardBody = styled.div`
-  padding: 10px;
+  padding: 5px;
   @media (max-width: 930px) {
     line-height: 0.9;
     padding: 5px;
@@ -230,9 +222,9 @@ const ButtonLink = styled(Link)`
     background-color: #149295;
     color: white;
     border: none;
-    padding: 8px;
+    padding: 5px;
     display: flex;
-    font-size: 14px;
+    font-size: 13px;
     font-family: inherit;
     cursor: pointer;
     &:hover {

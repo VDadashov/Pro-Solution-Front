@@ -19,10 +19,8 @@ import { LayoutContainer } from "@styles/common/LayoutContainer";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 
-const AdjustableSection = ({ headerName, imageSrc }) => {
-  
-  const { data: products } = useGet("products", ENDPOINTS.products);
-
+const AdjustableSection = ({ headerName}) => {
+const { data: brand } = useGet("brand", ENDPOINTS.brand);
   return (
     <AdjustableContainer>
       <LayoutContainer>
@@ -55,13 +53,13 @@ const AdjustableSection = ({ headerName, imageSrc }) => {
                 },
               }}
             >
-              {products?.map((item) => (
+              {brand?.map((item) => (
                 <SwiperSlide>
                   <ImageContainer key={"1"}>
-                    <StyledImage src={`./images/${imageSrc}`} />
+                    <StyledImage src={item.imagePath} />
                     <DescriptionContainer>
-                      <NameBox>Acer</NameBox>
-                      <CountBox className="countbox">17 Məhsul</CountBox>
+                      <NameBox>{item.title}</NameBox>
+                      <CountBox className="countbox">{item.description}</CountBox>
                     </DescriptionContainer>
                   </ImageContainer>
                 </SwiperSlide>

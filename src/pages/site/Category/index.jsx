@@ -15,24 +15,19 @@ const Category = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [sortOption, setSortOption] = useState("Standart Sıralama");
   const [priceRange, setPriceRange] = useState({ min: null, max: null });
-
-  const { data: products ,isLoading } = useGet("products", ENDPOINTS.products);
-  // const { data: categories } = useGet("products", ENDPOINTS.categories);
+  const { data: products, isLoading } = useGet("products", ENDPOINTS.products);
+  console.log(products)
 
   const handleClearMinPrice = () => {
     setPriceRange((prev) => ({ ...prev, min: null }));
   };
-
   const handleClearMaxPrice = () => {
     setPriceRange((prev) => ({ ...prev, max: null }));
   };
-
   const handlePriceChange = (range) => {
     setPriceRange(range);
   };
-
   const [filterApplied, setFilterApplied] = useState(false);
-
   useEffect(() => {
     if (priceRange.min === null && priceRange.max === null) {
       setFilterApplied(false);
@@ -44,25 +39,21 @@ const Category = () => {
     }
     return Number(value);
   };
-
   const filteredProducts = products?.filter((item) => {
-    const price = parsePrice(item.price.current);
+    const price = parsePrice(item.discountPrice > 0 ? item.discountPrice : item.price);
     const minValid = priceRange.min === null || price >= priceRange.min;
     const maxValid = priceRange.max === null || price <= priceRange.max;
     return minValid && maxValid;
   });
 
-  // const getCategoryName = (categoryId) => {
-  //   const category = categories?.find((cat) => cat?.id == categoryId);
-  //   return category ? category?.name : "Unknown Category";
-  // };
-
   const sortedProducts = (filteredProducts || []).sort((a, b) => {
+    const priceA = parsePrice(a.discountPrice > 0 ? a.discountPrice : a.price);
+    const priceB = parsePrice(b.discountPrice > 0 ? b.discountPrice : b.price);
     switch (sortOption) {
       case "Qiymət: aşağıdan yuxarı":
-        return parsePrice(a.price.current) - parsePrice(b.price.current);
+        return priceA - priceB;
       case "Qiymət: yuxarıdan aşağı":
-        return parsePrice(b.price.current) - parsePrice(a.price.current);
+        return priceB - priceA;
       case "Ən yüksək reytinq":
         return b.rating - a.rating;
       case "Ən yenilər":
@@ -73,16 +64,15 @@ const Category = () => {
         return 0;
     }
   });
+
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 11;
-
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = sortedProducts.slice(
     indexOfFirstProduct,
     indexOfLastProduct
   );
-
   const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -93,187 +83,185 @@ const Category = () => {
 
 
   return (
-  <>
-  <Helmet>
-    <title>Products</title>
-  </Helmet>
+    <>
+      <Helmet>
+        <title>Products</title>
+      </Helmet>
       <CategoryWrapper>
-      <CategoryContent>
+        <CategoryContent>
+          <CategoryHead>
+            <div className="category-links">
+              <ul>
+                <li>
+                  <Link>Əsas səhifə /</Link>
+                </li>
+                <li>
+                  <Link>Noutbuklar</Link>
+                </li>
+              </ul>
+            </div>
+            <ResponsiveFilter onClick={() => setShowFilter(true)}>
+              <i>
+                <RiEqualizerLine />
+              </i>
+              <p>Filtr</p>
+            </ResponsiveFilter>
 
-        <CategoryHead>
-          <div className="category-links">
-            <ul>
-              <li>
-                <Link>Əsas səhifə /</Link>
-              </li>
-              <li>
-                <Link>Noutbuklar</Link>
-              </li>
-            </ul>
-          </div>
-          <ResponsiveFilter onClick={() => setShowFilter(true)}>
-            <i>
-              <RiEqualizerLine />
-            </i>
-            <p>Filtr</p>
-          </ResponsiveFilter>
-
-          <CategorySelect>
-            <p>Lorem ipsum dolor sit amet.</p>
-            <select
-              value={sortOption}
-              onChange={(e) => setSortOption(e.target.value)}
-            >
-              <option value="Standart Sıralama">Standart Sıralama</option>
-              <option value="Populyarlığa görə">Populyarlığa görə</option>
-              <option value="Ən yüksək reytinq">Ən yüksək reytinq</option>
-              <option value="Ən yenilər">Ən yenilər</option>
-              <option value="Qiymət: aşağıdan yuxarı">
-                Qiymət: aşağıdan yuxarı
-              </option>
-              <option value="Qiymət: yuxarıdan aşağı">
-                Qiymət: yuxarıdan aşağı
-              </option>
-            </select>
-          </CategorySelect>
-        </CategoryHead>
-
-        <CategoryBody>
-          {showFilter && (
-            <>
-              <TransparentBackground
-                onClick={() => setShowFilter(false)}
-                $isOpenModal={showFilter}
+            <CategorySelect>
+              <p>Lorem ipsum dolor sit amet.</p>
+              <select
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value)}
               >
-                <ModalButton onClick={() => setShowFilter(false)}>
-                  ×
-                </ModalButton>
-              </TransparentBackground>
-
-              <SidebarFilter $isOpenModal={showFilter}>
-                {filterApplied && (
-                  <ActiveFiltr>
-                    <h3>Aktiv Filtrlər</h3>
-                    <hr />
-                    <ActiveFilter
-                      priceRange={priceRange}
-                      onClearMin={() => {
-                        handleClearMinPrice();
-                        if (priceRange.max === null) setFilterApplied(false);
-                      }}
-                      onClearMax={() => {
-                        handleClearMaxPrice();
-                        if (priceRange.min === null) setFilterApplied(false);
-                      }}
-                    />
-                  </ActiveFiltr>
-                )}
-                <div className="price-section">
-                  <h3>QIYMƏT</h3>
-                  <hr />
-                  <PriceFilter
-                    onChange={handlePriceChange}
-                    onSubmit={() => setFilterApplied(true)}
-                  />
-                </div>
-                <Processor>
-                  <h3>PROSESSOR-AMD</h3>
-                  <hr />
-                  <select>
-                    <option>AMD Ryzen 5tm 5600H</option>
-                    <option>AMD Ryzen 7tm 6800H</option>
-                  </select>
-                </Processor>
-                <ProcessorSelect />
-                <Categories>
-                  <CategoriesSidebar />
-                </Categories>
-              </SidebarFilter>
-            </>
-          )}
-
-          <CategoryCardsWrapper>
-            <CategoryCards>
-              {currentProducts?.map((item) => (
-
-                isLoading ?  <CategoryProductCardSkelaton/> : <CategoryProductCard key={item.id} item={item} />
-              ))}
-            </CategoryCards>
-
-            {totalPages > 1 && (
-              <PaginationWrapper>
-                <PageButton
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  hidden={currentPage === 1}
-                >
-                  &laquo;
-                </PageButton>
-
-                {[...Array(totalPages)].map((_, index) => (
-                  <PageButton
-                    key={index}
-                    onClick={() => handlePageChange(index + 1)}
-                    active={currentPage === index + 1}
-                  >
-                    {index + 1}
-                  </PageButton>
-                ))}
-
-                <PageButton
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  hidden={currentPage === totalPages}
-                >
-                  &raquo;
-                </PageButton>
-              </PaginationWrapper>
-            )}
-          </CategoryCardsWrapper>
-
-          <CategoryFilter>
-            {filterApplied && (
-              <ActiveFiltr>
-                <h3>Aktiv Filtrlər</h3>
-                <hr />
-                <ActiveFilter
-                  priceRange={priceRange}
-                  onClearMin={() => {
-                    handleClearMinPrice();
-                    if (priceRange.max === null) setFilterApplied(false);
-                  }}
-                  onClearMax={() => {
-                    handleClearMaxPrice();
-                    if (priceRange.min === null) setFilterApplied(false);
-                  }}
-                />
-              </ActiveFiltr>
-            )}
-            <Price>
-              <h3>Qiymət</h3>
-              <hr />
-              <PriceFilter
-                onChange={handlePriceChange}
-                onSubmit={() => setFilterApplied(true)}
-              />
-            </Price>
-            <Processor>
-              <h3>PROSESSOR-AMD</h3>
-              <hr />
-              <select name="" id="">
-                <option value="">AMD Ryzen 5tm 5600H</option>
-                <option value="">AMD Ryzen 7tm 6800H</option>
+                <option value="Standart Sıralama">Standart Sıralama</option>
+                <option value="Populyarlığa görə">Populyarlığa görə</option>
+                <option value="Ən yüksək reytinq">Ən yüksək reytinq</option>
+                <option value="Ən yenilər">Ən yenilər</option>
+                <option value="Qiymət: aşağıdan yuxarı">
+                  Qiymət: aşağıdan yuxarı
+                </option>
+                <option value="Qiymət: yuxarıdan aşağı">
+                  Qiymət: yuxarıdan aşağı
+                </option>
               </select>
-            </Processor>
-            <ProcessorSelect />
-            <Categories>
-              <CategoriesSidebar />
-            </Categories>
-          </CategoryFilter>
-        </CategoryBody>
-      </CategoryContent>
-    </CategoryWrapper>
-  </>
+            </CategorySelect>
+          </CategoryHead>
+          <CategoryBody>
+            {showFilter && (
+              <>
+                <TransparentBackground
+                  onClick={() => setShowFilter(false)}
+                  $isOpenModal={showFilter}
+                >
+                  <ModalButton onClick={() => setShowFilter(false)}>
+                    ×
+                  </ModalButton>
+                </TransparentBackground>
+
+                <SidebarFilter $isOpenModal={showFilter}>
+                  {filterApplied && (
+                    <ActiveFiltr>
+                      <h3>Aktiv Filtrlər</h3>
+                      <hr />
+                      <ActiveFilter
+                        priceRange={priceRange}
+                        onClearMin={() => {
+                          handleClearMinPrice();
+                          if (priceRange.max === null) setFilterApplied(false);
+                        }}
+                        onClearMax={() => {
+                          handleClearMaxPrice();
+                          if (priceRange.min === null) setFilterApplied(false);
+                        }}
+                      />
+                    </ActiveFiltr>
+                  )}
+                  <div className="price-section">
+                    <h3>QIYMƏT</h3>
+                    <hr />
+                    <PriceFilter
+                      onChange={handlePriceChange}
+                      onSubmit={() => setFilterApplied(true)}
+                    />
+                  </div>
+                  <Processor>
+                    <h3>PROSESSOR-AMD</h3>
+                    <hr />
+                    <select>
+                      <option>AMD Ryzen 5tm 5600H</option>
+                      <option>AMD Ryzen 7tm 6800H</option>
+                    </select>
+                  </Processor>
+                  <ProcessorSelect />
+                  <Categories>
+                    <CategoriesSidebar />
+                  </Categories>
+                </SidebarFilter>
+              </>
+            )}
+
+            <CategoryCardsWrapper>
+              <CategoryCards>
+                {currentProducts?.map((item) => (
+
+                  isLoading ? <CategoryProductCardSkelaton /> : <CategoryProductCard uctCard key={item.id} item={item} />
+                ))}
+              </CategoryCards>
+
+              {totalPages > 1 && (
+                <PaginationWrapper>
+                  <PageButton
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    hidden={currentPage === 1}
+                  >
+                    &laquo;
+                  </PageButton>
+
+                  {[...Array(totalPages)].map((_, index) => (
+                    <PageButton
+                      key={index}
+                      onClick={() => handlePageChange(index + 1)}
+                      active={currentPage === index + 1}
+                    >
+                      {index + 1}
+                    </PageButton>
+                  ))}
+
+                  <PageButton
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    hidden={currentPage === totalPages}
+                  >
+                    &raquo;
+                  </PageButton>
+                </PaginationWrapper>
+              )}
+            </CategoryCardsWrapper>
+
+            <CategoryFilter>
+              {filterApplied && (
+                <ActiveFiltr>
+                  <h3>Aktiv Filtrlər</h3>
+                  <hr />
+                  <ActiveFilter
+                    priceRange={priceRange}
+                    onClearMin={() => {
+                      handleClearMinPrice();
+                      if (priceRange.max === null) setFilterApplied(false);
+                    }}
+                    onClearMax={() => {
+                      handleClearMaxPrice();
+                      if (priceRange.min === null) setFilterApplied(false);
+                    }}
+                  />
+                </ActiveFiltr>
+              )}
+              <Price>
+                <h3>Qiymət</h3>
+                <hr />
+                <PriceFilter
+                  onChange={handlePriceChange}
+                  onSubmit={() => setFilterApplied(true)}
+                />
+              </Price>
+              <Processor>
+                <h3>PROSESSOR-AMD</h3>
+                <hr />
+                <select name="" id="">
+                  <option value="">AMD Ryzen 5tm 5600H</option>
+                  <option value="">AMD Ryzen 7tm 6800H</option>
+                </select>
+              </Processor>
+              <ProcessorSelect />
+              <Categories>
+                <CategoriesSidebar />
+              </Categories>
+            </CategoryFilter>
+          </CategoryBody>
+        </CategoryContent>
+      </CategoryWrapper>
+    </>
 
   );
 };
