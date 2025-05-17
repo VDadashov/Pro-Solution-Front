@@ -19,6 +19,7 @@ function BlogDetail() {
   const { id } = useParams();
 
   const { data } = useGetOne("blogs", ENDPOINTS.blogs, id);
+  
   return (
     <BlogDetailWrapper>
       <QuestionContent>
@@ -77,15 +78,10 @@ function BlogDetail() {
       </Socials>
 
       <HorizontalLine width="100%" />
-      {data?.blogreviews?.map((item) => (
-        <Author>
-          <img src={item.url} alt="" />
-          <h3>{item.name}</h3>
-        </Author>
-      ))}
+    
 
       <HorizontalLine width="100%" />
-      <CommentForm />
+      <CommentForm blogId={id} />
     </BlogDetailWrapper>
   );
 }
