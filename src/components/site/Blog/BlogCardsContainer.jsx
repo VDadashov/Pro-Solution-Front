@@ -144,7 +144,7 @@ const BlogList = () => {
                 <p>{moment(blog?.createdAt).format("MMMM")}</p>
               </BlogDate>
               <BlogImg>
-                <img src={blog.imageUrl} alt={blog.title} />
+                <img src={blog.imageUrl} alt={blog.title} loading="lazy" />
               </BlogImg>
             </BlogDetail>
             <BlogContent>
@@ -205,7 +205,8 @@ const BlogContent = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-
+// background-color:green;
+width:200px;
   hr {
     width: 30px;
     border-top: 3px solid lightgray;
@@ -236,9 +237,9 @@ const BlogDate = styled(Link)`
   color: #149295;
   transition: all 0.3s ease;
   // position: absolute;
-
   // top: 20px;
   // left: -10px;
+  
   @media (max-width: 600px) {
     width: 40px;
     height: 40px;
@@ -275,7 +276,8 @@ const BlogCard = styled.div`
   align-items: center;
   padding-left: 50px;
   padding-right: 50px;
-  // background-color:red;
+
+  // background-color:red; 
 
   &:hover ${BlogDate} {
     background-color: #149295;
