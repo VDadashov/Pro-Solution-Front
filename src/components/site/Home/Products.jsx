@@ -53,7 +53,7 @@ const ProductSection = ({ sectionHeader, display }) => {
               }}
             >
               {products?.map((item) => (
-                !isLoading ?
+                isLoading ?
                   <SwiperSlide key={item.id}><ProductsCardSkeleton /></SwiperSlide>
                   : <SwiperSlide key={item.id}>
                     <ProductsCard item={item} />

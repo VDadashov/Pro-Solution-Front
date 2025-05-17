@@ -16,6 +16,7 @@ const Category = () => {
   const [sortOption, setSortOption] = useState("Standart Sıralama");
   const [priceRange, setPriceRange] = useState({ min: null, max: null });
   const { data: products, isLoading } = useGet("products", ENDPOINTS.products);
+  console.log(products)
 
   const handleClearMinPrice = () => {
     setPriceRange((prev) => ({ ...prev, min: null }));
@@ -88,7 +89,6 @@ const Category = () => {
       </Helmet>
       <CategoryWrapper>
         <CategoryContent>
-
           <CategoryHead>
             <div className="category-links">
               <ul>
@@ -126,7 +126,6 @@ const Category = () => {
               </select>
             </CategorySelect>
           </CategoryHead>
-
           <CategoryBody>
             {showFilter && (
               <>
@@ -185,7 +184,7 @@ const Category = () => {
               <CategoryCards>
                 {currentProducts?.map((item) => (
 
-                  isLoading ? <CategoryProductCardSkelaton /> : <CategoryProductCard key={item.id} item={item} />
+                  isLoading ? <CategoryProductCardSkelaton /> : <CategoryProductCard uctCard key={item.id} item={item} />
                 ))}
               </CategoryCards>
 

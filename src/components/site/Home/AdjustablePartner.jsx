@@ -19,8 +19,9 @@ import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
 
-const AdjustablePartnerSection = ({ headerName, imageSrc }) => {
-  const { data: products } = useGet("products", ENDPOINTS.products);
+const AdjustablePartnerSection = ({ headerName }) => {
+  const { data: partners } = useGet("partners", ENDPOINTS.partners);
+  console.log(partners)
 
   return (
     <AdjustableContainer>
@@ -54,10 +55,10 @@ const AdjustablePartnerSection = ({ headerName, imageSrc }) => {
                 },
               }}
             >
-              {products?.map((item) => (
+              {partners?.map((item) => (
                 <SwiperSlide>
                   <ImageContainer key={"1"}>
-                    <StyledImage src={`./images/${imageSrc}`} />
+                    <StyledImage src={item.image} />
                   </ImageContainer>
                 </SwiperSlide>
               ))}

@@ -31,7 +31,9 @@ const CategoryDetail = () => {
   const { id } = useParams();
   console.log(id)
   const { data: product,error } = useGetOne("productsId", ENDPOINTS.productsId, id);
+    const { data: categories } = useGetOne("categories", ENDPOINTS.categories, id);
   console.log(product?.featureOptionItems); 
+  console.log(categories)
   console.log(error)
   const { wishlist, addToWishlist } = useContext(WishlistContext);
 
@@ -64,11 +66,16 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
         <DetailHead>
           <Nav>
             <li>
-            <Link to="/">Əsas səhifə /</Link>
+            <Link to="/">Əsas səhifə</Link>
             </li>
-            <li>
-            <Link to="">Noutbuklar</Link>
-            </li>
+            {
+      product?.categories?.map((item) => (
+        <li key={item.id}>
+          <Link to=""> / {item.title}</Link>    
+        </li>
+      ))
+    }
+           
           </Nav>
           <SwitchProduct>
             <li>
@@ -185,8 +192,16 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
               <h2> {product?.description}</h2>
               <hr />
               <div className="price">
-                <p className="old">{product?.price} ₼</p>
+              {
+                product.discountPrice > 0 ?(
+                  <>
+                     <p className="old">{product?.price} ₼</p>
                 <p className="new">{product.discountPrice} ₼</p>
+                  </>
+                ): (
+                  <p className="new">{product?.price} ₼</p>
+                )
+              }
               </div>
 <DetailList>
 {
@@ -198,7 +213,6 @@ product?.featureOptionItems?.map((item)=>(
   </DetailItem>
 ))
 }
-
   <WishContainer onClick={() => {
     setLiked(true);
     addToWishlist(product);
@@ -223,7 +237,11 @@ product?.featureOptionItems?.map((item)=>(
 </DetailList>
               <DetailFoot>
                 <p>
-                  Kateqoriya: <span>Acer,Noutbuklar </span>
+                  Kateqoriya: {  product?.categories?.map((item)=>(
+                    <span>{item.title} </span>
+                  ))}
+                  
+                  {/* <span>Acer,Noutbuklar </span> */}
                 </p>
                 <Socials>
                   <li className="facebook" data-tooltip="Share on Facebook">

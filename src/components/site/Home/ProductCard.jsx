@@ -73,7 +73,7 @@ const ProductsCard = ({ item }) => {
  
       <ProductCard>
           <ProductCardHeadImage>
-            <ProductCardLink to={`/Product/${item.id}`}>
+            <ProductCardLink to={`/category/${item.id}`}>
               <img
                 src={item.images.find((img) => img.isMain)?.imagePath || ""}
                 alt={item.images.find((img) => img.isMain)?.altText || ""}
@@ -96,7 +96,7 @@ const ProductsCard = ({ item }) => {
     
           <ProductCardBody>
             <span>{item?.title}</span>
-            <Link to={`/Product/${item.id}`}>
+            <Link to={`/category/${item.id}`}>
               <ProductName>{item?.description}</ProductName>
             </Link>
             <PriceBox>
@@ -109,7 +109,7 @@ const ProductsCard = ({ item }) => {
                 <NewPrice>{item.price} ₼</NewPrice>
               )}
             </PriceBox>
-            <ButtonLink to={`/Product/${item.id}`}>Davamını oxu</ButtonLink>
+            <ButtonLink to={`/category/${item.id}`}>Davamını oxu</ButtonLink>
           </ProductCardBody>
         </ProductCard>
   );
@@ -117,7 +117,6 @@ const ProductsCard = ({ item }) => {
 
 const ProductCard = styled.div`
   border-radius: 8px;
-  /* box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; */
   padding: 10px;
   overflow: hidden;
   background-color: #fff;
@@ -230,9 +229,9 @@ const ButtonLink = styled(Link)`
     background-color: #149295;
     color: white;
     border: none;
-    padding: 8px;
+    padding: 5px;
     display: flex;
-    font-size: 14px;
+    font-size: 13px;
     font-family: inherit;
     cursor: pointer;
     &:hover {

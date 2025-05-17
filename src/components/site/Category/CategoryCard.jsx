@@ -32,17 +32,11 @@ export const CategoryProductCardSkelaton = () => {
       <CategoryCard>
         <CategoryCardHeadImage>
           <LoadingSkeleton height={"100%"} />
-
         </CategoryCardHeadImage>
-
         <CategoryCardBody>
           <LoadingSkeleton height={"10"} width={"40%"} />
-
-
           <ProductName>
-
             <LoadingSkeleton height={"10"} width={"60%"} />
-
           </ProductName>
           <div style={{ display: "flex", gap: "10px" }}>
             <PriceBox>
@@ -52,7 +46,6 @@ export const CategoryProductCardSkelaton = () => {
             </PriceBox>
           </div>
           <LoadingSkeleton height={"35px"} width={"100px"} />
-
         </CategoryCardBody>
       </CategoryCard>
 
@@ -75,7 +68,6 @@ const CategoryProductCard = ({ item }) => {
         <CategoryCardLink to={`/category/${item.id}`}>
           <img
             src={item.images.find((img) => img.isMain)?.imagePath || ""}
-            alt={item.images.find((img) => img.isMain)?.altText || ""}
           />
         </CategoryCardLink>
         <div className="heartIcon"
@@ -230,9 +222,9 @@ const ButtonLink = styled(Link)`
     background-color: #149295;
     color: white;
     border: none;
-    padding: 8px;
+    padding: 5px;
     display: flex;
-    font-size: 14px;
+    font-size: 13px;
     font-family: inherit;
     cursor: pointer;
     &:hover {
