@@ -7,7 +7,7 @@ export const ENDPOINTS = {
   productsId:`${MAIN_URL}/api/products/getbyid`,
   featureOptions:`${MAIN_URL}/api/featureoptions`,
   brand: `${MAIN_URL}/api/brand`,
-  partners: `${MAIN_URL}/api/partners`,
+  partners: `${MAIN_URL}/api/partners/all`,
   about: `${MAIN_URL}/about`,
   register: `${MAIN_URL}/api/auth/register`,
   blogs: `${MAIN_URL}/api/blogs`,

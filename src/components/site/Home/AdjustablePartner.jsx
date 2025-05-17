@@ -58,7 +58,8 @@ const AdjustablePartnerSection = ({ headerName }) => {
               {partners?.map((item) => (
                 <SwiperSlide>
                   <ImageContainer key={"1"}>
-                    <StyledImage src={item.image} />
+                    <StyledImage src={item.imagePath
+} />
                   </ImageContainer>
                 </SwiperSlide>
               ))}

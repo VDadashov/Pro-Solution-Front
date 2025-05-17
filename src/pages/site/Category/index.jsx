@@ -66,7 +66,7 @@ const Category = () => {
   });
 
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 11;
+  const productsPerPage = 8;
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = sortedProducts.slice(
@@ -114,14 +114,15 @@ const Category = () => {
                 onChange={(e) => setSortOption(e.target.value)}
               >
                 <option value="Standart Sıralama">Standart Sıralama</option>
-                <option value="Populyarlığa görə">Populyarlığa görə</option>
-                <option value="Ən yüksək reytinq">Ən yüksək reytinq</option>
-                <option value="Ən yenilər">Ən yenilər</option>
+                <option value="Populyarlığa görə">Populyarlığa görə sırala</option>
+                <option value="Ən yüksək reytinq">Ən yüksək reytinqə görə sırala</option>
+                <option value="Ən sonuncular">Ən sonunculara görə sırala</option>
+                <option value="Ən yenilər">Ən yenilərə görə sırala</option>
                 <option value="Qiymət: aşağıdan yuxarı">
-                  Qiymət: aşağıdan yuxarı
+                  Qiymətə görə: aşağıdan yuxarı
                 </option>
                 <option value="Qiymət: yuxarıdan aşağı">
-                  Qiymət: yuxarıdan aşağı
+                  Qiymətə görə: yuxarıdan aşağı
                 </option>
               </select>
             </CategorySelect>
