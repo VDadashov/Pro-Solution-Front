@@ -6,7 +6,7 @@ const ActionButtons = ({ openRegister }) => {
     <ButtonContainer>
       <StyledLinkContainer>
         <StyledLinkButton
-          href="https://service.prosolution.ltd"
+          href="https://service.devhost.site"
           target="_blank"
           rel="noopener noreferrer"
         >
