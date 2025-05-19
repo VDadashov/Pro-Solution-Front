@@ -39,9 +39,12 @@ export const CategoryProductCardSkelaton = () => {
             <LoadingSkeleton height={"10"} width={"60%"} />
           </ProductName>
           <div style={{ display: "flex", gap: "10px" }}>
+
             <PriceBox>
               <LoadingSkeleton height={"10"} width="40px" />
-            </PriceBox> <PriceBox>
+            </PriceBox> 
+            
+            <PriceBox>
               <LoadingSkeleton height={"10"} width="40px" />
             </PriceBox>
           </div>
