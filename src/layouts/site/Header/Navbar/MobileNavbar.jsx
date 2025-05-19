@@ -29,7 +29,7 @@ const MobileNavbar = ({ $isOpenModal, closeModal }) => {
         <MainMenu>
           <MobileSearch />
           <MenuComponent>
-            <Link to={"/"}>
+            <Link to={"/discount"}>
               <LinkText>Endirimlər</LinkText>
             </Link>
           </MenuComponent>

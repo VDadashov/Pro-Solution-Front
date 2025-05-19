@@ -26,6 +26,7 @@ const Discount = () => {
     <CategoryBody>
     <CategoryCardsWrapper>
             <CategoryCards>
+
               {currentPosts?.map((item) => (
 isLoading ?  <CategoryProductCardSkelaton/> : <CategoryProductCard key={item.id} item={item} />
 ))}
@@ -58,6 +59,7 @@ isLoading ?  <CategoryProductCardSkelaton/> : <CategoryProductCard key={item.id}
               </PaginationWrapper>
             )}
           </CategoryCardsWrapper>
+          
      <CategoryFilter>
     <Categories>
               <CategoriesSidebar />
@@ -81,7 +83,7 @@ const CategoryContent = styled.div`
   min-height: 100vh;
   width: 80%;
   padding: 20px;
-  @media (max-width: 950px) {
+  @media (max-width: 980px) {
     width: 100%;
   }
 `;
@@ -89,15 +91,18 @@ const CategoryBody = styled.div`
   display: flex;
   flex-direction: row;
   min-height: 100vh;
-  @media (max-width: 850px) {
-    flex-direction: column-reverse;
+  @media (max-width: 855px) {
+    flex-direction: column;
   }
 `;
 const CategoryCardsWrapper = styled.div`
   display: flex;
-  flex:1;
+  flex: 1;
   flex-direction: column;
   justify-content: space-between;
+  @media (max-width: 855px) {
+    width: 100%;
+  }
 `;
 
 const CategoryCards = styled.div`
@@ -106,16 +111,18 @@ const CategoryCards = styled.div`
   justify-content: flex-start;
   gap: 30px;
   width: 100%;
-  @media (max-width: 1093px) {
+  @media (max-width: 833px) {
     justify-content: center;
   }
 `;
 const CategoryFilter = styled.div`
   width: 25%;
   @media (max-width: 850px) {
-    display: none;
+    width: 100%;
+    margin-top: 20px;
   }
 `;
+
 const Categories = styled.div``;
 
 const PageButton = styled.button`

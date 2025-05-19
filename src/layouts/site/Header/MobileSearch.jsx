@@ -30,8 +30,8 @@ const MobileSearch = () => {
             All
           </option>
           {categories?.map((category) => (
-            <option key={category.name} value={category.name}>
-              {category.name}
+            <option key={category.title} value={category.title}>
+              {category.title}
             </option>
           ))}
         </SearchCategories>

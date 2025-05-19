@@ -146,7 +146,6 @@ const Category = () => {
                     ×
                   </ModalButton>
                 </TransparentBackground>
-
                 <SidebarFilter $isOpenModal={showFilter}>
                   {filterApplied && (
                     <ActiveFiltr>
