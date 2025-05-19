@@ -5,7 +5,6 @@ import styled from "styled-components";
 
 const WishlistTables = () => {
   const { wishlist, addToWishlist } = useContext(WishlistContext);
-
   return (
     <WishlistTable>
       <TableHead>
@@ -31,12 +30,13 @@ const WishlistTables = () => {
                 <ProductName>{item.description}</ProductName>
               </ProductNameTd>
               <ProductData style={{ color: "#000000" }}>
-                <DelTag>{item.price}</DelTag> {item.discountPrice} m
+                <DelTag>{item?.price?.original}</DelTag> {item?.price?.current}
               </ProductData>
               <ProductData>In Stock</ProductData>
             </ProductTr>
           ))
         )}
+
       </TableBody>
     </WishlistTable>
   );
