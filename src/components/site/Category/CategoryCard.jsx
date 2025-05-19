@@ -86,9 +86,9 @@ const CategoryProductCard = ({ item }) => {
       </CategoryCardHeadImage>
 
       <CategoryCardBody>
-        <span>{item?.title}</span>
-        <Link to={`/category/${item.id}`}>
-          <ProductName>{item?.description} </ProductName>
+        <span>{item?.categories[0].title}</span>
+        <Link to={`/category/${item.id}`}>  
+          <ProductName>{item?.title} </ProductName>
         </Link>
         <PriceBox>
           {item.discountPrice > 0 ? (
@@ -116,7 +116,7 @@ const CategoryCard = styled.div`
   background-color: #fff;
   transition: all 0.3s ease;
   cursor: pointer;
-  width: 200px;
+  width: 180px;
 &:hover{
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
@@ -133,8 +133,7 @@ const CategoryCard = styled.div`
 
 const ProductName = styled.h5`
   max-width: 100%;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+ overflow-wrap: break-word;
   font-size: 15px;
   color: #149295;
   margin: 10px 0;

@@ -31,7 +31,7 @@ const Search = () => {
           </option>
           {categories?.map((category) => (
             <option key={category.name} value={category.name}>
-              {category.name}
+              {category.title}
             </option>
           ))}
         </SearchCategories>

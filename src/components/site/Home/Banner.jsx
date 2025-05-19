@@ -16,8 +16,11 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
+import { ENDPOINTS } from "@utils/constants/Endpoints";
+import { useGet } from "@utils/hooks/useCustomQuery";
 
 const Banner = () => {
+  const { data: sliders } = useGet("sliders", ENDPOINTS.sliders);
   return (
     <BannerSection>
       <LayoutContainer>
@@ -32,17 +35,13 @@ const Banner = () => {
               modules={[FreeMode, Navigation, Autoplay, Pagination]}
               autoplay={{ delay: 2000, disableOnInteraction: false }}
             >
-              <SwiperSlide>
-                <StyledImage src={"./images/maxresdefault.webp"} />
+            {
+              sliders?.map((item)=>(
+                <SwiperSlide key={item.id}>
+                <StyledImage src={item.imagePath} />
               </SwiperSlide>
-              <SwiperSlide>
-                <StyledImage src={"./images/maxresdefault-jpg2.webp"} />
-              </SwiperSlide>
-              <SwiperSlide>
-                <StyledImage
-                  src={"./images/fcbae5e02653dba533d39dfd3b891a28.webp"}
-                />
-              </SwiperSlide>
+              ))
+            }
             </Swiper>
           </SwiperContainer>
         </BannerContainer>
@@ -50,6 +49,7 @@ const Banner = () => {
     </BannerSection>
   );
 };
+
 
 const BannerSection = styled.section`
   padding: 20px 0px;

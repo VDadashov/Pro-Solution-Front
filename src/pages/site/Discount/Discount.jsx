@@ -8,16 +8,12 @@ import styled from 'styled-components';
 
 const Discount = () => {
  const { data: products,isLoading } = useGet("products", ENDPOINTS.products);
-
   const [currentPage, setCurrentPage] = useState(1);
    const postsPerPage = 10;
- 
    const totalPages = Math.ceil((products?.length || 0) / postsPerPage);
    const indexOfLastPost = currentPage * postsPerPage;
    const indexOfFirstPost = indexOfLastPost - postsPerPage;
    const currentPosts = products?.slice(indexOfFirstPost, indexOfLastPost) || [];
-   
- 
    const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
@@ -62,22 +58,15 @@ isLoading ?  <CategoryProductCardSkelaton/> : <CategoryProductCard key={item.id}
               </PaginationWrapper>
             )}
           </CategoryCardsWrapper>
-
      <CategoryFilter>
     <Categories>
               <CategoriesSidebar />
             </Categories>
  </CategoryFilter>
-    </CategoryBody>
- 
-           
+    </CategoryBody>      
     </CategoryContent>
     </CategoryWrapper>
-
     </>
-
-   
-  
   )
 }
 
@@ -90,7 +79,7 @@ const CategoryWrapper = styled.section`
 `;
 const CategoryContent = styled.div`
   min-height: 100vh;
-  width: 90%;
+  width: 80%;
   padding: 20px;
   @media (max-width: 950px) {
     width: 100%;
@@ -122,7 +111,7 @@ const CategoryCards = styled.div`
   }
 `;
 const CategoryFilter = styled.div`
-  width: 30%;
+  width: 25%;
   @media (max-width: 850px) {
     display: none;
   }
