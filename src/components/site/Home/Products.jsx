@@ -14,14 +14,7 @@ import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
 
 const ProductSection = ({ sectionHeader, display }) => {
-  // const { data: categories } = useGet("categories", ENDPOINTS.categories);
   const { data: products, isLoading } = useGet("products", ENDPOINTS.products);
-
-
-  // const getCategoryName = (categoryId) => {
-  //   const category = categories?.find((cat) => cat?.id == categoryId);
-  //   return category ? category?.name : "Unknown Category";
-  // };
 
   return (
     <SectionContainer>

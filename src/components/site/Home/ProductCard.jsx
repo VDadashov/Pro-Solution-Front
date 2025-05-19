@@ -31,17 +31,11 @@ export const ProductsCardSkeleton=()=>{
       <ProductCard>
         <ProductCardHeadImage>
           <LoadingSkeleton height={"100%"} />
-
         </ProductCardHeadImage>
-
         <ProductCardBody>
           <LoadingSkeleton height={"10"} width={"40%"} />
-
-
           <ProductName>
-
             <LoadingSkeleton height={"10"} width={"60%"} />
-
           </ProductName>
           <div style={{ display: "flex", gap: "10px" }}>
             <PriceBox>
@@ -51,7 +45,6 @@ export const ProductsCardSkeleton=()=>{
             </PriceBox>
           </div>
           <LoadingSkeleton height={"35px"} width={"100px"} />
-
         </ProductCardBody>
       </ProductCard>
 
@@ -95,9 +88,9 @@ const ProductsCard = ({ item }) => {
           </ProductCardHeadImage>
     
           <ProductCardBody>
-            <span>{item?.title}</span>
+            <span>{item?.categories[0].title}</span>
             <Link to={`/category/${item.id}`}>
-              <ProductName>{item?.description}</ProductName>
+              <ProductName>{item?.title}</ProductName>
             </Link>
             <PriceBox>
               {item.discountPrice > 0 ? (
