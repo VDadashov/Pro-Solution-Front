@@ -14,12 +14,13 @@ import HorizontalLine from "@styles/common/HorizontalLine";
 import CommentForm from "@components/site/Blog/CommentForm";
 import { useGetOne } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
+import Reviews from "./Reviews";
 
 function BlogDetail() {
   const { id } = useParams();
 
   const { data } = useGetOne("blogs", ENDPOINTS.blogs, id);
-  
+ 
   return (
     <BlogDetailWrapper>
       <QuestionContent>
@@ -78,8 +79,9 @@ function BlogDetail() {
       </Socials>
 
       <HorizontalLine width="100%" />
-    
-
+      {data?.blogReviews?.map((item)=>(
+        <Reviews  item={item} ></Reviews>
+      ))}
       <HorizontalLine width="100%" />
       <CommentForm blogId={id} />
     </BlogDetailWrapper>
@@ -260,22 +262,7 @@ const Socials = styled.ul`
   }
 `;
 
-const Author = styled.div`
-  padding: 40px 30px;
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  color: #149295;
 
-  img {
-    border-radius: 50%;
-    width: 100px;
-  }
-
-  h3 {
-    padding: 20px;
-  }
-`;
 
 const BlogText = styled.div`
   padding: 20px;

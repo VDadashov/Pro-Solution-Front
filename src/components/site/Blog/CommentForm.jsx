@@ -29,9 +29,7 @@ function CommentForm({blogId}) {
       name: "",
       email: "",
       blogId: blogId,
-      // saveInfo: false,
-      // followUp: false,
-      // newPosts: false,
+ 
     },
     validationSchema: validationSchema,
     onSubmit: (values, actions) => {
@@ -134,7 +132,7 @@ function CommentForm({blogId}) {
         </div>
       </FormInputs>
 
-      <CheckboxGroup>
+      {/* <CheckboxGroup>
         <label>
           <input
             type="checkbox"
@@ -163,7 +161,7 @@ function CommentForm({blogId}) {
           />{" "}
           Notify me of new posts by email.
         </label>
-      </CheckboxGroup>
+      </CheckboxGroup> */}
 
       <SubmitButton
         type="submit"
