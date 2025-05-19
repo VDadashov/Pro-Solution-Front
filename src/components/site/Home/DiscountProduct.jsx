@@ -1,7 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const DiscountProductSection = () => {
+const [seconds, setSeconds] = useState(30);
+const [minutes, setMinutes] = useState(59);
+const [hours, setHours] = useState(1);
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    if (seconds > 0) {
+      setSeconds((prev) => prev - 1);
+    } else {
+      if (minutes > 0) {
+        setMinutes((prev) => prev - 1);
+        setSeconds(59);
+      } else {
+        if (hours > 0) {
+          setHours((prev) => prev - 1);
+          setMinutes(59);
+          setSeconds(59);
+        } else {
+          clearInterval(interval); 
+        }
+      }
+    }
+  }, 1000);
+
+  return () => clearInterval(interval);
+}, [seconds, minutes, hours]);
+
   return (
     <SectionContainer>
       <TextBox>
@@ -14,17 +41,17 @@ const DiscountProductSection = () => {
           <strong>50%-ə qədər </strong>
           endirimə düşən məhsullar
         </LeadUpperCase>
-        <TimerContainer>
-          <TimerBox>
-            0 <StyledStrong>Hours</StyledStrong>
-          </TimerBox>
-          <TimerBox>
-            0 <StyledStrong>Min</StyledStrong>
-          </TimerBox>
-          <TimerBox>
-            0 <StyledStrong>Sec</StyledStrong>
-          </TimerBox>
-        </TimerContainer>
+       <TimerContainer>
+  <TimerBox>
+    {hours} <StyledStrong>Hours</StyledStrong>
+  </TimerBox>
+  <TimerBox>
+    {minutes} <StyledStrong>Min</StyledStrong>
+  </TimerBox>
+  <TimerBox>
+    {seconds} <StyledStrong>Sec</StyledStrong>
+  </TimerBox>
+</TimerContainer>
         <TextBoxButton>İndi Bax</TextBoxButton>
       </TextBox>
     </SectionContainer>
