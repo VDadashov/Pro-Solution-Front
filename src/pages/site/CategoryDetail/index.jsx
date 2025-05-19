@@ -275,7 +275,7 @@ product?.featureOptionItems?.map((item)=>(
           </DetailInfo>
         </DetailBody>
       </Wrapper>
-      <ProductDetailTabs />
+      <ProductDetailTabs productId={id} />
     </DetailWrapper>
   );
 };

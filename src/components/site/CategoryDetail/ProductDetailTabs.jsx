@@ -1,21 +1,82 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { IoStar } from "react-icons/io5";
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage, useFormik } from 'formik';
 import * as Yup from 'yup';
 import ProductSection from '../Home/Products';
-const ProductDetailTabs = () => {
+import { ENDPOINTS } from '@utils/constants/Endpoints';
+import { usePost } from '@utils/hooks/useCustomMutation';
+import { Bounce, toast } from 'react-toastify';
+const ProductDetailTabs = ({ productId }) => {
   const [activeTab, setActiveTab] = useState('info');
   const [rating, setRating] = useState(0);
 
+  const {mutate:productReviewMutation}=usePost("productsCreateReview",ENDPOINTS.productsCreateReview)
   const ReviewSchema = Yup.object().shape({
-    review: Yup.string()
+    text: Yup.string()
       .max(500, 'Ən çox 500 hərf yaza bilərsiniz')
       .required('Rəy yazmaq məcburidir'),
     name: Yup.string().required('Ad tələb olunur'),
     email: Yup.string().email('Düzgün e-poçt deyil').required('E-poçt tələb olunur'),
-    save: Yup.boolean()
+    rating: Yup.number(),
+    productId: Yup.string()
   });
+  const formik = useFormik({
+    initialValues: {
+      text: '',
+      name: '',
+      email: '',
+      rating: rating,
+      productId: productId
+    },
+    validationSchema: ReviewSchema,
+    onSubmit: (values, actions) => {
+      const formData = {
+        ...values,
+        rating: rating
+      };
+
+
+productReviewMutation(formData,{
+
+  onSuccess:(res)=>{
+     console.log("SUCCESS:", res);
+  toast.success("Şərhiniz göndərildi");
+    actions.setSubmitting(false)
+actions.resetForm()
+  toast.success("Serhiniz gonderildi", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
+  },
+    onError: (error) => {
+          actions.setSubmitting(false);
+          toast.error(error, {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+          });
+        },
+})
+
+
+      console.log('Form dəyərləri:', formData);
+      actions.resetForm();
+      setRating(0);
+    }
+  })
+
   return (
     <Container>
       <Tabs>
@@ -36,70 +97,81 @@ const ProductDetailTabs = () => {
             <h2>Rəylər</h2>
             <p>Hələ ki, rəy yoxdur.</p>
           </Review>
-          <Formik
-            initialValues={{
-              review: '',
-              name: '',
-              email: '',
-              save: false
-            }}
-            validationSchema={ReviewSchema}
-            onSubmit={(values, actions) => {
-              const formData = {
-                ...values,
-                rating: rating
-              };
-              console.log('Form dəyərləri:', formData);
-              actions.resetForm();
-              setRating(0);
-            }}
-          >
-            {() => (
-              <ReviewForm as={Form}>
-                <h3>Be the first to review “Acer Aspire 3 A315-59 Slim (NX.K6SER.002-N)”</h3>
+        
+            <ReviewForm onSubmit={formik.handleSubmit}>
+  <h3>Be the first to review “Acer Aspire 3 A315-59 Slim (NX.K6SER.002-N)”</h3>
 
-                <label>Sizin reytinqiniz *</label>
-                <Stars>
-                  {[1, 2, 3, 4, 5].map((starValue) => (
-                    <Star
-                      key={starValue}
-                      onClick={() => setRating(starValue)}
-                      active={rating >= starValue}
-                    >
-                      <IoStar />
-                    </Star>
-                  ))}
-                </Stars>
+  <label>Sizin reytinqiniz *</label>
+  <Stars>
+    {[1, 2, 3, 4, 5].map((starValue) => (
+      <Star
+        key={starValue}
+        onClick={() => {
+          setRating(starValue);
+          formik.setFieldValue('rating', starValue);
+        }}
+        active={rating >= starValue}
+      >
+        <IoStar />
+      </Star>
+    ))}
+  </Stars>
 
+  <label>Sizin rəyiniz *</label>
+  <textarea
+    name="text"
+    rows="5"
+    maxLength={500}
+    {...formik.getFieldProps('text')}
+  />
+  {formik.touched.text && formik.errors.text && (
+    <div style={{ color: 'red', fontSize: '0.9rem' }}>{formik.errors.text}</div>
+  )}
 
-                <label>Sizin rəyiniz *</label>
-                <Field as="textarea" name="review" rows="5" />
-                <ErrorMessage name="review" component="div" style={{ color: 'red', fontSize: '0.9rem' }} />
+  <InputRow>
+    <div>
+      <label htmlFor="name">Ad *</label>
+      <input
+        type="text"
+        id="name"
+        maxLength={100}
+        {...formik.getFieldProps('name')}
+      />
+      {formik.touched.name && formik.errors.name && (
+        <div style={{ color: 'red', fontSize: '0.9rem' }}>{formik.errors.name}</div>
+      )}
+    </div>
+    <div>
+      <label htmlFor="email">E-poçt *</label>
+      <input
+        type="email"
+        id="email"
+        maxLength={100}
+        {...formik.getFieldProps('email')}
+      />
+      {formik.touched.email && formik.errors.email && (
+        <div style={{ color: 'red', fontSize: '0.9rem' }}>{formik.errors.email}</div>
+      )}
+    </div>
+  </InputRow>
 
-                <InputRow>
-                  <div>
-                    <label>Ad *</label>
-                    <Field type="text" name="name" />
-                    <ErrorMessage name="name" component="div" style={{ color: 'red', fontSize: '0.9rem' }} />
-                  </div>
-                  <div>
-                    <label>E-poçt *</label>
-                    <Field type="email" name="email" />
-                    <ErrorMessage name="email" component="div" style={{ color: 'red', fontSize: '0.9rem' }} />
-                  </div>
-                </InputRow>
+  <CheckboxRow>
+    <input
+      type="checkbox"
+      name="save"
+      id="save"
+      onChange={formik.handleChange}
+      checked={formik.values.save}
+    />
+    <label htmlFor="save">
+      Save my name, email, and website in this browser for the next time I comment.
+    </label>
+  </CheckboxRow>
 
-                <CheckboxRow>
-                  <Field type="checkbox" name="save" id="save" />
-                  <label htmlFor="save">
-                    Save my name, email, and website in this browser for the next time I comment.
-                  </label>
-                </CheckboxRow>
-
-                <SubmitButton type="submit">GÖNDƏR</SubmitButton>
-              </ReviewForm>
-            )}
-          </Formik>
+  <SubmitButton type="submit" disabled={formik.isSubmitting}>
+    GÖNDƏR
+  </SubmitButton>
+</ReviewForm>
         </>
       )}
 
@@ -264,4 +336,77 @@ const SubmitButton = styled.button`
   cursor: pointer;
 `;
 
+  // const ReviewSchema = Yup.object().shape({
+  //   review: Yup.string()
+  //     .max(500, 'Ən çox 500 hərf yaza bilərsiniz')
+  //     .required('Rəy yazmaq məcburidir'),
+  //   name: Yup.string().required('Ad tələb olunur'),
+  //   email: Yup.string().email('Düzgün e-poçt deyil').required('E-poçt tələb olunur'),
+  //   save: Yup.boolean()
+  // });
 
+
+    {/* <Formik
+            initialValues={{
+              review: '',
+              name: '',
+              email: '',
+              save: false
+            }}
+            validationSchema={ReviewSchema}
+            onSubmit={(values, actions) => {
+              const formData = {
+                ...values,
+                rating: rating
+              };
+              console.log('Form dəyərləri:', formData);
+              actions.resetForm();
+              setRating(0);
+            }}
+          >
+            {() => (
+              <ReviewForm as={Form}>
+                <h3>Be the first to review “Acer Aspire 3 A315-59 Slim (NX.K6SER.002-N)”</h3>
+
+                <label>Sizin reytinqiniz *</label>
+                <Stars>
+                  {[1, 2, 3, 4, 5].map((starValue) => (
+                    <Star
+                      key={starValue}
+                      onClick={() => setRating(starValue)}
+                      active={rating >= starValue}
+                    >
+                      <IoStar />
+                    </Star>
+                  ))}
+                </Stars>
+
+
+                <label>Sizin rəyiniz *</label>
+                <Field as="textarea" name="review" rows="5" />
+                <ErrorMessage name="review" component="div" style={{ color: 'red', fontSize: '0.9rem' }} />
+
+                <InputRow>
+                  <div>
+                    <label>Ad *</label>
+                    <Field type="text" name="name" />
+                    <ErrorMessage name="name" component="div" style={{ color: 'red', fontSize: '0.9rem' }} />
+                  </div>
+                  <div>
+                    <label>E-poçt *</label>
+                    <Field type="email" name="email" />
+                    <ErrorMessage name="email" component="div" style={{ color: 'red', fontSize: '0.9rem' }} />
+                  </div>
+                </InputRow>
+
+                <CheckboxRow>
+                  <Field type="checkbox" name="save" id="save" />
+                  <label htmlFor="save">
+                    Save my name, email, and website in this browser for the next time I comment.
+                  </label>
+                </CheckboxRow>
+
+                <SubmitButton type="submit">GÖNDƏR</SubmitButton>
+              </ReviewForm>
+            )}
+          </Formik> */}

@@ -25,12 +25,17 @@ const Discount = () => {
  <CategoryContent>
     <CategoryBody>
     <CategoryCardsWrapper>
-            <CategoryCards>
-
-              {currentPosts?.map((item) => (
-isLoading ?  <CategoryProductCardSkelaton/> : <CategoryProductCard key={item.id} item={item} />
-))}
-            </CategoryCards>
+    
+ <CategoryCards>
+  {isLoading
+    ? Array.from({ length: 8 }).map((_, index) => (
+        <CategoryProductCardSkelaton key={index} />
+      ))
+    : currentPosts?.map((item) => (
+        <CategoryProductCard key={item.id} item={item} />
+      ))
+  }
+</CategoryCards>
             {totalPages > 1 && (
               <PaginationWrapper>
                 <PageButton
@@ -59,12 +64,13 @@ isLoading ?  <CategoryProductCardSkelaton/> : <CategoryProductCard key={item.id}
               </PaginationWrapper>
             )}
           </CategoryCardsWrapper>
-          
+
      <CategoryFilter>
     <Categories>
               <CategoriesSidebar />
             </Categories>
  </CategoryFilter>
+
     </CategoryBody>      
     </CategoryContent>
     </CategoryWrapper>
