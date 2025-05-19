@@ -28,11 +28,13 @@ const Category = () => {
     setPriceRange(range);
   };
   const [filterApplied, setFilterApplied] = useState(false);
+
   useEffect(() => {
     if (priceRange.min === null && priceRange.max === null) {
       setFilterApplied(false);
     }
   }, [priceRange]);
+  
   const parsePrice = (value) => {
     if (typeof value === "string") {
       return Number(value.replace(/[^\d.]/g, ""));
@@ -81,7 +83,6 @@ const Category = () => {
     setCurrentPage(1);
   }, [priceRange, sortOption]);
 
-
   return (
     <>
       <Helmet>
@@ -95,9 +96,16 @@ const Category = () => {
                 <li>
                   <Link>Əsas səhifə /</Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link>Noutbuklar</Link>
+                </li> */}
+                {
+                  products?.categories?.map((item)=>(
+                     <li key={item.id}>
+                  <Link>{item.title}</Link>
                 </li>
+                  ))
+                }
               </ul>
             </div>
             <ResponsiveFilter onClick={() => setShowFilter(true)}>
@@ -106,7 +114,6 @@ const Category = () => {
               </i>
               <p>Filtr</p>
             </ResponsiveFilter>
-
             <CategorySelect>
               <p>Lorem ipsum dolor sit amet.</p>
               <select
@@ -185,7 +192,7 @@ const Category = () => {
               <CategoryCards>
                 {currentProducts?.map((item) => (
 
-                  isLoading ? <CategoryProductCardSkelaton /> : <CategoryProductCard uctCard key={item.id} item={item} />
+                  isLoading ? <CategoryProductCardSkelaton /> : <CategoryProductCard uctCard key={item.id}  item={item} />
                 ))}
               </CategoryCards>
 
@@ -308,7 +315,7 @@ const CategoryWrapper = styled.section`
 `;
 const CategoryContent = styled.div`
   min-height: 100vh;
-  width: 90%;
+  width: 80%;
   padding: 20px;
   @media (max-width: 950px) {
     width: 100%;
@@ -319,7 +326,7 @@ const CategoryHead = styled.div`
   justify-content: space-between;
   flex-wrap: wrap;
   align-items: center;
-  max-width: 93%;
+  max-width: 95%;
   padding-bottom: 1rem;
   @media (max-width: 850px) {
     display: flex;
@@ -420,7 +427,7 @@ const CategoryCards = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  gap: 30px;
+  gap: 20px;
   width: 100%;
   @media (max-width: 1093px) {
     justify-content: center;

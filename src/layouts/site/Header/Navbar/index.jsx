@@ -205,7 +205,6 @@ const CategoryElement = styled.li`
 `;
 
 const SubCategoryList = styled.ul`
-  padding-top: 20px;
   display: none;
   position: absolute;
   box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.15);

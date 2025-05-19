@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
@@ -18,9 +18,11 @@ import "swiper/css/scrollbar";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
+import { data } from "react-router";
 
 const AdjustableSection = ({ headerName}) => {
 const { data: brand } = useGet("brand", ENDPOINTS.brand);
+console.log(data)
   return (
     <AdjustableContainer>
       <LayoutContainer>
@@ -59,7 +61,7 @@ const { data: brand } = useGet("brand", ENDPOINTS.brand);
                     <StyledImage src={item.imagePath} />
                     <DescriptionContainer>
                       <NameBox>{item.title}</NameBox>
-                      <CountBox className="countbox">{item.description}</CountBox>
+                      <CountBox className="countbox">{item.products.length} Məhsullar</CountBox>
                     </DescriptionContainer>
                   </ImageContainer>
                 </SwiperSlide>

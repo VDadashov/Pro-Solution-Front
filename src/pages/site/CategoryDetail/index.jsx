@@ -328,8 +328,14 @@ const SwitchProduct = styled.ul`
       padding: 6px;
       border: 2px solid #c0c0c0;
       border-radius: 50%;
-    }
+           &:hover{
+    background-color: teal;
+    color: white;
   }
+    }
+ 
+  }
+
 `;
 const DetailBody = styled.div`
   display: flex;
