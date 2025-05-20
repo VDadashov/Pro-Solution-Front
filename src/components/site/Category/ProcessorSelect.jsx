@@ -72,9 +72,10 @@ console.log("error:", error);
 export default ProcessorSelect;
 
 const Container = styled.div`
-  padding-left: 20px;
+  /* padding-left: 20px; */
   font-family: Arial, sans-serif;
   max-width: 300px;
+  margin-bottom: 1rem;
 
   h3 {
     font-size: 1em;

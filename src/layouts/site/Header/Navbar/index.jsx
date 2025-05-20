@@ -15,7 +15,7 @@ const Navbar = () => {
   const { wishlist } = useContext(WishlistContext);
     const { data: categories } = useGet("categories", ENDPOINTS.categories);
 
-  
+  console.log(categories)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,7 +31,12 @@ const Navbar = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
+function toKebabCase(str) {
+  return str
+    .replace(/([a-z])([A-Z])/g, '$1-$2')       // insert dash between camelCase
+    .replace(/[\s_]+/g, '-')                   // replace spaces and underscores with dash
+    .toLowerCase();                            // lowercase everything
+}
   const isHomePage = location.pathname === "/";
   
   return (
@@ -50,18 +55,26 @@ const Navbar = () => {
                   <CategoryList>
                     {categories?.map((item) => (
                       <CategoryElement key={item.name}>
+                      <CategoryLink to={`/category/${toKebabCase(item.title)}`}>
+
                         {item.title}
+                      </CategoryLink>
                         <ArrowForward />
+                        
                         <SubCategoryList>
                           {item?.categoryItems?.map((categoryItem) => (
                             <SubCategoryElement key={categoryItem.title}>
+                            <Link  to={`/category/${toKebabCase(item.title)}/${toKebabCase(categoryItem.title)}`}>
                               {categoryItem.title}
+
+                            </Link>
                             </SubCategoryElement>
                           ))}
                         </SubCategoryList>
                       </CategoryElement>
                     ))}
                   </CategoryList>
+
                 </CategoryListContainer>
               </ProductsLi>
               <StyledNavigationLi>
@@ -105,7 +118,11 @@ const Navbar = () => {
     </NavigationBar>
   );
 };
+const CategoryLink=styled(Link)`
+width:"100%";
+height:"100%";
 
+`
 const NavbarLink = styled(NavLink)`
   &.active {
     color: #fff;

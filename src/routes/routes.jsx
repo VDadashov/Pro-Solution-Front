@@ -41,6 +41,20 @@ const ROUTES = [
       {
         path: "/category",
         element: <Category />,
+        children: [
+          {
+            path: ":category",
+            element: <Category />,
+            children: [
+              {
+                path: ":subcategory",
+                element: <Category />,
+
+
+              }
+            ]
+          }
+        ]
       },
       {
         path: "/discount",
