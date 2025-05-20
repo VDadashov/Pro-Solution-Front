@@ -1,13 +1,55 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import moment from "moment"
+import styled, { keyframes } from "styled-components";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
+const pulse = keyframes`
+     0% {
+       opacity: 1;
+     }
+     50% {
+       opacity: 0.5;
+     }
+     100% {
+       opacity: 1;
+     }
+   `;
+
+  const LoadingSkeleton = styled(Skeleton)`
+    animation: ${pulse} 1.5s infinite ease-in-out;
+  `;
+
+  const BlogSkeleton= ({index})=>{
+    return (
+      <BlogCardsContainer>
+        <BlogCard >
+          <BlogDetail>
+            <div>
+              <LoadingSkeleton width={"50px"} height={"50px"} />
+              
+            </div>
+            <BlogImg>
+              <LoadingSkeleton width={"250px"} height={"150px"} />
+            </BlogImg>
+          </BlogDetail>
+          <BlogContent>
+            <Question>
+              <LoadingSkeleton width={"100px"} height={20} />
+            </Question>
+            <hr />
+            <LoadingSkeleton width={"100px"} height={20} />
+          </BlogContent>
+        </BlogCard>
+      </BlogCardsContainer>
+    );
+  }
 
 const BlogList = () => {
-  const { data: blogs } = useGet("blogs", ENDPOINTS.blogs);
+  const { data: blogs, isLoading } = useGet("blogs", ENDPOINTS.blogs);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 3;
 
@@ -19,9 +61,14 @@ const BlogList = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div>
+    <>
       <BlogCardsContainer>
-        {currentPosts?.map((blog, index) => (
+        {!isLoading ? 
+        Array.from({length:8}).map((_,index)=>(
+          <BlogSkeleton key={index}/>
+        ))
+        :
+        currentPosts?.map((blog, index) => (
           <BlogCard key={index}>
             <BlogDetail>
               <BlogDate>
@@ -68,8 +115,9 @@ const BlogList = () => {
             </PageButton>
           </PaginationWrapper>
         )}
+
       </BlogCardsContainer>
-    </div>
+    </>
   );
 };
 

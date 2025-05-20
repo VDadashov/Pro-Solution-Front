@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+
 const pulse = keyframes`
      0% {
        opacity: 1;
