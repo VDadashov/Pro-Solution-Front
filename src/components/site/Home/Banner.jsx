@@ -66,6 +66,10 @@ const BannerContainer = styled.div`
 
 const SwiperContainer = styled.div`
   max-width: 75%;
+    @media(max-width:850px){
+max-width: 100%;
+
+  }
   .swiper-pagination-bullet {
     background-color: transparent;
     border: 1px solid #ffffff;
@@ -84,6 +88,7 @@ const SwiperContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: all 0.3s ease;
   }
 
   .swiper-button-next::after,
@@ -96,18 +101,31 @@ const SwiperContainer = styled.div`
   .swiper-button-prev:hover {
     background-color: rgba(0, 0, 0, 0.5);
   }
-
-  @media (max-width: 850px) {
+    @media (max-width: 850px) {
     .swiper-button-next,
     .swiper-button-prev {
-      font-size: 1.5rem;
-      width: 40px;
-      height: 40px;
+      font-size: 1.2rem;
+      width: 35px;
+      height: 35px;
     }
 
     .swiper-button-next::after,
     .swiper-button-prev::after {
-      font-size: 1.5rem;
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .swiper-button-next,
+    .swiper-button-prev {
+      font-size: 1rem;
+      width: 20px;
+      height: 28px;
+    }
+
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+      font-size: 0.8rem;
     }
   }
 `;

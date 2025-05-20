@@ -54,7 +54,9 @@ const SideBarOpener = styled.a`
   }
 `;
 
-const BarIcon = styled(FaBars)``;
+const BarIcon = styled(FaBars)`
+ font-size: 24px;
+`;
 
 const Header = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
