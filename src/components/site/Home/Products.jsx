@@ -63,18 +63,54 @@ const ProductSection = ({ sectionHeader, display }) => {
 const SectionContainer = styled.section`
   width: 100%;
   padding: 10px 0px 30px;
+
   .swiper-button-next,
   .swiper-button-prev {
     color: black;
     transition: color 0.3s ease;
-    transform: scale(0.7);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &::after {
+      font-size: 30px; 
+    }
   }
 
   .swiper-button-next:hover,
   .swiper-button-prev:hover {
     color: #149295;
   }
+
+  @media (max-width: 1024px) {
+    .swiper-button-next,
+    .swiper-button-prev {
+      width: 30px;
+      height: 30px;
+    }
+
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+      font-size: 25px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .swiper-button-next,
+    .swiper-button-prev {
+      width: 14px;
+      height: 14px;
+    }
+
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+      font-size: 18px;
+    }
+  }
 `;
+
 
 const ProductsContainer = styled.div`
   width: 100%;
@@ -92,5 +128,6 @@ const ContainerHeader = styled.h3`
 `;
 
 const ContainerSpan = styled.span``;
+
 
 export default ProductSection;

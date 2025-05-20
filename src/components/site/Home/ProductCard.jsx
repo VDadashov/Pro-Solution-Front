@@ -182,6 +182,9 @@ const ProductCardHeadImage = styled.div`
     @media (max-width: 930px) {
       font-size: 18px;
     }
+         @media(max-width:960px){
+    opacity: 1;
+  }
   }
   .heartIcon:hover {
     color: white;
