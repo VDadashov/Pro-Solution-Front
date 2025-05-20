@@ -13,9 +13,9 @@ const Home = () => {
       {/* <Loading /> */}
       <MainSection>
         <Banner />
-        <ProductSection sectionHeader={"Ən Çox Satılanlar"} />
-        <ProductSection sectionHeader={"Təzə Endirimlər"} />
-        <ProductSection sectionHeader={"Yeni Məhsullar"} />
+        <ProductSection sectionHeader={"Ən Çox Satılanlar"}  order={2}  />
+        <ProductSection sectionHeader={"Təzə Endirimlər"}  order={2} />
+        <ProductSection sectionHeader={"Yeni Məhsullar"} order={2} />
         <DiscountProductSection />
         <AdjustableSection
           headerName={"Brendlər"}

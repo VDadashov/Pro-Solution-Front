@@ -467,7 +467,6 @@ const SidebarFilter = styled.div`
   .price-section {
     padding-top: 1rem;
     padding-bottom: 20px;
-    padding-left: 20px;
     h3 {
       font-size: 1em;
       font-weight: 600;
@@ -487,13 +486,12 @@ const SidebarFilter = styled.div`
   }
 `;
 const CategoryFilter = styled.div`
-  width: 30%;
+  width: 28%;
   @media (max-width: 850px) {
     display: none;
   }
 `;
 const ActiveFiltr = styled.div`
-  padding-left: 20px;
   h3 {
     font-size: 1em;
     font-weight: 600;
@@ -509,7 +507,6 @@ const ActiveFiltr = styled.div`
   }
 `;
 const Price = styled.div`
-  padding-left: 20px;
   padding-bottom: 20px;
   h3 {
     font-size: 1em;
@@ -527,7 +524,6 @@ const Price = styled.div`
 `;
 const Categories = styled.div``;
 const Processor = styled.div`
-  padding-left: 20px;
   margin-bottom: 1rem;
   line-height: 2.5;
   max-width: 300px;
