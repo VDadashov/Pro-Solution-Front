@@ -1,104 +1,59 @@
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+const pulse = keyframes`
+     0% {
+       opacity: 1;
+     }
+     50% {
+       opacity: 0.5;
+     }
+     100% {
+       opacity: 1;
+     }
+   `;
 
-const CategoriesSidebar = ({}) => {
+  const LoadingSkeleton = styled(Skeleton)`
+    animation: ${pulse} 1.5s infinite ease-in-out;
+  `;
 
-  const { data: categories } = useGet("categories", ENDPOINTS.categories);
-  // console.log(categories)
-  // const categories = [
-  //   { name: "Acer", count: 17 },
-  //   { name: "Aksespointlər", count: 9 },
-  //   { name: "Ana Platalar", count: 45 },
-  //   { name: "Asus", count: 24 },
-  //   { name: "Dell", count: 13 },
-  //   { name: "Flaşkartlar", count: 19 },
-  //   { name: "HDD", count: 9 },
-  //   { name: "HP", count: 59 },
-  //   { name: "HP", count: 12 },
-  //   { name: "Kabel", count: 12 },
-  //   { name: "Kalonkalar", count: 15 },
-  //   { name: "Keyslər", count: 20 },
-  //   { name: "Klaviaturalar", count: 22 },
-  //   { name: "Kompüter Aksesuarları", count: 165 },
-  //   { name: "Kompüter Hissələri", count: 206 },
-  //   { name: "Lenovo", count: 23 },
-  //   { name: "Masaüstü Kompüter", count: 34 },
-  //   { name: "Mauslar", count: 52 },
-  //   { name: "Mobil Cihazlar", count: 88 },
-  //   { name: "Monitorlar", count: 47 },
-  //   { name: "Monobloklar", count: 17 },
-  //   { name: "MousePad", count: 10 },
-  //   { name: "MSI", count: 10 },
-  //   { name: "Məişət Texnikası", count: 26 },
-  //   { name: "Noutbuklar", count: 145 },
-  //   { name: "Operativ Yaddaşlar", count: 26 },
-  //   { name: "Planşetlər", count: 24 },
-  //   { name: "Printerlər", count: 24 },
-  //   { name: "Printer və Skanerlər", count: 31 },
-  //   { name: "Prosessorlar", count: 25 },
-  //   { name: "Qida Blokları", count: 17 },
-  //   { name: "Serverlər", count: 17 },
-  //   { name: "Soyutma Sistemləri", count: 20 },
-  //   { name: "SSD", count: 28 },
-  //   { name: "Sviçlər", count: 19 },
-  //   { name: "Telefonlar", count: 52 },
-  //   { name: "TV", count: 9 },
-  // ];
+  const CategoriesSkeleton = ({ index }) => {
+    const randomWidth = Math.floor(Math.random() * (100 - 50 + 1)) + 50;
+    return (
+      <SidebarWrapper key={`skleton-${index}`}>
+        <CategoriesSection>
+          <LoadingSkeleton width={randomWidth} height={20} />
+        </CategoriesSection>
+      </SidebarWrapper>
+    );
+  };
+const CategoriesSidebar = () => {
+  const { data: categories, isLoading } = useGet(
+    "categories",
+    ENDPOINTS.categories
+  );
 
-  // const [products, setProducts]= useState([])
-  // const [categories, setCategories]= useState([])
-  //   useEffect(() => {
-  //     fetch("http://localhost:3000/products")
-  //     .then((res)=>res.json())
-  //     .then(data=>{
-  //       setProducts(data)
-  //     })
-  //     ;
-  //   }, []);
-
-  //   useEffect(()=>{
-  //     fetch("http://localhost:3000/categories")
-  //     .then((res)=>res.json())
-  //     .then(cat=>{
-  //       setCategories(cat)
-  //     })
-  //   },[])
-
-  //  const productCount = products.filter(
-  //    (product) => product.categoryId === categories.id
-  //  ).length;
-
-  //  const [products, setProducts]=useState([])
-  //  const uniqueCategories = [
-  //    ...new Set(products.map((product) => product.category)),
-  //  ];
-
-  console.log(categories);
   
+
   return (
     <SidebarWrapper>
-     
       <CategoriesHead>
         <h4>KATEQORİYALAR</h4>
         <hr />
       </CategoriesHead>
       <CategoriesSection>
-        {categories?.map((category, index) => (
-          <React.Fragment key={index}>
-            <button>{category.title}</button>
-            {/* {category.subcategories?.map((sub, subIndex) => (
-              <button key={`${index}-${subIndex}`}>{sub.name}</button>
-            ))} */}
-            {/* {
-              products.map((pro, proindex)=>(
-               
-                <button key={proindex}>{pro.category}({productCount})</button>
-              ))
-            } */}
-          </React.Fragment>
-        ))}
+        {isLoading
+          ? Array.from({ length: 20 }).map((_, index) => (
+              <CategoriesSkeleton key={index} />
+            ))
+          : categories?.map((category, index) => (
+              <React.Fragment key={index}>
+                <button>{category.title}</button>
+              </React.Fragment>
+            ))}
       </CategoriesSection>
     </SidebarWrapper>
   );
@@ -107,17 +62,17 @@ const CategoriesSidebar = ({}) => {
 export default CategoriesSidebar;
 
 const SidebarWrapper = styled.div`
-  padding: 20px;
-  display:flex;
-  align-items:flex-start;
-  flex-direction:column;
+  // padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
   h4 {
     color: gray;
     margin-bottom: 10px;
   }
-  hr{
-  width:50px;
-  border-top: 2px solid #ececec
+  hr {
+    width: 50px;
+    border-top: 2px solid #ececec;
   }
 
   button {
@@ -132,7 +87,6 @@ const SidebarWrapper = styled.div`
       background-color: #149295;
       color: #fff;
     }
-
   }
 `;
 
@@ -149,4 +103,3 @@ const CategoriesHead = styled.div`
   flex-shrink: 0;
   padding-bottom: 30px;
 `;
-

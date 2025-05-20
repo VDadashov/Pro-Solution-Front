@@ -1,12 +1,12 @@
 import React from 'react'
 import styled from 'styled-components';
-import AuthorsWrapper from "@components/site/Blog/Authors";
+import Authors from "@components/site/Blog/Authors";
 import CategoriesSidebar from "@components/site/Blog/CategoriesSidebar";
 
 function SideBar() {
   return (
     <Sidebar>
-      <AuthorsWrapper />
+      <Authors />
       <CategoriesSidebar />
     </Sidebar>
   );
