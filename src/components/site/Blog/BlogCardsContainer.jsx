@@ -4,122 +4,7 @@ import { Link } from "react-router-dom";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import moment from "moment"
-// const staticBlogs = [
-//   {
-//     date: "22",
-//     month: "iyl",
-//     title: "Ram-nədir?",
-//     excerpt: "Ram-nədir?[...]",
-//     to: "/blog/ram-nedir",
-//     img: "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2024/07/444444444444444.jpg?w=1080&ssl=1",
-//   },
-//   {
-//     date: "13",
-//     month: "iyn",
-//     title: "CPU-nədir?",
-//     excerpt: "CPU-nədir?[...]",
-//     to: "/blog/ram-nedir",
-//     img: "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2024/06/2222222222222222222222222222222222222.jpg?w=1080&ssl=1",
-//   },
-//   {
-//     date: "13",
-//     month: "iyn",
-//     title: "CPU-nədir?",
-//     excerpt: "CPU-nədir?[...]",
-//     to: "/blog/ram-nedir",
-//     img: "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2024/06/2222222222222222222222222222222222222.jpg?w=1080&ssl=1",
-//   },
-//   {
-//     date: "13",
-//     month: "iyn",
-//     title: "CPU-nədir?",
-//     excerpt: "CPU-nədir?[...]",
-//     to: "/blog/ram-nedir",
-//     img: "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2024/06/2222222222222222222222222222222222222.jpg?w=1080&ssl=1",
-//   },
-//   {
-//     date: "13",
-//     month: "iyn",
-//     title: "CPU-nədir?",
-//     excerpt: "CPU-nədir?[...]",
-//     to: "/blog/ram-nedir",
-//     img: "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2024/06/2222222222222222222222222222222222222.jpg?w=1080&ssl=1",
-//   },
-//   {
-//     date: "13",
-//     month: "iyn",
-//     title: "CPU-nədir?",
-//     excerpt: "CPU-nədir?[...]",
-//     to: "/blog/ram-nedir",
-//     img: "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2024/06/2222222222222222222222222222222222222.jpg?w=1080&ssl=1",
-//   },
-//   {
-//     date: "13",
-//     month: "iyn",
-//     title: "CPU-nədir?",
-//     excerpt: "CPU-nədir?[...]",
-//     to: "/blog/ram-nedir",
-//     img: "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2024/06/2222222222222222222222222222222222222.jpg?w=1080&ssl=1",
-//   },
-// ];
 
-// const BlogListSkeleton= ()=>{
-//   return (
-
-//     <div>
-//       <BlogCardsContainer>
-//         {blogs?.map((blog, index) => (
-//           <BlogCard key={index}>
-//             <BlogDetail>
-//               <BlogDate>
-//                 <h3>{blogs.date}</h3>
-//                 <p>{blogs.month}</p>
-//               </BlogDate>
-//               <BlogImg>
-//                 <img src={blogs.img} alt={blogs.title} />
-//               </BlogImg>
-//             </BlogDetail>
-//             <BlogContent>
-//               <Question to={blogs.to}>{blogs.title}</Question>
-//               <hr />
-//               <p>{blogs.excerpt}</p>
-//             </BlogContent>
-//           </BlogCard>
-//         ))}
-//         {totalPages > 1 && (
-//           <PaginationWrapper>
-//             <PageButton
-//               onClick={() => paginate(currentPage - 1)}
-//               disabled={currentPage === 1}
-//               hidden={currentPage === 1}
-//             >
-//               &laquo;
-//             </PageButton>
-
-//             {[...Array(totalPages)].map((_, index) => (
-//               <PageButton
-//                 key={index}
-//                 onClick={() => paginate(index + 1)}
-//                 active={currentPage === index + 1}
-//               >
-//                 {index + 1}
-//               </PageButton>
-//             ))}
-
-//             <PageButton
-//               onClick={() => paginate(currentPage + 1)}
-//               disabled={currentPage === totalPages}
-//               hidden={currentPage === totalPages}
-//             >
-//               &raquo;
-//             </PageButton>
-//           </PaginationWrapper>
-//         )}
-//       </BlogCardsContainer>
-
-//     </div>
-//   )
-// }
 
 const BlogList = () => {
   const { data: blogs } = useGet("blogs", ENDPOINTS.blogs);
@@ -196,7 +81,6 @@ const BlogCardsContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   min-height: 130vh;
-  padding: 30px 0 30px 0;
 `;
 
 const BlogContent = styled.div`
