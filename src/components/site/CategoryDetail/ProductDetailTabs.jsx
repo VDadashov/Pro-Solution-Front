@@ -7,7 +7,7 @@ import ProductSection from '../Home/Products';
 import { ENDPOINTS } from '@utils/constants/Endpoints';
 import { usePost } from '@utils/hooks/useCustomMutation';
 import { Bounce, toast } from 'react-toastify';
-const ProductDetailTabs = ({ productId }) => {
+const ProductDetailTabs = ({product}) => {
   const [activeTab, setActiveTab] = useState('info');
   const [rating, setRating] = useState(0);
   
@@ -31,7 +31,7 @@ useEffect(() => {
     }
   }
 }, []);
-
+console.log(product)
   const ReviewSchema = Yup.object().shape({
     text: Yup.string()
       .max(500, 'Ən çox 500 hərf yaza bilərsiniz')
@@ -51,7 +51,7 @@ useEffect(() => {
       name: '',
       email: '',
       rating: 0,
-      productId: productId||null
+      productId: product?.id||null
     },
     validationSchema: ReviewSchema,
     onSubmit: (values, actions) => {
@@ -124,10 +124,17 @@ productReviewMutation(formData,{
       )}
       {activeTab === 'reviews' && (
         <>
-          <Review>
-            <h2>Rəylər</h2>
-            <p>Hələ ki, rəy yoxdur.</p>
+        
+          
+{product?.productReviews?.map((item)=>(
+  <Review key={item.id}>
+            <h2>{item.name}</h2>
+            <p>{item.text}</p>
           </Review>
+))
+  
+}
+
         
             <ReviewForm onSubmit={formik.handleSubmit}>
   <h3>Be the first to review “Acer Aspire 3 A315-59 Slim (NX.K6SER.002-N)”</h3>

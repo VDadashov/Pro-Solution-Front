@@ -13,8 +13,9 @@ import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
 
-const ProductSection = ({ sectionHeader, display }) => {
-  const { data: products, isLoading } = useGet("products", ENDPOINTS.products);
+const ProductSection = ({ sectionHeader, display, order }) => {
+  const { data: products, isLoading } = useGet("getAllFiltered", `${ENDPOINTS.getAllFiltered}?order=${order}&take=20&skip=1`);
+
 
   return (
     <SectionContainer>
@@ -45,13 +46,13 @@ const ProductSection = ({ sectionHeader, display }) => {
                 },
               }}
             >
-              {products?.map((item) => (
-                isLoading ?
-                  <SwiperSlide key={item.id}><ProductsCardSkeleton /></SwiperSlide>
-                  : <SwiperSlide key={item.id}>
+              {isLoading ? <SwiperSlide ><ProductsCardSkeleton /></SwiperSlide>
+                : products?.items?.map((item) => (
+
+                  <SwiperSlide key={item.id}>
                     <ProductsCard item={item} />
                   </SwiperSlide>
-              ))}
+                ))}
             </Swiper>
           </ProductsMenu>
         </ProductsContainer>

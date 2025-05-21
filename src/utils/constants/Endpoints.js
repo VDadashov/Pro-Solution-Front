@@ -4,7 +4,7 @@ export const ENDPOINTS = {
   categories: `${MAIN_URL}/api/categories/all`,
   products: `${MAIN_URL}/api/products/getall`,
   productsId:`${MAIN_URL}/api/products/getbyid`,
-  productFilter:`${MAIN_URL}/api/products/getallfiltered`,
+  getAllFiltered:`${MAIN_URL}/api/products/getallfiltered`,
   productsCreateReview: `${MAIN_URL}/api/products/createreview`,
   featureOptions:`${MAIN_URL}/api/featureoptions`,
   sliders: `${MAIN_URL}/api/sliders/all`,
