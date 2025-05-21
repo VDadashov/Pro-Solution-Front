@@ -30,12 +30,14 @@ export default Blog;
 
 const BlogWrapper = styled.div`
   // height: 140vh !important;
-
+// background-color:red;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   padding:30px 0px;
+
+
 `;
 
 

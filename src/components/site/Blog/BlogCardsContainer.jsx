@@ -25,12 +25,11 @@ const pulse = keyframes`
 
   const BlogSkeleton= ({index})=>{
     return (
-      <BlogCardsContainer>
-        <BlogCard >
+      <BlogCardsContainer key={`skeleton-${index}`}>
+        <BlogCard>
           <BlogDetail>
             <div>
               <LoadingSkeleton width={"50px"} height={"50px"} />
-              
             </div>
             <BlogImg>
               <LoadingSkeleton width={"250px"} height={"150px"} />
@@ -63,29 +62,32 @@ const BlogList = () => {
   return (
     <>
       <BlogCardsContainer>
-        {!isLoading ? 
-        Array.from({length:8}).map((_,index)=>(
-          <BlogSkeleton key={index}/>
-        ))
-        :
-        currentPosts?.map((blog, index) => (
-          <BlogCard key={index}>
-            <BlogDetail>
-              <BlogDate>
-                <h3>{moment(blog?.createdAt).format("MM")}</h3>
-                <p>{moment(blog?.createdAt).format("MMMM")}</p>
-              </BlogDate>
-              <BlogImg>
-                <img src={blog.imageUrl} alt={blog.title} loading="lazy" />
-              </BlogImg>
-            </BlogDetail>
-            <BlogContent>
-              <Question to={blog.id}>{blog.title}</Question>
-              <hr />
-              <p>{blog.title}</p>
-            </BlogContent>
-          </BlogCard>
-        ))}
+        {isLoading ? (
+          <>
+            {Array.from({ length: 3 }).map((_, index) => (
+              <BlogSkeleton key={index}/>
+            ))}
+          </>
+        ) : (
+          currentPosts?.map((blog, index) => (
+            <BlogCard key={index}>
+              <BlogDetail>
+                <BlogDate>
+                  <h3>{moment(blog?.createdAt).format("MM")}</h3>
+                  <p>{moment(blog?.createdAt).format("MMMM")}</p>
+                </BlogDate>
+                <BlogImg>
+                  <img src={blog.imageUrl} alt={blog.title} loading="lazy" />
+                </BlogImg>
+              </BlogDetail>
+              <BlogContent>
+                <Question to={blog.id}>{blog.title}</Question>
+                <hr />
+                <p>{blog.title}</p>
+              </BlogContent>
+            </BlogCard>
+          ))
+        )}
         {totalPages > 1 && (
           <PaginationWrapper>
             <PageButton
@@ -115,7 +117,6 @@ const BlogList = () => {
             </PageButton>
           </PaginationWrapper>
         )}
-
       </BlogCardsContainer>
     </>
   );
@@ -128,7 +129,17 @@ const BlogCardsContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 130vh;
+  min-height: 30vh;
+  gap:50px;
+  // background-color:green;
+
+    @media (max-width:850px){
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:100px;
+
+  }
 `;
 
 const BlogContent = styled.div`
@@ -154,8 +165,11 @@ const BlogDetail = styled.div`
   justify-content: center;
   align-items: flex-start;
   position: relative;
-  gap:10px;
-  // background-color:green;
+  gap: 10px;
+  // background-color: green;
+  @media (max-width: 600px) {
+    width: 100%;
+  }
 `;
 const BlogDate = styled(Link)`
   display: flex;
@@ -168,15 +182,16 @@ const BlogDate = styled(Link)`
   background-color: transparent;
   color: #149295;
   transition: all 0.3s ease;
-  // position: absolute;
-  // top: 20px;
-  // left: -10px;
-  
+  position: absolute;
+  top: 20px;
+  left: -20px;
+
   @media (max-width: 600px) {
     width: 40px;
     height: 40px;
-    top: 50px;
+    top: 0px;
     font-size: 13px;
+    left: 0px;
   }
   /* @media (max-width: 400px) {
     width: 20px;
@@ -184,20 +199,23 @@ const BlogDate = styled(Link)`
     top: 0px;
     font-size: 6px;
   } */
+  @media (max-width: 550px) {
+  }
 `;
 
 const BlogImg = styled.div`
-  height: 150px;
+  height: 200px;
   width: 80%;
-  overflow: hidden;
   display: flex;
   justify-content: space-between;
   align-items: center;
-
+  // background-color: blue;
   img {
-    height: 350px;
+    width: 100%;
+
+    height: 100%;
     cursor: pointer;
-    object-fit: contain;
+    object-fit: cover;
   }
 `;
 
@@ -208,8 +226,8 @@ const BlogCard = styled.div`
   align-items: center;
   padding-left: 50px;
   padding-right: 50px;
-
-  // background-color:red; 
+  position:relative;
+  // background-color:yellow; 
 
   &:hover ${BlogDate} {
     background-color: #149295;
@@ -219,9 +237,13 @@ const BlogCard = styled.div`
     flex-direction: column;
     padding: 0;
     width: 100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
   }
   @media (max-width: 650px) {
-    // gap: 10px;
+    gap: 10px;
     width: 100%;
   }
 `;
