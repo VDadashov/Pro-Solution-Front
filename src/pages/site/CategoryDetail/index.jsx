@@ -33,7 +33,7 @@ const CategoryDetail = () => {
   const { data: product,error } = useGetOne("productsId", ENDPOINTS.productsId, id);
     const { data: categories } = useGetOne("categories", ENDPOINTS.categories, id);
   console.log(product?.featureOptionItems); 
-  console.log(categories)
+  // console.log(categories)
   console.log(error)
   const { wishlist, addToWishlist } = useContext(WishlistContext);
 

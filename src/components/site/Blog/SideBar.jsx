@@ -15,4 +15,7 @@ function SideBar() {
 export default SideBar
 
 const Sidebar = styled.div`
+@media (max-width:850px){
+padding:30px;
+}
 `

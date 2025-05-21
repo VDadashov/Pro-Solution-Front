@@ -170,6 +170,7 @@ const BlogDetail = styled.div`
   @media (max-width: 600px) {
     width: 100%;
   }
+    
 `;
 const BlogDate = styled(Link)`
   display: flex;
@@ -183,8 +184,8 @@ const BlogDate = styled(Link)`
   color: #149295;
   transition: all 0.3s ease;
   position: absolute;
-  top: 20px;
-  left: -20px;
+  top: 5px;
+  left: -30px;
 
   @media (max-width: 600px) {
     width: 40px;
@@ -201,10 +202,14 @@ const BlogDate = styled(Link)`
   } */
   @media (max-width: 550px) {
   }
+  // @media (max-width: 1240px) {
+  //   position: absolute;
+  //   left: 2000px px;
+  // }
 `;
 
 const BlogImg = styled.div`
-  height: 200px;
+  // height: 200px;
   width: 80%;
   display: flex;
   justify-content: space-between;
@@ -212,7 +217,6 @@ const BlogImg = styled.div`
   // background-color: blue;
   img {
     width: 100%;
-
     height: 100%;
     cursor: pointer;
     object-fit: cover;

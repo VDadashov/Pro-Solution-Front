@@ -244,24 +244,25 @@ const FormInputs = styled.div`
   }
 `;
 
-const CheckboxGroup = styled.div`
-  margin-top: 20px;
-  label {
-    display: block;
-    font-size: 14px;
-    margin-bottom: 8px;
-  }
+// const CheckboxGroup = styled.div`
+//   margin-top: 20px;
+//   label {
+//     display: block;
+//     font-size: 14px;
+//     margin-bottom: 8px;
+//   }
 
-  input {
-    margin-right: 8px;
-  }
-`;
+//   input {
+//     margin-right: 8px;
+//   }
+// `;
+
 
 const SubmitButton = styled.button`
   background-color: #009688;
   color: white;
   padding: 10px 20px;
-  margin-top: 20px;
+  margin-top: 40px;
   border: none;
   font-weight: bold;
   font-size: 15px;

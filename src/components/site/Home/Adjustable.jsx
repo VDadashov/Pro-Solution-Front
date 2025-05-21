@@ -22,7 +22,9 @@ import { data } from "react-router";
 
 const AdjustableSection = ({ headerName}) => {
 const { data: brand } = useGet("brand", ENDPOINTS.brand);
+
 console.log(data)
+
   return (
     <AdjustableContainer>
       <LayoutContainer>

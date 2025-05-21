@@ -31,7 +31,9 @@ useEffect(() => {
     }
   }
 }, []);
-console.log(product)
+
+// console.log(product)
+
   const ReviewSchema = Yup.object().shape({
     text: Yup.string()
       .max(500, 'Ən çox 500 hərf yaza bilərsiniz')
