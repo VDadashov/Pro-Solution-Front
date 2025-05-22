@@ -50,7 +50,7 @@ const CategoriesSidebar = () => {
           ? Array.from({ length: 20 }).map((_, index) => (
               <CategoriesSkeleton key={index} />
             ))
-          : categories?.map((category, index) => (
+          : categories?.$values?.map((category, index) => (
               <React.Fragment key={index}>
                 <button>{category.title}</button>
               </React.Fragment>

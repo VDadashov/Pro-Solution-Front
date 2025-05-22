@@ -46,13 +46,23 @@ const ProductSection = ({ sectionHeader, display, order }) => {
                 },
               }}
             >
-              {isLoading ? <SwiperSlide ><ProductsCardSkeleton /></SwiperSlide>
-                : products?.items?.map((item) => (
+              {
+                isLoading ? (
+                  <>
+                    {Array.from({ length: 6 }).map((_, index) => (
+                      <SwiperSlide ><ProductsCardSkeleton key={index} /></SwiperSlide>
+                    ))}
+                  </>
+                ) : (
+                  products?.$values?.items?.map((item) => (
 
-                  <SwiperSlide key={item.id}>
-                    <ProductsCard item={item} />
-                  </SwiperSlide>
-                ))}
+                    <SwiperSlide key={item.id}>
+                      <ProductsCard item={item} />
+                    </SwiperSlide>
+                  ))
+                )
+              }
+
             </Swiper>
           </ProductsMenu>
         </ProductsContainer>

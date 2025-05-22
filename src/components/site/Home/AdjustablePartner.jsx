@@ -55,7 +55,7 @@ const AdjustablePartnerSection = ({ headerName }) => {
                 },
               }}
             >
-              {partners?.map((item) => (
+              {partners?.$values?.map((item) => (
                 <SwiperSlide>
                   <ImageContainer key={"1"}>
                     <StyledImage src={item.imagePath
