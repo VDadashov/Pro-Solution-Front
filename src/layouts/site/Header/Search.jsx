@@ -4,13 +4,25 @@ import { IoIosArrowDown } from "react-icons/io";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
+import { useNavigate } from "react-router-dom";
 
 const Search = () => {
   const { data: categories } = useGet("categories", ENDPOINTS.categories);
   const [selected, setSelected] = useState("All");
+  const [searchInput, setSearchInput] = useState("");
+
   const [selectWidth, setSelectWidth] = useState(0);
   const textMeasureRef = useRef(null);
+  const navigate = useNavigate();
 
+  const handleSearch = () => {
+    const slugParam = selected === "All" ? "" : selected;
+    const query = `?slug=${slugParam}&search=${encodeURIComponent(
+      searchInput
+    )}`;
+    navigate(`/product-category${query}`);
+  };
+  
   useEffect(() => {
     if (textMeasureRef.current) {
       setSelectWidth(textMeasureRef.current.offsetWidth + 20);
@@ -42,13 +54,28 @@ const Search = () => {
           width: `calc(100% - ${selectWidth}px - 5px)`,
         }}
       >
-        <SearchInput type="search" placeholder="Axtar..." />
-        <MagnifyingIcon />
+        <SearchInput  
+          type="search"
+          placeholder="Axtar..."
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+        <SearchButton>
+          <MagnifyingIcon onClick={handleSearch} />
+        </SearchButton>
       </SearchBar>
     </SearchContainer>
   );
 };
+;
 
+
+const SearchButton = styled.button`
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+`;
 const SearchContainer = styled.div`
   display: flex;
   align-items: center;
@@ -114,10 +141,7 @@ const ArrowIcon = styled(IoIosArrowDown)`
 `;
 
 const MagnifyingIcon = styled(FaMagnifyingGlass)`
-  position: absolute;
-  right: 5%;
-  top: 50%;
-  transform: translateY(-50%);
+
   color: rgba(119, 119, 119, 1);
   z-index: -1;
 `;
