@@ -42,7 +42,7 @@ const Category = () => {
     }
     return Number(value);
   };
-  const filteredProducts = products?.filter((item) => {
+  const filteredProducts = products?.$values?.filter((item) => {
     const price = parsePrice(item.discountPrice > 0 ? item.discountPrice : item.price);
     const minValid = priceRange.min === null || price >= priceRange.min;
     const maxValid = priceRange.max === null || price <= priceRange.max;

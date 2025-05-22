@@ -48,8 +48,8 @@ const CategoryDetail = () => {
     return <div>Product not found</div>;
   }
 
-  const mainImage = product?.images?.find((img) => img.isMain);
-const otherImages = product?.images?.filter((img) => !img.isMain);
+  const mainImage = product?.$values?.images?.find((img) => img.isMain);
+const otherImages = product?.$values?.images?.filter((img) => !img.isMain);
 const images = mainImage ? [mainImage, ...otherImages] : [];
 
   const nextImage = () => {
@@ -69,7 +69,7 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
             <Link to="/">Əsas səhifə</Link>
             </li>
             {
-      product?.categories?.map((item) => (
+      product?.$values?.categories?.map((item) => (
         <li key={item.id}>
           <Link to=""> / {item.title}</Link>    
         </li>
@@ -205,7 +205,7 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
               </div>
 <DetailList>
 {
-product?.featureOptionItems?.map((item)=>(
+product?.$values?.featureOptionItems?.map((item)=>(
   <DetailItem key={item.id || item.name}>
     <p>{item.parent?.featureOption?.name} :</p>
     <span>{item?.name}</span>
@@ -237,7 +237,7 @@ product?.featureOptionItems?.map((item)=>(
 </DetailList>
               <DetailFoot>
                 <p>
-                  Kateqoriya: {  product?.categories?.map((item)=>(
+                  Kateqoriya: {  product?.$values?.categories?.map((item)=>(
                     <span>{item.title} </span>
                   ))}
                   
