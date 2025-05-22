@@ -194,7 +194,7 @@ const Category = () => {
     ? Array.from({ length: 8 }).map((_, index) => (
         <CategoryProductCardSkelaton key={index} />
       ))
-    : currentProducts?.map((item) => (
+    : currentProducts?.$values?.map((item) => (
         <CategoryProductCard key={item.id} item={item} />
       ))
   }
