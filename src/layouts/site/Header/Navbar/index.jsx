@@ -192,10 +192,13 @@ const CategoryListContainer = styled.div`
   left: 0;
   width: 100%;
   &.hoverable {
-    display: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.6s;
   }
   ${ProductsLi}:hover & {
-    display: block;
+    opacity: 1;
+    visibleity: visible;
   }
 `;
 

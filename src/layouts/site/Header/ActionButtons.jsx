@@ -35,7 +35,7 @@ const StyledLinkContainer = styled.li`
   }
 `;
 
-const StyledLinkButton = styled.a`
+export const StyledLinkButton = styled.a`
   background-color: #149295;
   border: 1px solid #149295;
   border-radius: 99px;
@@ -44,6 +44,8 @@ const StyledLinkButton = styled.a`
   color: #fff;
   padding: 6px 15px;
   font-size: 0.97em;
+  // display: flex;
+  text-align: center;
   &:hover {
     background-color: #157778;
   }

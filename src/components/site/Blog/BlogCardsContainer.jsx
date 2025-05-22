@@ -29,18 +29,18 @@ const pulse = keyframes`
         <BlogCard>
           <BlogDetail>
             <div>
-              <LoadingSkeleton width={"50px"} height={"50px"} />
+              <LoadingSkeleton width={"40px"} height={"40px"} />
             </div>
             <BlogImg>
-              <LoadingSkeleton width={"250px"} height={"150px"} />
+              <LoadingSkeleton width={"220px"} height={"150px"} />
             </BlogImg>
           </BlogDetail>
           <BlogContent>
             <Question>
-              <LoadingSkeleton width={"100px"} height={20} />
+              <LoadingSkeleton width={"90px"} height={20} />
             </Question>
             <hr />
-            <LoadingSkeleton width={"100px"} height={20} />
+            <LoadingSkeleton width={"90px"} height={20} />
           </BlogContent>
         </BlogCard>
       </BlogCardsContainer>

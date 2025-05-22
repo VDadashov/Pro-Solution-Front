@@ -3,6 +3,7 @@ import styled from "styled-components";
 import MobileSearch from "../MobileSearch";
 import { IoClose } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import { StyledLinkButton } from "../ActionButtons";
 
 const MobileNavbar = ({ $isOpenModal, closeModal }) => {
   useEffect(() => {
@@ -46,6 +47,11 @@ const MobileNavbar = ({ $isOpenModal, closeModal }) => {
           <MenuComponent>
             <Link to={"/myaccount"}>
               <LinkText>Giriş</LinkText>
+            </Link>
+          </MenuComponent>
+          <MenuComponent>
+            <Link to={"https://service.devhost.site"}>
+              <LinkText>İT Servis Mərkəzi</LinkText>
             </Link>
           </MenuComponent>
         </MainMenu>
