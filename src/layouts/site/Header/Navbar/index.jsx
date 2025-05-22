@@ -48,7 +48,7 @@ const Navbar = () => {
             <HeaderNav>
               <ProductsLi>
                 <FaBars />
-                <Link to={"/category"}> Məhsullarımız</Link>
+                <Link to={"/product-category"}> Məhsullarımız</Link>
                 <ArrowDown />
                 <CategoryListContainer
                   className={iScrolled || !isHomePage ? "hoverable" : ""}
