@@ -93,10 +93,10 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
         <DetailBody>
           <DetailCard>
             <ThumbnailList>
-              {images.map((img, i) => (
+              {images?.map((img, i) => (
     <Thumbnail
      key={img.id || i}
-      src={img.imagePath}
+      src={img?.$values?.imagePath}
       active={i === selectedIndex}
       onClick={() => setSelectedIndex(i)}
     />
