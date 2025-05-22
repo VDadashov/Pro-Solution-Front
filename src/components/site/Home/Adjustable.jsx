@@ -57,7 +57,7 @@ console.log(data)
                 },
               }}
             >
-              {brand?.map((item) => (
+              {brand?.$values?.map((item) => (
                 <SwiperSlide>
                   <ImageContainer key={"1"}>
                     <StyledImage src={item.imagePath} />

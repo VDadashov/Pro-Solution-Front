@@ -39,7 +39,7 @@ const ROUTES = [
         element: <Contact />,
       },
       {
-        path: "/category",
+        path: "/product-category",
         element: <Category />,
         children: [
           {

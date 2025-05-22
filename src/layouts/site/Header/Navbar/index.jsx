@@ -4,7 +4,7 @@ import { FaBars } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 import { FaRegHeart } from "react-icons/fa";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { WishlistContext } from "@Context/wishlistContext";
@@ -13,7 +13,8 @@ const Navbar = () => {
   const location = useLocation();
   const [iScrolled, setIsScrolled] = useState(false);
   const { wishlist } = useContext(WishlistContext);
-    const { data: categories } = useGet("categories", ENDPOINTS.categories);
+  const { data: categories } = useGet("categories", ENDPOINTS.categories);
+  const navigate = useNavigate();
 
   console.log(categories)
 
@@ -31,14 +32,14 @@ const Navbar = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-function toKebabCase(str) {
-  return str
-    .replace(/([a-z])([A-Z])/g, '$1-$2')       // insert dash between camelCase
-    .replace(/[\s_]+/g, '-')                   // replace spaces and underscores with dash
-    .toLowerCase();                            // lowercase everything
-}
+  function toKebabCase(str) {
+    return str
+      .replace(/([a-z])([A-Z])/g, '$1-$2')       // insert dash between camelCase
+      .replace(/[\s_]+/g, '-')                   // replace spaces and underscores with dash
+      .toLowerCase();                            // lowercase everything
+  }
   const isHomePage = location.pathname === "/";
-  
+
   return (
     <NavigationBar>
       <StyledNavbarContainer>
@@ -53,21 +54,24 @@ function toKebabCase(str) {
                   className={iScrolled || !isHomePage ? "hoverable" : ""}
                 >
                   <CategoryList>
-                    {categories?.map((item) => (
-                      <CategoryElement key={item.name}>
-                      <CategoryLink to={`/category/${toKebabCase(item.title)}`}>
-
+                    {categories?.$values?.map((item) => (
+                      <CategoryElement key={item.name} onClick={() => navigate(`/category/${toKebabCase(item.title)}`)}>
                         {item.title}
-                      </CategoryLink>
+
                         <ArrowForward />
-                        
+
                         <SubCategoryList>
-                          {item?.categoryItems?.map((categoryItem) => (
-                            <SubCategoryElement key={categoryItem.title}>
-                            <Link  to={`/category/${toKebabCase(item.title)}/${toKebabCase(categoryItem.title)}`}>
+                          {item?.categoryItems?.$values?.map((categoryItem) => (
+                            <SubCategoryElement key={categoryItem.title}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(`/product-category/${toKebabCase(item.title)}/${toKebabCase(categoryItem.title)}`
+                                );
+                              }}>
+
                               {categoryItem.title}
 
-                            </Link>
+
                             </SubCategoryElement>
                           ))}
                         </SubCategoryList>
@@ -118,7 +122,7 @@ function toKebabCase(str) {
     </NavigationBar>
   );
 };
-const CategoryLink=styled(Link)`
+const CategoryLink = styled(Link)`
 width:"100%";
 height:"100%";
 

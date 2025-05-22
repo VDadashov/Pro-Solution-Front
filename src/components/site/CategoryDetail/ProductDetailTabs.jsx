@@ -10,7 +10,7 @@ import { Bounce, toast } from 'react-toastify';
 const ProductDetailTabs = ({product}) => {
   const [activeTab, setActiveTab] = useState('info');
   const [rating, setRating] = useState(0);
-  
+
   
   const {mutate:productReviewMutation}=usePost("productsCreateReview",ENDPOINTS.productsCreateReview)
 useEffect(() => {
@@ -23,7 +23,7 @@ useEffect(() => {
           ...prev,
           name: parsed.name || '',
           email: parsed.email || '',
-          save: true // 🔥 checkbox da işarələnir
+          save: true 
         }));
       }
     } catch (err) {
@@ -128,15 +128,18 @@ productReviewMutation(formData,{
         <>
         
           
-{product?.productReviews?.map((item)=>(
+{/* {product?.productReviews?.map((item)=>(
   <Review key={item.id}>
             <h2>{item.name}</h2>
             <p>{item.text}</p>
           </Review>
 ))
   
-}
-
+} */}
+    <Review>
+            <h2>Rəylər</h2>
+            <p>Hələ ki, rəy yoxdur.</p>
+          </Review>
         
             <ReviewForm onSubmit={formik.handleSubmit}>
   <h3>Be the first to review “Acer Aspire 3 A315-59 Slim (NX.K6SER.002-N)”</h3>

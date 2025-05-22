@@ -13,7 +13,7 @@ const Discount = () => {
    const totalPages = Math.ceil((products?.length || 0) / postsPerPage);
    const indexOfLastPost = currentPage * postsPerPage;
    const indexOfFirstPost = indexOfLastPost - postsPerPage;
-   const currentPosts = products?.slice(indexOfFirstPost, indexOfLastPost) || [];
+   const currentPosts = products?.$values?.slice(indexOfFirstPost, indexOfLastPost) || [];
    const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
   return (

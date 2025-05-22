@@ -31,7 +31,7 @@ const CategoryDetail = () => {
   const { id } = useParams();
   console.log(id)
   const { data: product,error } = useGetOne("productsId", ENDPOINTS.productsId, id);
-    const { data: categories } = useGetOne("categories", ENDPOINTS.categories, id);
+    // const { data: categories } = useGetOne("categories", ENDPOINTS.categories, id);
   console.log(product?.featureOptionItems); 
   // console.log(categories)
   console.log(error)

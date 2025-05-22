@@ -36,7 +36,7 @@ const Banner = () => {
               autoplay={{ delay: 2000, disableOnInteraction: false }}
             >
             {
-              sliders?.map((item)=>(
+              sliders?.$values?.map((item)=>(
                 <SwiperSlide key={item.id}>
                 <StyledImage src={item.imagePath} />
               </SwiperSlide>

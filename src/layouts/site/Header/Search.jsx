@@ -29,7 +29,7 @@ const Search = () => {
           <option key={"All"} value={"All"}>
             All
           </option>
-          {categories?.map((category) => (
+          {categories?.$values?.map((category) => (
             <option key={category.name} value={category.name}>
               {category.title}
             </option>
