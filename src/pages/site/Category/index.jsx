@@ -17,7 +17,7 @@ const Category = () => {
   const [priceRange, setPriceRange] = useState({ min: null, max: null });
   const { data: products, isLoading } = useGet("products", ENDPOINTS.products);
   const { data: productFilter } = useGet("products", ENDPOINTS.productFilter);
-  console.log(productFilter)
+  
 
   const handleClearMinPrice = () => {
     setPriceRange((prev) => ({ ...prev, min: null }));
