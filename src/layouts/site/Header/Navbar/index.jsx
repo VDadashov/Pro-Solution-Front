@@ -16,8 +16,6 @@ const Navbar = () => {
   const { data: categories } = useGet("categories", ENDPOINTS.categories);
   const navigate = useNavigate();
 
-  console.log(categories)
-
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 150) {

@@ -29,11 +29,10 @@ const CategoryDetail = () => {
   const [isZoomed, setIsZoomed] = useState(false);
   const [liked, setLiked] = useState(false);
   const { id } = useParams();
-  console.log(id)
   const { data: product,error } = useGetOne("productsId", ENDPOINTS.productsId, id);
-    // const { data: categories } = useGetOne("categories", ENDPOINTS.categories, id);
-  console.log(product?.featureOptionItems); 
-  // console.log(categories)
+  console.log(product); 
+  console.log("Product ID:", id);
+
   console.log(error)
   const { wishlist, addToWishlist } = useContext(WishlistContext);
 
@@ -47,10 +46,10 @@ const CategoryDetail = () => {
   if (!product) {
     return <div>Product not found</div>;
   }
-
-  const mainImage = product?.$values?.images?.find((img) => img.isMain);
-const otherImages = product?.$values?.images?.filter((img) => !img.isMain);
-const images = mainImage ? [mainImage, ...otherImages] : [];
+const imageValues = product?.images?.$values || [];
+const mainImage = imageValues.find((img) => img.isMain);
+const otherImages = imageValues.filter((img) => !img.isMain);
+const images = mainImage ? [mainImage, ...otherImages] : imageValues;
 
   const nextImage = () => {
     setSelectedIndex((prev) => (prev + 1) % images.length);
@@ -96,7 +95,7 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
               {images?.map((img, i) => (
     <Thumbnail
      key={img.id || i}
-      src={img?.$values?.imagePath}
+      src={img?.imagePath}
       active={i === selectedIndex}
       onClick={() => setSelectedIndex(i)}
     />
@@ -573,7 +572,7 @@ const ThumbnailList = styled.div`
 const Thumbnail = styled.img`
   width: 100px;
   height: 100px;
-  object-fit: cover;
+  object-fit: contain;
   border: 1px solid ${({ active }) => (active ? " #666666" : "none")};
   cursor: pointer;
   @media (max-width: 851px) {

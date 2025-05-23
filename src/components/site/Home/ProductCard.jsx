@@ -67,10 +67,9 @@ const ProductsCard = ({ item }) => {
       <ProductCard>
           <ProductCardHeadImage>
             <ProductCardLink to={`/category/${item.id}`}>
-              <img
-                src={item.images.find((img) => img.isMain)?.imagePath || ""}
-                alt={item.images.find((img) => img.isMain)?.altText || ""}
-              />
+             <img
+            src={item.images?.$values?.find((img) => img.isMain)?.imagePath || ""}
+          />
             </ProductCardLink>
             <div className="heartIcon"
               onClick={() => {
@@ -88,7 +87,7 @@ const ProductsCard = ({ item }) => {
           </ProductCardHeadImage>
     
           <ProductCardBody>
-            <span>{item?.categories[0].title}</span>
+             <span>{item.categories?.$values ? item.categories.$values[0]?.title : item.categories?.[0]?.title}</span>
             <Link to={`/category/${item.id}`}>
               <ProductName>{item?.title}</ProductName>
             </Link>
