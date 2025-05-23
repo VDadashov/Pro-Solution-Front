@@ -32,7 +32,7 @@ const AuthorsSkeleton = ({ index }) => {
 };
 function Authors() {
   const { data: authors, isLoading } = useGet("authors", ENDPOINTS.authors);
-  console.log("authors", authors)
+  
   return (
     <AuthorsWrapper>
       <CategoriesHead>
@@ -42,7 +42,7 @@ function Authors() {
       <AuthorsSection>
         {isLoading
           ? <>{Array.from({ length: 15 }).map((_, index) => <AuthorsSkeleton key={index}/> )}</>
-          : authors?.items?.map((author, index) => (
+          : authors?.$values?.items?.map((author, index) => (
               <StyledButton key={index} >
                 {author.name} {author.surname}
               </StyledButton>

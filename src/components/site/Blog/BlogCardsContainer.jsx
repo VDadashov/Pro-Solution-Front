@@ -55,7 +55,7 @@ const BlogList = () => {
   const totalPages = Math.ceil(blogs?.length / postsPerPage);
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = blogs?.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPosts = blogs?.$values?.slice(indexOfFirstPost, indexOfLastPost);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 

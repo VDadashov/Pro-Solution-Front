@@ -49,34 +49,44 @@ const Navbar = () => {
                 <p> Məhsullarımız</p>
                 <ArrowDown />
                 <CategoryListContainer
-                  className={iScrolled || !isHomePage ? "hoverable" : ""}
+                    className={iScrolled || !isHomePage ? "hoverable" : ""}
                 >
                   <CategoryList>
                     {categories?.$values?.map((item) => (
-                      <CategoryElement key={item.name} onClick={() => navigate(`/product-category/${toKebabCase(item.title)}`)}>
+
+                      <CategoryElement
+                        key={item.name}
+                        onClick={() =>
+                          navigate(
+                            `/product-category/${toKebabCase(item.title)}`
+                          )
+                        }
+                      >
+
                         {item.title}
 
                         <ArrowForward />
 
                         <SubCategoryList>
                           {item?.categoryItems?.$values?.map((categoryItem) => (
-                            <SubCategoryElement key={categoryItem.title}
+                            <SubCategoryElement
+                              key={categoryItem.title}
                               onClick={(e) => {
                                 e.stopPropagation();
-                                navigate(`/product-category/${toKebabCase(item.title)}/${toKebabCase(categoryItem.title)}`
+                                navigate(
+                                  `/product-category/${toKebabCase(
+                                    item.title
+                                  )}/${toKebabCase(categoryItem.title)}`
                                 );
-                              }}>
-
+                              }}
+                            >
                               {categoryItem.title}
-
-
                             </SubCategoryElement>
                           ))}
                         </SubCategoryList>
                       </CategoryElement>
                     ))}
                   </CategoryList>
-
                 </CategoryListContainer>
               </ProductsLi>
               <StyledNavigationLi>
