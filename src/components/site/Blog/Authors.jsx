@@ -42,7 +42,7 @@ function Authors() {
       <AuthorsSection>
         {isLoading
           ? <>{Array.from({ length: 15 }).map((_, index) => <AuthorsSkeleton key={index}/> )}</>
-          : authors?.$values?.items?.map((author, index) => (
+          : authors?.items?.$values?.map((author, index) => (
               <StyledButton key={index} >
                 {author.name} {author.surname}
               </StyledButton>
@@ -71,7 +71,7 @@ const AuthorsWrapper = styled.div`
       border-top: 2px solid #ececec;
     }
 
-    }
+    
   `;
 const CategoriesHead = styled.div``;
 const AuthorsSection = styled.div`
@@ -92,4 +92,5 @@ const StyledButton = styled.button`
       &:hover {
         background-color: #149295;
         color: #ffffff;
+      }
   `;
