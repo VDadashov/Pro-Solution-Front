@@ -16,8 +16,7 @@ const Category = () => {
   const [sortOption, setSortOption] = useState("Standart Sıralama");
   const [priceRange, setPriceRange] = useState({ min: null, max: null });
   const { data: products, isLoading } = useGet("products", ENDPOINTS.products);
-  const { data: productFilter } = useGet("products", ENDPOINTS.productFilter);
-  console.log(productFilter)
+  console.log(products)
 
   const handleClearMinPrice = () => {
     setPriceRange((prev) => ({ ...prev, min: null }));
@@ -194,8 +193,8 @@ const Category = () => {
     ? Array.from({ length: 8 }).map((_, index) => (
         <CategoryProductCardSkelaton key={index} />
       ))
-    : currentProducts?.$values?.map((item) => (
-        <CategoryProductCard key={item.id} item={item} />
+    : currentProducts?.map((item) => (
+        <CategoryProductCard key={item.$id || item.id} item={item} />
       ))
   }
 </CategoryCards>
