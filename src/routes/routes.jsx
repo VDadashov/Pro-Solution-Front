@@ -19,15 +19,18 @@ import Downloads from "@components/site/MyAccount/Downloads";
 import Address from "@components/site/MyAccount/Address";
 import AccountDetails from "@components/site/MyAccount/AccountDetails";
 import ScrollToTop from "@components/site/common/ScrollToTop/ScrollToTop";
+import { CategoryProvider } from "@Context/CategoryContext";
 
 
 const ROUTES = [
   {
     path: "/",
     element: (
-      <ScrollToTop>
-        <SiteRoot />
-      </ScrollToTop>
+      <CategoryProvider>
+        <ScrollToTop>
+          <SiteRoot />
+        </ScrollToTop>
+      </CategoryProvider>
     ),
     children: [
       {
@@ -49,12 +52,10 @@ const ROUTES = [
               {
                 path: ":subcategory",
                 element: <Category />,
-
-
-              }
-            ]
-          }
-        ]
+              },
+            ],
+          },
+        ],
       },
       {
         path: "/discount",

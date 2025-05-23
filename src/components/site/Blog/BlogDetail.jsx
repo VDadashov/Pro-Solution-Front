@@ -79,7 +79,7 @@ function BlogDetail() {
       </Socials>
 
       <HorizontalLine width="100%" />
-      {data?.blogReviews?.map((item)=>(
+      {data?.$values?.blogReviews?.map((item)=>(
         <Reviews  item={item} ></Reviews>
       ))}
       <HorizontalLine width="100%" />
