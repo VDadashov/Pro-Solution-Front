@@ -16,7 +16,6 @@ const Category = () => {
   const [sortOption, setSortOption] = useState("Standart Sıralama");
   const [priceRange, setPriceRange] = useState({ min: null, max: null });
   const { data: products, isLoading } = useGet("products", ENDPOINTS.products);
-  console.log(products)
 
   const handleClearMinPrice = () => {
     setPriceRange((prev) => ({ ...prev, min: null }));
