@@ -40,13 +40,23 @@ function Authors() {
         <hr />
       </CategoriesHead>
       <AuthorsSection>
+
         {isLoading
           ? <>{Array.from({ length: 15 }).map((_, index) => <AuthorsSkeleton key={index}/> )}</>
           : authors?.items?.$values?.map((author, index) => (
               <StyledButton key={index} >
                 {author.name} {author.surname}
               </StyledButton>
+
             ))}
+          </>
+        ) : (
+          authors?.items?.$values?.map((author, index) => (
+            <StyledButton key={index}>
+              {author.name} {author.surname}
+            </StyledButton>
+          ))
+        )}
       </AuthorsSection>
     </AuthorsWrapper>
   );
