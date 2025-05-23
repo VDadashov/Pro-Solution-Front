@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { RiEqualizerLine } from "react-icons/ri";
 import PriceFilter from "@components/site/Category/FilterPrice";
@@ -17,6 +17,25 @@ const Category = () => {
   const [priceRange, setPriceRange] = useState({ min: null, max: null });
   const { data: products, isLoading } = useGet("products", ENDPOINTS.products);
 
+  const location= useLocation();
+ const [filteredItems, setFilteredItems] = useState([]);
+
+ const searchParams=new URLSearchParams(location.search);
+ const slug= searchParams.get("slug") || "";
+ const search=searchParams.get("search") || "";
+
+ useEffect(()=>{
+  const filtered= products?.$values?.filter((product)=>{
+    const matchesSlug = slug === "" || product.categorySlug === slug;
+    const matchesSearch =
+      search === "" ||
+      product?.$values?.title.toLowerCase().includes(search.toLowerCase());
+    return matchesSlug && matchesSearch;
+  });
+  setFilteredItems(filtered)
+ }, [slug,search,products]
+) 
+;
   const handleClearMinPrice = () => {
     setPriceRange((prev) => ({ ...prev, min: null }));
   };
@@ -97,9 +116,9 @@ const Category = () => {
                 <li>
                   <Link>Əsas səhifə /</Link>
                 </li>
-                {/* <li>
+                <li>
                   <Link>Noutbuklar</Link>
-                </li> */}
+                </li>
                 {
                   products?.categories?.map((item)=>(
                      <li key={item.id}>
@@ -135,6 +154,7 @@ const Category = () => {
               </select>
             </CategorySelect>
           </CategoryHead>
+
           <CategoryBody>
             {showFilter && (
               <>

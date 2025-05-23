@@ -55,7 +55,7 @@ const Search = () => {
         }}
       >
         <SearchInput  
-          type="search"
+          type="text"
           placeholder="Axtar..."
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
@@ -75,6 +75,8 @@ const SearchButton = styled.button`
   right: 5%;
   top: 50%;
   transform: translateY(-50%);
+  background-color:transparent;
+  border:none;
 `;
 const SearchContainer = styled.div`
   display: flex;
