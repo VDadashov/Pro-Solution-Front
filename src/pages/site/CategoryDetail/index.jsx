@@ -97,6 +97,7 @@ const CategoryDetail = () => {
   const { id } = useParams();
   const { data: product, error,isLoading } = useGetOne("productsId", ENDPOINTS.productsId, id);
   console.log(product);
+
   console.log("Product ID:", id);
 
   console.log(error)
@@ -130,7 +131,6 @@ const CategoryDetail = () => {
 
   return (
      isLoading ? <DetailSkeleton /> : (
-
        <DetailWrapper>
       <Wrapper>
         <DetailHead>
@@ -261,11 +261,11 @@ const CategoryDetail = () => {
           </DetailCard>
           <DetailInfo>
             <div className="DetailInfoHead">
-              <h2> {product?.description}</h2>
+              <h2> {product?.title}</h2>
               <hr />
               <div className="price">
                 {
-                  product.discountPrice > 0 ? (
+                  product?.discountPrice > 0 ? (
                     <>
                       <p className="old">{product?.price} ₼</p>
                       <p className="new">{product.discountPrice} ₼</p>
@@ -277,9 +277,9 @@ const CategoryDetail = () => {
               </div>
               <DetailList>
                 {
-                  product?.$values?.featureOptionItems?.map((item) => (
+                  product?.featureOptionItems?.$values?.map((item) => (
                     <DetailItem key={item.id || item.name}>
-                      <p>{item.parent?.featureOption?.name} :</p>
+                      <p>{item.featureOption?.name} :</p>
                       <span>{item?.name}</span>
                       <span>{item?.parent?.name}</span>
                     </DetailItem>

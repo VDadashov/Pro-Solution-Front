@@ -53,6 +53,7 @@ const Navbar = () => {
                 >
                   <CategoryList>
                     {categories?.$values?.map((item) => (
+
                       <CategoryElement
                         key={item.name}
                         onClick={() =>
@@ -61,6 +62,7 @@ const Navbar = () => {
                           )
                         }
                       >
+
                         {item.title}
 
                         <ArrowForward />
