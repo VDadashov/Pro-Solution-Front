@@ -70,7 +70,7 @@ const CategoryProductCard = ({ item }) => {
       <CategoryCardHeadImage>
         <CategoryCardLink to={`/category/${item.id}`}>
           <img
-            src={item.images.find((img) => img.isMain)?.imagePath || ""}
+            src={item.images?.$values?.find((img) => img.isMain)?.imagePath || ""}
           />
         </CategoryCardLink>
         <div className="heartIcon"
@@ -89,7 +89,8 @@ const CategoryProductCard = ({ item }) => {
       </CategoryCardHeadImage>
 
       <CategoryCardBody>
-        <span>{item?.categories[0].title}</span>
+        <span>{item.categories?.$values ? item.categories.$values[0]?.title : item.categories?.[0]?.title}</span>
+
         <Link to={`/category/${item.id}`}>  
           <ProductName>{item?.title} </ProductName>
         </Link>

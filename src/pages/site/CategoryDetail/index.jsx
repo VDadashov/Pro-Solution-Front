@@ -22,6 +22,72 @@ import { WishlistContext } from "@Context/wishlistContext";
 import { FaHeart } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import { useGetOne } from "@utils/hooks/useCustomQuery";
+import  { keyframes } from "styled-components";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+const pulse = keyframes`
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
+
+const LoadingSkeleton = styled(Skeleton)`
+  width: 100%;
+  animation: ${pulse} 1.5s infinite ease-in-out;
+`;
+
+const DetailSkeleton = () => (
+  <DetailWrapper>
+    <Wrapper>
+      <DetailHead>
+        <Nav>
+          <LoadingSkeleton width={100} height={20} />
+        </Nav>
+      </DetailHead>
+
+      <DetailBody>
+        <DetailCard>
+          <ThumbnailList>
+            {[...Array(3)].map((_, i) => (
+              <LoadingSkeleton key={i} width={60} height={60} style={{ marginBottom: "10px" }} />
+            ))}
+          </ThumbnailList>
+
+          <MainImageWrapper>
+          <ImgWrap>
+   <LoadingSkeleton height={"100%"}  width={"100%"}/>
+          </ImgWrap>
+         
+          </MainImageWrapper>
+        </DetailCard>
+
+        <DetailInfo>
+          <div className="DetailInfoHead">
+            <LoadingSkeleton height="100%" width="80%" />
+            <hr />
+            <div className="price">
+              <LoadingSkeleton height={20} width={80} />
+            </div>
+
+            <DetailList>
+              {[...Array(5)].map((_, i) => (
+                <DetailItem key={i}>
+                  <LoadingSkeleton height={15} width="40%" />
+                </DetailItem>
+              ))}
+            </DetailList>
+          </div>
+        </DetailInfo>
+      </DetailBody>
+    </Wrapper>
+  </DetailWrapper>
+);
 
 const CategoryDetail = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -29,11 +95,10 @@ const CategoryDetail = () => {
   const [isZoomed, setIsZoomed] = useState(false);
   const [liked, setLiked] = useState(false);
   const { id } = useParams();
-  console.log(id)
-  const { data: product,error } = useGetOne("productsId", ENDPOINTS.productsId, id);
-    // const { data: categories } = useGetOne("categories", ENDPOINTS.categories, id);
-  console.log(product?.featureOptionItems); 
-  // console.log(categories)
+  const { data: product, error,isLoading } = useGetOne("productsId", ENDPOINTS.productsId, id);
+  console.log(product);
+  console.log("Product ID:", id);
+
   console.log(error)
   const { wishlist, addToWishlist } = useContext(WishlistContext);
 
@@ -47,10 +112,10 @@ const CategoryDetail = () => {
   if (!product) {
     return <div>Product not found</div>;
   }
-
-  const mainImage = product?.images?.find((img) => img.isMain);
-const otherImages = product?.images?.filter((img) => !img.isMain);
-const images = mainImage ? [mainImage, ...otherImages] : [];
+  const imageValues = product?.images?.$values || [];
+  const mainImage = imageValues.find((img) => img.isMain);
+  const otherImages = imageValues.filter((img) => !img.isMain);
+  const images = mainImage ? [mainImage, ...otherImages] : imageValues;
 
   const nextImage = () => {
     setSelectedIndex((prev) => (prev + 1) % images.length);
@@ -60,22 +125,27 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
     setSelectedIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
+
+
+
   return (
-    <DetailWrapper>
+     isLoading ? <DetailSkeleton /> : (
+
+       <DetailWrapper>
       <Wrapper>
         <DetailHead>
           <Nav>
             <li>
-            <Link to="/">Əsas səhifə</Link>
+              <Link to="/">Əsas səhifə</Link>
             </li>
             {
-      product?.categories?.map((item) => (
-        <li key={item.id}>
-          <Link to=""> / {item.title}</Link>    
-        </li>
-      ))
-    }
-           
+              product?.$values?.categories?.map((item) => (
+                <li key={item.id}>
+                  <Link to=""> / {item.title}</Link>
+                </li>
+              ))
+            }
+
           </Nav>
           <SwitchProduct>
             <li>
@@ -90,24 +160,25 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
             </li>
           </SwitchProduct>
         </DetailHead>
+
         <DetailBody>
           <DetailCard>
             <ThumbnailList>
-              {images.map((img, i) => (
-    <Thumbnail
-     key={img.id || i}
-      src={img.imagePath}
-      active={i === selectedIndex}
-      onClick={() => setSelectedIndex(i)}
-    />
-  ))}
+              {images?.map((img, i) => (
+                <Thumbnail
+                  key={img.id || i}
+                  src={img?.imagePath}
+                  active={i === selectedIndex}
+                  onClick={() => setSelectedIndex(i)}
+                />
+              ))}
             </ThumbnailList>
 
             <MainImageWrapper>
-            <ImgWrap>
-<MainImage  src={images[selectedIndex]?.imagePath}
-               />
-            </ImgWrap>
+              <ImgWrap>
+                <MainImage src={images[selectedIndex]?.imagePath}
+                />
+              </ImgWrap>
               <HoverIcons>
                 <ArrowLeft onClick={prevImage}>
                   <FaChevronLeft />
@@ -116,18 +187,18 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
                   <FaChevronRight />
                 </ArrowRight>
                 <LikeIcon
-  onClick={() => {
-    addToWishlist(product);
-    if (!liked) {
-      toast.success("Product added to wishlist!");
-    } else {
-      toast.error("Product removed from wishlist.");
-    }
-    setLiked(!liked);
-  }}
->
-  <CiHeart />
-</LikeIcon>
+                  onClick={() => {
+                    addToWishlist(product);
+                    if (!liked) {
+                      toast.success("Product added to wishlist!");
+                    } else {
+                      toast.error("Product removed from wishlist.");
+                    }
+                    setLiked(!liked);
+                  }}
+                >
+                  <CiHeart />
+                </LikeIcon>
 
               </HoverIcons>
               <ZoomIcon onClick={() => setIsModalOpen(true)}>
@@ -167,9 +238,10 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
                     transition: "transform 0.3s ease",
                     cursor: isZoomed ? "zoom-out" : "zoom-in",
                   }}
-                  onClick={(e) =>{e.stopPropagation();
+                  onClick={(e) => {
+                    e.stopPropagation();
                     setIsZoomed(!isZoomed)
-                  } }
+                  }}
                 />
                 <ModalBtn onClick={(e) => e.stopPropagation()}>
                   <CloseBtn
@@ -192,55 +264,55 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
               <h2> {product?.description}</h2>
               <hr />
               <div className="price">
-              {
-                product.discountPrice > 0 ?(
-                  <>
-                     <p className="old">{product?.price} ₼</p>
-                <p className="new">{product.discountPrice} ₼</p>
-                  </>
-                ): (
-                  <p className="new">{product?.price} ₼</p>
-                )
-              }
+                {
+                  product.discountPrice > 0 ? (
+                    <>
+                      <p className="old">{product?.price} ₼</p>
+                      <p className="new">{product.discountPrice} ₼</p>
+                    </>
+                  ) : (
+                    <p className="new">{product?.price} ₼</p>
+                  )
+                }
               </div>
-<DetailList>
-{
-product?.featureOptionItems?.map((item)=>(
-  <DetailItem key={item.id || item.name}>
-    <p>{item.parent?.featureOption?.name} :</p>
-    <span>{item?.name}</span>
-    <span>{item?.parent?.name}</span>
-  </DetailItem>
-))
-}
-  <WishContainer onClick={() => {
-    setLiked(true);
-    addToWishlist(product);
-  }}>
-    <WishIcon>
-      {liked ? <FaHeart style={{ color: "black" }} /> : <FaRegHeart />}
-    </WishIcon>
+              <DetailList>
+                {
+                  product?.$values?.featureOptionItems?.map((item) => (
+                    <DetailItem key={item.id || item.name}>
+                      <p>{item.parent?.featureOption?.name} :</p>
+                      <span>{item?.name}</span>
+                      <span>{item?.parent?.name}</span>
+                    </DetailItem>
+                  ))
+                }
+                <WishContainer onClick={() => {
+                  setLiked(true);
+                  addToWishlist(product);
+                }}>
+                  <WishIcon>
+                    {liked ? <FaHeart style={{ color: "black" }} /> : <FaRegHeart />}
+                  </WishIcon>
 
-    <WishText>
-      {liked ? (
-        <>
-          <Gray>Product added</Gray>
-          <BrowseLink to="/wishlist" onClick={(e) => e.stopPropagation()}>
-            Browse wishlist
-          </BrowseLink>
-        </>
-      ) : (
-        <Blue>Add to wishlist</Blue>
-      )}
-    </WishText>
-  </WishContainer>
-</DetailList>
+                  <WishText>
+                    {liked ? (
+                      <>
+                        <Gray>Product added</Gray>
+                        <BrowseLink to="/wishlist" onClick={(e) => e.stopPropagation()}>
+                          Browse wishlist
+                        </BrowseLink>
+                      </>
+                    ) : (
+                      <Blue>Add to wishlist</Blue>
+                    )}
+                  </WishText>
+                </WishContainer>
+              </DetailList>
               <DetailFoot>
                 <p>
-                  Kateqoriya: {  product?.categories?.map((item)=>(
+                  Kateqoriya: {product?.$values?.categories?.map((item) => (
                     <span>{item.title} </span>
                   ))}
-                  
+
                   {/* <span>Acer,Noutbuklar </span> */}
                 </p>
                 <Socials>
@@ -277,6 +349,8 @@ product?.featureOptionItems?.map((item)=>(
       </Wrapper>
       <ProductDetailTabs product={product} />
     </DetailWrapper>
+     )
+   
   );
 };
 
@@ -573,7 +647,7 @@ const ThumbnailList = styled.div`
 const Thumbnail = styled.img`
   width: 100px;
   height: 100px;
-  object-fit: cover;
+  object-fit: contain;
   border: 1px solid ${({ active }) => (active ? " #666666" : "none")};
   cursor: pointer;
   @media (max-width: 851px) {
@@ -621,7 +695,7 @@ const ZoomIcon = styled.div`
     bottom: 0;
   }
 `;
-const ImgWrap=styled.div`
+const ImgWrap = styled.div`
 width: 100%;
 height: 100%;
 display: flex;

@@ -54,7 +54,7 @@ const ProductSection = ({ sectionHeader, display, order }) => {
                     ))}
                   </>
                 ) : (
-                  products?.$values?.items?.map((item) => (
+                  products?.items?.$values.map((item) => (
 
                     <SwiperSlide key={item.id}>
                       <ProductsCard item={item} />
