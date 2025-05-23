@@ -46,14 +46,14 @@ const Navbar = () => {
             <HeaderNav>
               <ProductsLi>
                 <FaBars />
-                <Link to={"/product-category"}> Məhsullarımız</Link>
+                <p> Məhsullarımız</p>
                 <ArrowDown />
                 <CategoryListContainer
                   className={iScrolled || !isHomePage ? "hoverable" : ""}
                 >
                   <CategoryList>
                     {categories?.$values?.map((item) => (
-                      <CategoryElement key={item.name} onClick={() => navigate(`/category/${toKebabCase(item.title)}`)}>
+                      <CategoryElement key={item.name} onClick={() => navigate(`/product-category/${toKebabCase(item.title)}`)}>
                         {item.title}
 
                         <ArrowForward />
@@ -200,7 +200,7 @@ const CategoryListContainer = styled.div`
   }
   ${ProductsLi}:hover & {
     opacity: 1;
-    visibleity: visible;
+    visibility: visible;
   }
 `;
 
