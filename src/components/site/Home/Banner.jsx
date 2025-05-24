@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
   Navigation,
@@ -10,7 +10,7 @@ import {
   Autoplay,
 } from "swiper/modules";
 
-// Swiper Css Imports
+
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -18,31 +18,82 @@ import "swiper/css/scrollbar";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { useGet } from "@utils/hooks/useCustomQuery";
+import Skeleton from "react-loading-skeleton";
+const pulse = keyframes`
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  `;
 
-const Banner = () => {
-  const { data: sliders } = useGet("sliders", ENDPOINTS.sliders);
+const LoadingSkeleton = styled(Skeleton)`
+  animation: ${pulse} 1.5s infinite ease-in-out;
+`;
+
+const BannerSkeleton = () => {
   return (
     <BannerSection>
       <LayoutContainer>
         <BannerContainer>
           <SwiperContainer>
             <Swiper
-              navigation={true}
-              pagination={{ clickable: true }}
-              loop={true}
-              spaceBetween={0}
-              slidesPerView={1}
-              modules={[FreeMode, Navigation, Autoplay, Pagination]}
-              autoplay={{ delay: 2000, disableOnInteraction: false }}
-            >
-            {
-              sliders?.$values?.map((item)=>(
-                <SwiperSlide key={item.id}>
-                <StyledImage src={item.imagePath} />
-              </SwiperSlide>
-              ))
-            }
-            </Swiper>
+                navigation={true}
+                pagination={{ clickable: true }}
+                loop={true}
+                spaceBetween={0}
+                slidesPerView={1}
+                modules={[FreeMode, Navigation, Autoplay, Pagination]}
+                autoplay={{ delay: 2000, disableOnInteraction: false }}
+              >
+                {
+                  Array.from({length:1}).map((_,index)=>(
+  <SwiperSlide key={index}>
+                    <LoadingSkeleton width={"100%"} height={"100%"}/>
+                  </SwiperSlide>
+                  ))
+                }
+                
+             
+              </Swiper>
+          </SwiperContainer>
+        </BannerContainer>
+      </LayoutContainer>
+    </BannerSection>
+  );
+};
+
+
+const Banner = () => {
+  const { data: sliders,isLoading } = useGet("sliders", ENDPOINTS.sliders);
+  return (
+    <BannerSection>
+      <LayoutContainer>
+        <BannerContainer>
+      <SwiperContainer>
+            {isLoading || !sliders?.$values?.length ? (
+              <BannerSkeleton />
+            ) : (
+              <Swiper
+                navigation={true}
+                pagination={{ clickable: true }}
+                loop={true}
+                spaceBetween={0}
+                slidesPerView={1}
+                modules={[FreeMode, Navigation, Autoplay, Pagination]}
+                autoplay={{ delay: 2000, disableOnInteraction: false }}
+              >
+                {sliders.$values.map((item) => (
+                  <SwiperSlide key={item.id}>
+                    <StyledImage src={item.imagePath} />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            )}
           </SwiperContainer>
         </BannerContainer>
       </LayoutContainer>
