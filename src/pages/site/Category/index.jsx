@@ -164,7 +164,10 @@ const {
                 value={sortOption}
                 onChange={(e) => setSortOption(e.target.value)}
               >
+     
                 <option value="Standart Sıralama">Standart Sıralama</option>
+                         <option value="A-dan Z-e">A-dan Z-e</option>
+                <option value="Z-den A-ya">Z-den A-ya</option>
                 <option value="Populyarlığa görə">Populyarlığa görə sırala</option>
                 <option value="Ən yüksək reytinq">Ən yüksək reytinqə görə sırala</option>
                 <option value="Ən sonuncular">Ən sonunculara görə sırala</option>
