@@ -13,118 +13,118 @@ import { Helmet } from "react-helmet";
 import { useCategory } from "@Context/CategoryContext";
 
 const Category = () => {
-//   const [showFilter, setShowFilter] = useState(false);
-//   const [sortOption, setSortOption] = useState("Standart Sıralama");
-//   const [priceRange, setPriceRange] = useState({ min: null, max: null });
-//   const { data: products, isLoading } = useGet("products", ENDPOINTS.products);
+  //   const [showFilter, setShowFilter] = useState(false);
+  //   const [sortOption, setSortOption] = useState("Standart Sıralama");
+  //   const [priceRange, setPriceRange] = useState({ min: null, max: null });
+  //   const { data: products, isLoading } = useGet("products", ENDPOINTS.products);
 
-//   const location= useLocation();
-//  const [filteredItems, setFilteredItems] = useState([]);
+  //   const location= useLocation();
+  //  const [filteredItems, setFilteredItems] = useState([]);
 
-//  const searchParams=new URLSearchParams(location.search);
-//  const slug= searchParams.get("slug") || "";
-//  const search=searchParams.get("search") || "";
+  //  const searchParams=new URLSearchParams(location.search);
+  //  const slug= searchParams.get("slug") || "";
+  //  const search=searchParams.get("search") || "";
 
-//  useEffect(()=>{
-//   const filtered= products?.$values?.filter((product)=>{
-//     const matchesSlug = slug === "" || product.categorySlug === slug;
-//     const matchesSearch =
-//       search === "" ||
-//       product?.$values?.title.toLowerCase().includes(search.toLowerCase());
-//     return matchesSlug && matchesSearch;
-//   });
-//   setFilteredItems(filtered)
-//  }, [slug,search,products]
-// ) 
-// ;
-//   const handleClearMinPrice = () => {
-//     setPriceRange((prev) => ({ ...prev, min: null }));
-//   };
-//   const handleClearMaxPrice = () => {
-//     setPriceRange((prev) => ({ ...prev, max: null }));
-//   };
-//   const handlePriceChange = (range) => {
-//     setPriceRange(range);
-//   };
-//   const [filterApplied, setFilterApplied] = useState(false);
+  //  useEffect(()=>{
+  //   const filtered= products?.$values?.filter((product)=>{
+  //     const matchesSlug = slug === "" || product.categorySlug === slug;
+  //     const matchesSearch =
+  //       search === "" ||
+  //       product?.$values?.title.toLowerCase().includes(search.toLowerCase());
+  //     return matchesSlug && matchesSearch;
+  //   });
+  //   setFilteredItems(filtered)
+  //  }, [slug,search,products]
+  // ) 
+  // ;
+  //   const handleClearMinPrice = () => {
+  //     setPriceRange((prev) => ({ ...prev, min: null }));
+  //   };
+  //   const handleClearMaxPrice = () => {
+  //     setPriceRange((prev) => ({ ...prev, max: null }));
+  //   };
+  //   const handlePriceChange = (range) => {
+  //     setPriceRange(range);
+  //   };
+  //   const [filterApplied, setFilterApplied] = useState(false);
 
-//   useEffect(() => {
-//     if (priceRange.min === null && priceRange.max === null) {
-//       setFilterApplied(false);
-//     }
-//   }, [priceRange]);
-  
-//   const parsePrice = (value) => {
-//     if (typeof value === "string") {
-//       return Number(value.replace(/[^\d.]/g, ""));
-//     }
-//     return Number(value);
-//   };
-//   const filteredProducts = products?.$values?.filter((item) => {
+  //   useEffect(() => {
+  //     if (priceRange.min === null && priceRange.max === null) {
+  //       setFilterApplied(false);
+  //     }
+  //   }, [priceRange]);
 
-//     const price = parsePrice(item.discountPrice > 0 ? item.discountPrice : item.price);
+  //   const parsePrice = (value) => {
+  //     if (typeof value === "string") {
+  //       return Number(value.replace(/[^\d.]/g, ""));
+  //     }
+  //     return Number(value);
+  //   };
+  //   const filteredProducts = products?.$values?.filter((item) => {
 
-//     const minValid = priceRange.min === null || price >= priceRange.min;
-//     const maxValid = priceRange.max === null || price <= priceRange.max;
-//     return minValid && maxValid;
-//   });
+  //     const price = parsePrice(item.discountPrice > 0 ? item.discountPrice : item.price);
 
-//   const sortedProducts = (filteredProducts || []).sort((a, b) => {
-//     const priceA = parsePrice(a.discountPrice > 0 ? a.discountPrice : a.price);
-//     const priceB = parsePrice(b.discountPrice > 0 ? b.discountPrice : b.price);
-//     switch (sortOption) {
-//       case "Qiymət: aşağıdan yuxarı":
-//         return priceA - priceB;
-//       case "Qiymət: yuxarıdan aşağı":
-//         return priceB - priceA;
-//       case "Ən yüksək reytinq":
-//         return b.rating - a.rating;
-//       case "Ən yenilər":
-//         return new Date(b.createdAt) - new Date(a.createdAt);
-//       case "Populyarlığa görə":
-//         return b.popularity - a.popularity;
-//       default:
-//         return 0;
-//     }
-//   });
+  //     const minValid = priceRange.min === null || price >= priceRange.min;
+  //     const maxValid = priceRange.max === null || price <= priceRange.max;
+  //     return minValid && maxValid;
+  //   });
 
-//   const [currentPage, setCurrentPage] = useState(1);
-//   const productsPerPage = 8;
-//   const indexOfLastProduct = currentPage * productsPerPage;
-//   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-//   const currentProducts = sortedProducts.slice(
-//     indexOfFirstProduct,
-//     indexOfLastProduct
-//   );
-//   const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
-//   const handlePageChange = (pageNumber) => {
-//     setCurrentPage(pageNumber);
-//   };
-//   useEffect(() => {
-//     setCurrentPage(1);
-//   }, [priceRange, sortOption]);
+  //   const sortedProducts = (filteredProducts || []).sort((a, b) => {
+  //     const priceA = parsePrice(a.discountPrice > 0 ? a.discountPrice : a.price);
+  //     const priceB = parsePrice(b.discountPrice > 0 ? b.discountPrice : b.price);
+  //     switch (sortOption) {
+  //       case "Qiymət: aşağıdan yuxarı":
+  //         return priceA - priceB;
+  //       case "Qiymət: yuxarıdan aşağı":
+  //         return priceB - priceA;
+  //       case "Ən yüksək reytinq":
+  //         return b.rating - a.rating;
+  //       case "Ən yenilər":
+  //         return new Date(b.createdAt) - new Date(a.createdAt);
+  //       case "Populyarlığa görə":
+  //         return b.popularity - a.popularity;
+  //       default:
+  //         return 0;
+  //     }
+  //   });
+
+  //   const [currentPage, setCurrentPage] = useState(1);
+  //   const productsPerPage = 8;
+  //   const indexOfLastProduct = currentPage * productsPerPage;
+  //   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  //   const currentProducts = sortedProducts.slice(
+  //     indexOfFirstProduct,
+  //     indexOfLastProduct
+  //   );
+  //   const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
+  //   const handlePageChange = (pageNumber) => {
+  //     setCurrentPage(pageNumber);
+  //   };
+  //   useEffect(() => {
+  //     setCurrentPage(1);
+  //   }, [priceRange, sortOption]);
 
 
 
-const {
-  showFilter,
-  setShowFilter,
-  sortOption,
-  setSortOption,
-  priceRange,
-  setPriceRange,
-  handlePriceChange,
-  handleClearMinPrice,
-  handleClearMaxPrice,
-  filterApplied,
-  setFilterApplied,
-  currentProducts,
-  currentPage,
-  setCurrentPage,
-  totalPages,
-  isLoading,
-  products,
-} = useCategory();
+  const {
+    showFilter,
+    setShowFilter,
+    sortOption,
+    setSortOption,
+    priceRange,
+    setPriceRange,
+    handlePriceChange,
+    handleClearMinPrice,
+    handleClearMaxPrice,
+    filterApplied,
+    setFilterApplied,
+    currentProducts,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    isLoading,
+    products,
+  } = useCategory();
 
 
   return (
@@ -144,10 +144,10 @@ const {
                   <Link>Noutbuklar</Link>
                 </li>
                 {
-                  products?.categories?.map((item)=>(
-                     <li key={item.id}>
-                  <Link>{item.title}</Link>
-                </li>
+                  products?.categories?.map((item) => (
+                    <li key={item.id}>
+                      <Link>{item.title}</Link>
+                    </li>
                   ))
                 }
               </ul>
@@ -164,9 +164,9 @@ const {
                 value={sortOption}
                 onChange={(e) => setSortOption(e.target.value)}
               >
-     
+
                 <option value="Standart Sıralama">Standart Sıralama</option>
-                         <option value="A-dan Z-e">A-dan Z-e</option>
+                <option value="A-dan Z-e">A-dan Z-e</option>
                 <option value="Z-den A-ya">Z-den A-ya</option>
                 <option value="Populyarlığa görə">Populyarlığa görə sırala</option>
                 <option value="Ən yüksək reytinq">Ən yüksək reytinqə görə sırala</option>
@@ -236,16 +236,16 @@ const {
             )}
 
             <CategoryCardsWrapper>
-<CategoryCards>
-  {isLoading
-    ? Array.from({ length: 8 }).map((_, index) => (
-        <CategoryProductCardSkelaton key={index} />
-      ))
-    : currentProducts?.map((item) => (
-        <CategoryProductCard key={item.$id || item.id} item={item} />
-      ))
-  }
-</CategoryCards>
+              <CategoryCards>
+                {isLoading
+                  ? Array.from({ length: 8 }).map((_, index) => (
+                    <CategoryProductCardSkelaton key={index} />
+                  ))
+                  : currentProducts?.map((item) => (
+                    <CategoryProductCard key={item.$id || item.id} item={item} />
+                  ))
+                }
+              </CategoryCards>
 
               {totalPages > 1 && (
                 <PaginationWrapper>
