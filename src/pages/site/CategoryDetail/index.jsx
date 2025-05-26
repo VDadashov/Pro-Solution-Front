@@ -42,7 +42,7 @@ const LoadingSkeleton = styled(Skeleton)`
   animation: ${pulse} 1.5s infinite ease-in-out;
 `;
 
-const DetailSkeleton = () => (
+const DetailSkeleton = ({ imageCount}) => (
   <DetailWrapper>
     <Wrapper>
       <DetailHead>
@@ -54,15 +54,15 @@ const DetailSkeleton = () => (
       <DetailBody>
         <DetailCard>
           <ThumbnailList>
-            {[...Array(3)].map((_, i) => (
+            {[...Array(imageCount)].map((_, i) => (
               <LoadingSkeleton key={i} width={60} height={60} style={{ marginBottom: "10px" }} />
             ))}
           </ThumbnailList>
 
           <MainImageWrapper>
-          <ImgWrap>
+          
    <LoadingSkeleton height={"100%"}  width={"100%"}/>
-          </ImgWrap>
+          
          
           </MainImageWrapper>
         </DetailCard>
@@ -76,12 +76,20 @@ const DetailSkeleton = () => (
             </div>
 
             <DetailList>
-              {[...Array(5)].map((_, i) => (
+              {[...Array(10)].map((_, i) => (
                 <DetailItem key={i}>
-                  <LoadingSkeleton height={15} width="40%" />
+                  <LoadingSkeleton height={15} width={"40%"} />
                 </DetailItem>
               ))}
             </DetailList>
+                <DetailFoot>
+                <p>
+                  <LoadingSkeleton height={15} width={"40%"} />
+                </p>
+                <Socials>
+                 <LoadingSkeleton height={15} width={"100%"} />
+                </Socials>
+              </DetailFoot>
           </div>
         </DetailInfo>
       </DetailBody>
@@ -95,12 +103,8 @@ const CategoryDetail = () => {
   const [isZoomed, setIsZoomed] = useState(false);
   const [liked, setLiked] = useState(false);
   const { id } = useParams();
-  const { data: product, error,isLoading } = useGetOne("productsId", ENDPOINTS.productsId, id);
-  console.log(product);
+  const { data: product,isLoading } = useGetOne("productsId", ENDPOINTS.productsId, id);
 
-  console.log("Product ID:", id);
-
-  console.log(error)
   const { wishlist, addToWishlist } = useContext(WishlistContext);
 
   useEffect(() => {
@@ -110,9 +114,6 @@ const CategoryDetail = () => {
     }
   }, [wishlist, product]);
 
-  if (!product) {
-    return <div>Product not found</div>;
-  }
   const imageValues = product?.images?.$values || [];
   const mainImage = imageValues.find((img) => img.isMain);
   const otherImages = imageValues.filter((img) => !img.isMain);
@@ -130,7 +131,7 @@ const CategoryDetail = () => {
 
 
   return (
-     isLoading ? <DetailSkeleton /> : (
+    isLoading ? <DetailSkeleton imageCount={product?.images?.$values?.length}/> : (
        <DetailWrapper>
       <Wrapper>
         <DetailHead>
@@ -435,7 +436,7 @@ width: 45%;
   }
 `;
 const DetailInfo = styled.div`
-  width: 32%;
+  width: 35%;
   @media (max-width: 851px) {
     width: 100%;
     padding-left: 1rem;
@@ -671,10 +672,11 @@ const MainImageWrapper = styled.div`
     width: 100%;
     height: auto;
   }
+
 `;
 const ZoomIcon = styled.div`
   position: absolute;
-  bottom: 30px;
+  bottom:0;
   left: 10px;
   pointer-events: all;
   display: flex;
@@ -704,13 +706,9 @@ align-items: center;
 
 `
 const MainImage = styled.img`
-  width: 100%;
-  height: 100%;
   object-fit: contain;
   border-radius: 6px;
-  @media (max-width: 1420px) {
-   object-fit: cover;
-  }
+
 `;
 const HoverIcons = styled.div`
   position: absolute;
