@@ -1,90 +1,95 @@
+
 import CategoriesSidebar from '@components/site/Blog/CategoriesSideBar';
-import CategoryProductCard, { CategoryProductCardSkelaton } from '@components/site/Category/CategoryCard'
+import CategoryProductCard, { CategoryProductCardSkelaton } from '@components/site/Category/CategoryCard';
 import { ENDPOINTS } from '@utils/constants/Endpoints';
 import { useGet } from '@utils/hooks/useCustomQuery';
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 
 const Discount = () => {
- const { data: products,isLoading } = useGet("products", ENDPOINTS.products);
+  const { data: products, isLoading } = useGet("products", ENDPOINTS.products);
   const [currentPage, setCurrentPage] = useState(1);
-   const postsPerPage = 10;
-   const totalPages = Math.ceil((products?.length || 0) / postsPerPage);
-   const indexOfLastPost = currentPage * postsPerPage;
-   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-   const currentPosts = products?.$values?.slice(indexOfFirstPost, indexOfLastPost) || [];
-   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
+  const postsPerPage = 8;
+
+  const productsArray = products?.$values || [];
+  const totalPages = Math.ceil(productsArray.length / postsPerPage);
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = productsArray.slice(indexOfFirstPost, indexOfLastPost);
+
+  const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <>
-    <Helmet>
-    <title>Discount</title>
-    </Helmet>
-        <CategoryWrapper>
- <CategoryContent>
-    <CategoryBody>
-    <CategoryCardsWrapper>
-    
- <CategoryCards>
-  {isLoading
-    ? Array.from({ length: 8 }).map((_, index) => (
-        <CategoryProductCardSkelaton key={index} />
-      ))
-    : currentPosts?.map((item) => (
-        <CategoryProductCard key={item.id} item={item} />
-      ))
-  }
-</CategoryCards>
-            {totalPages > 1 && (
-              <PaginationWrapper>
-                <PageButton
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                >
-                  &laquo;
-                </PageButton>
+      <Helmet>
+        <title>Discount</title>
+      </Helmet>
+      <CategoryWrapper>
+        <CategoryContent>
+          <CategoryBody>
+            <CategoryCardsWrapper>
+              <CategoryCards>
+                {isLoading
+                  ? Array.from({ length: 8 }).map((_, index) => (
+                      <CategoryProductCardSkelaton key={index} />
+                    ))
+                  : currentPosts.map((item) => (
+                      <CategoryProductCard key={item.id} item={item} />
+                    ))}
+              </CategoryCards>
 
-                {[...Array(totalPages)].map((_, index) => (
+              {totalPages > 1 && (
+                <PaginationWrapper>
                   <PageButton
-                    key={index}
-                    onClick={() => handlePageChange(index + 1)}
-                    active={currentPage === index + 1}
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
                   >
-                    {index + 1}
+                    &laquo;
                   </PageButton>
-                ))}
 
-                <PageButton
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                >
-                  &raquo;
-                </PageButton>
-              </PaginationWrapper>
-            )}
-          </CategoryCardsWrapper>
+                  {[...Array(totalPages)].map((_, index) => (
+                    <PageButton
+                      key={index}
+                      onClick={() => handlePageChange(index + 1)}
+                      active={currentPage === index + 1}
+                    >
+                      {index + 1}
+                    </PageButton>
+                  ))}
 
-     <CategoryFilter>
-    <Categories>
-              <CategoriesSidebar />
-            </Categories>
- </CategoryFilter>
+                  <PageButton
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    &raquo;
+                  </PageButton>
+                </PaginationWrapper>
+              )}
+            </CategoryCardsWrapper>
 
-    </CategoryBody>      
-    </CategoryContent>
-    </CategoryWrapper>
+            <CategoryFilter>
+              <Categories>
+                <CategoriesSidebar />
+              </Categories>
+            </CategoryFilter>
+          </CategoryBody>
+        </CategoryContent>
+      </CategoryWrapper>
     </>
-  )
-}
+  );
+};
 
-export default Discount
+export default Discount;
+
+// Styled Components
 const CategoryWrapper = styled.section`
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
+
 const CategoryContent = styled.div`
   min-height: 100vh;
   width: 80%;
@@ -93,6 +98,7 @@ const CategoryContent = styled.div`
     width: 100%;
   }
 `;
+
 const CategoryBody = styled.div`
   display: flex;
   flex-direction: row;
@@ -101,6 +107,7 @@ const CategoryBody = styled.div`
     flex-direction: column;
   }
 `;
+
 const CategoryCardsWrapper = styled.div`
   display: flex;
   flex: 1;
@@ -121,6 +128,7 @@ const CategoryCards = styled.div`
     justify-content: center;
   }
 `;
+
 const CategoryFilter = styled.div`
   width: 25%;
   @media (max-width: 850px) {
@@ -132,7 +140,6 @@ const CategoryFilter = styled.div`
 const Categories = styled.div``;
 
 const PageButton = styled.button`
-  display: ${(props) => (props.hidden ? "none" : "inline-block")};
   background: ${(props) => (props.active ? "#00A6A6" : "#fff")};
   color: ${(props) => (props.active ? "#fff" : "#333")};
   border: 1px solid #ddd;
@@ -144,7 +151,7 @@ const PageButton = styled.button`
   cursor: pointer;
   transition: all 0.3s ease;
 
-  &:hover:not(:disabled):not([hidden]) {
+  &:hover:not(:disabled) {
     background-color: #00a6a6;
     color: #fff;
   }
@@ -154,6 +161,7 @@ const PageButton = styled.button`
     cursor: not-allowed;
   }
 `;
+
 const PaginationWrapper = styled.div`
   width: 100%;
   display: flex;
