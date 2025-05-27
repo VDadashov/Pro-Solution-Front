@@ -37,7 +37,7 @@ const Navbar = () => {
       .toLowerCase();                            // lowercase everything
   }
   const isHomePage = location.pathname === "/";
-
+ 
   return (
     <NavigationBar>
       <StyledNavbarContainer>
@@ -49,20 +49,18 @@ const Navbar = () => {
                 <p> Məhsullarımız</p>
                 <ArrowDown />
                 <CategoryListContainer
-                    className={iScrolled || !isHomePage ? "hoverable" : ""}
+                  className={iScrolled || !isHomePage ? "hoverable" : ""}
                 >
                   <CategoryList>
                     {categories?.$values?.map((item) => (
-
                       <CategoryElement
                         key={item.name}
                         onClick={() =>
                           navigate(
-                            `/product-category/${toKebabCase(item.title)}`
+                            `/product-category/${item.slug}?slug=${item.slug}`
                           )
                         }
                       >
-
                         {item.title}
 
                         <ArrowForward />
@@ -76,7 +74,9 @@ const Navbar = () => {
                                 navigate(
                                   `/product-category/${toKebabCase(
                                     item.title
-                                  )}/${toKebabCase(categoryItem.title)}`
+                                  )}/${toKebabCase(categoryItem.title)}?slug=${
+                                    item.slug
+                                  }&search=${categoryItem.title}`
                                 );
                               }}
                             >

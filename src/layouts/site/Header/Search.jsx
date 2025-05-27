@@ -16,7 +16,7 @@ const Search = () => {
   const navigate = useNavigate();
 
   const handleSearch = () => {
-    const slugParam = selected === "All" ? "" : selected;
+   const slugParam = selected === "All" ? "" : selected;
     const query = `?slug=${slugParam}&search=${encodeURIComponent(
       searchInput
     )}`;
