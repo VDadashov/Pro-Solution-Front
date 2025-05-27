@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-
+import { Link } from "react-router";
 const pulse = keyframes`
      0% {
        opacity: 1;
@@ -17,6 +17,13 @@ const pulse = keyframes`
      }
    `;
 
+   function toKebabCase(str) {
+     return str
+       .replace(/([a-z])([A-Z])/g, "$1-$2") // insert dash between camelCase
+       .replace(/[\s_]+/g, "-") // replace spaces and underscores with dash
+       .toLowerCase(); // lowercase everything
+   }
+   
   const LoadingSkeleton = styled(Skeleton)`
     animation: ${pulse} 1.5s infinite ease-in-out;
   `;
@@ -52,7 +59,9 @@ const CategoriesSidebar = () => {
             ))
           : categories?.$values?.map((category, index) => (
               <React.Fragment key={index}>
-                <button>{category.title}</button>
+                <Link
+                to={`/product-category/${toKebabCase(category.title)}`}
+                >{category.title}</Link>
               </React.Fragment>
             ))}
       </CategoriesSection>
@@ -76,7 +85,7 @@ const SidebarWrapper = styled.div`
     border-top: 2px solid #ececec;
   }
 
-  button {
+  a {
     background-color: transparent;
     border: 1px solid #149295;
     color: #149295;

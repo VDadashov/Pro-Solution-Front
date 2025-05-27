@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { RiEqualizerLine } from "react-icons/ri";
 import PriceFilter from "@components/site/Category/FilterPrice";
@@ -8,102 +8,117 @@ import ProcessorSelect from "@components/site/Category/ProcessorSelect";
 import CategoriesSidebar from "@components/site/Blog/CategoriesSideBar";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
-import CategoryProductCard, { CategoryProductCardSkelaton } from "@components/site/Category/CategoryCard";
+import CategoryProductCard, {
+  CategoryProductCardSkelaton,
+} from "@components/site/Category/CategoryCard";
 import { Helmet } from "react-helmet";
 
 const Category = () => {
-    const [showFilter, setShowFilter] = useState(false);
-    const [sortOption, setSortOption] = useState("Standart Sıralama");
-    const [priceRange, setPriceRange] = useState({ min: null, max: null });
-    const { data: products, isLoading } = useGet("products", ENDPOINTS.products);
+  const [products, setProducts] = useState([]);
+  const [isLoading, setLoading] = useState(true);
 
-    const location= useLocation();
-   const [filteredItems, setFilteredItems] = useState([]);
+  const [showFilter, setShowFilter] = useState(false);
+  const [sortOption, setSortOption] = useState("Standart Sıralama");
+  const [priceRange, setPriceRange] = useState({ min: null, max: null });
+  const location = useLocation();
+  const [filteredItems, setFilteredItems] = useState([]);
+  const { category, subcategory } = useParams();
+  const searchParams = new URLSearchParams(location.search);
+  const search = searchParams.get("search") || "";
+  const slug = searchParams.get("slug") || "";
 
-   const searchParams=new URLSearchParams(location.search);
-   const slug= searchParams.get("slug") || "";
-   const search=searchParams.get("search") || "";
+  // const { data: products, isLoading } = useGet(
+  //   "getAllFiltered",
+  //   `${
+  //     ENDPOINTS.getAllFiltered
+  //   }?slug=${category}&search=${search}&take=${"1"}&skip=${"10"}&order=${"1"}&isDeleted=${false}`
+  // );
+  console.log(products);
 
-   useEffect(()=>{
-    const filtered= products?.$values?.filter((product)=>{
-      const matchesSlug = slug === "" || product.categorySlug === slug;
-      const matchesSearch =
-        search === "" ||
-        product?.$values?.title.toLowerCase().includes(search.toLowerCase());
-      return matchesSlug && matchesSearch;
-    });
-    setFilteredItems(filtered)
-   }, [slug,search,products]
-  ) 
-  ;
-    const handleClearMinPrice = () => {
-      setPriceRange((prev) => ({ ...prev, min: null }));
-    };
-    const handleClearMaxPrice = () => {
-      setPriceRange((prev) => ({ ...prev, max: null }));
-    };
-    const handlePriceChange = (range) => {
-      setPriceRange(range);
-    };
-    const [filterApplied, setFilterApplied] = useState(false);
+  useEffect(() => {
+    fetch(
+      `${
+        ENDPOINTS.getAllFiltered
+      }?slug=${slug}&search=${search}&take=${"10"}&skip=${"1"}&order=${"1"}&isDeleted=${false}`
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setProducts(result); // nəticəni state-ə yaz
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Xəta baş verdi:", error);
+        setLoading(false);
+      });
+  }, [slug, subcategory, search]);
 
-    useEffect(() => {
-      if (priceRange.min === null && priceRange.max === null) {
-        setFilterApplied(false);
-      }
-    }, [priceRange]);
+  const handleClearMinPrice = () => {
+    setPriceRange((prev) => ({ ...prev, min: null }));
+  };
+  const handleClearMaxPrice = () => {
+    setPriceRange((prev) => ({ ...prev, max: null }));
+  };
+  const handlePriceChange = (range) => {
+    setPriceRange(range);
+  };
+  const [filterApplied, setFilterApplied] = useState(false);
 
-    const parsePrice = (value) => {
-      if (typeof value === "string") {
-        return Number(value.replace(/[^\d.]/g, ""));
-      }
-      return Number(value);
-    };
-    const filteredProducts = products?.$values?.filter((item) => {
+  useEffect(() => {
+    if (priceRange.min === null && priceRange.max === null) {
+      setFilterApplied(false);
+    }
+  }, [priceRange]);
 
-      const price = parsePrice(item.discountPrice > 0 ? item.discountPrice : item.price);
-
-      const minValid = priceRange.min === null || price >= priceRange.min;
-      const maxValid = priceRange.max === null || price <= priceRange.max;
-      return minValid && maxValid;
-    });
-
-    const sortedProducts = (filteredProducts || []).sort((a, b) => {
-      const priceA = parsePrice(a.discountPrice > 0 ? a.discountPrice : a.price);
-      const priceB = parsePrice(b.discountPrice > 0 ? b.discountPrice : b.price);
-      switch (sortOption) {
-        case "Qiymət: aşağıdan yuxarı":
-          return priceA - priceB;
-        case "Qiymət: yuxarıdan aşağı":
-          return priceB - priceA;
-        case "Ən yüksək reytinq":
-          return b.rating - a.rating;
-        case "Ən yenilər":
-          return new Date(b.createdAt) - new Date(a.createdAt);
-        case "Populyarlığa görə":
-          return b.popularity - a.popularity;
-        default:
-          return 0;
-      }
-    });
-
-    const [currentPage, setCurrentPage] = useState(1);
-    const productsPerPage = 8;
-    const indexOfLastProduct = currentPage * productsPerPage;
-    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    const currentProducts = sortedProducts.slice(
-      indexOfFirstProduct,
-      indexOfLastProduct
+  const parsePrice = (value) => {
+    if (typeof value === "string") {
+      return Number(value.replace(/[^\d.]/g, ""));
+    }
+    return Number(value);
+  };
+  const filteredProducts = filteredItems?.filter((item) => {
+    const price = parsePrice(
+      item.discountPrice > 0 ? item.discountPrice : item.price
     );
-    const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
-    const handlePageChange = (pageNumber) => {
-      setCurrentPage(pageNumber);
-    };
-    useEffect(() => {
-      setCurrentPage(1);
-    }, [priceRange, sortOption]);
 
+    const minValid = priceRange.min === null || price >= priceRange.min;
+    const maxValid = priceRange.max === null || price <= priceRange.max;
+    return minValid && maxValid;
+  });
 
+  const sortedProducts = (filteredProducts || []).sort((a, b) => {
+    const priceA = parsePrice(a.discountPrice > 0 ? a.discountPrice : a.price);
+    const priceB = parsePrice(b.discountPrice > 0 ? b.discountPrice : b.price);
+    switch (sortOption) {
+      case "Qiymət: aşağıdan yuxarı":
+        return priceA - priceB;
+      case "Qiymət: yuxarıdan aşağı":
+        return priceB - priceA;
+      case "Ən yüksək reytinq":
+        return b.rating - a.rating;
+      case "Ən yenilər":
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      case "Populyarlığa görə":
+        return b.popularity - a.popularity;
+      default:
+        return 0;
+    }
+  });
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 8;
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = sortedProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+  const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [priceRange, sortOption]);
 
   return (
     <>
@@ -116,18 +131,19 @@ const Category = () => {
             <div className="category-links">
               <ul>
                 <li>
-                  <Link>Əsas səhifə /</Link>
+                  <Link>Əsas səhifə </Link>
                 </li>
                 <li>
-                  <Link>Noutbuklar</Link>
+                  <Link>
+                    {category == undefined ? "/" : `/ ${category} /`}{" "}
+                  </Link>
+                  <Link> {search}</Link>
                 </li>
-                {
-                  products?.categories?.map((item) => (
-                    <li key={item.id}>
-                      <Link>{item.title}</Link>
-                    </li>
-                  ))
-                }
+                {products?.categories?.map((item) => (
+                  <li key={item.id}>
+                    <Link>{item.title}</Link>
+                  </li>
+                ))}
               </ul>
             </div>
             <ResponsiveFilter onClick={() => setShowFilter(true)}>
@@ -142,13 +158,18 @@ const Category = () => {
                 value={sortOption}
                 onChange={(e) => setSortOption(e.target.value)}
               >
-
                 <option value="Standart Sıralama">Standart Sıralama</option>
                 <option value="A-dan Z-e">A-dan Z-e</option>
                 <option value="Z-den A-ya">Z-den A-ya</option>
-                <option value="Populyarlığa görə">Populyarlığa görə sırala</option>
-                <option value="Ən yüksək reytinq">Ən yüksək reytinqə görə sırala</option>
-                <option value="Ən sonuncular">Ən sonunculara görə sırala</option>
+                <option value="Populyarlığa görə">
+                  Populyarlığa görə sırala
+                </option>
+                <option value="Ən yüksək reytinq">
+                  Ən yüksək reytinqə görə sırala
+                </option>
+                <option value="Ən sonuncular">
+                  Ən sonunculara görə sırala
+                </option>
                 <option value="Ən yenilər">Ən yenilərə görə sırala</option>
                 <option value="Qiymət: aşağıdan yuxarı">
                   Qiymətə görə: aşağıdan yuxarı
@@ -217,12 +238,14 @@ const Category = () => {
               <CategoryCards>
                 {isLoading
                   ? Array.from({ length: 8 }).map((_, index) => (
-                    <CategoryProductCardSkelaton key={index} />
-                  ))
-                  : currentProducts?.map((item) => (
-                    <CategoryProductCard key={item.$id || item.id} item={item} />
-                  ))
-                }
+                      <CategoryProductCardSkelaton key={index} />
+                    ))
+                  : products?.items?.$values?.map((item) => (
+                      <CategoryProductCard
+                        key={item.$id || item.id}
+                        item={item}
+                      />
+                    ))}
               </CategoryCards>
 
               {totalPages > 1 && (
@@ -299,7 +322,6 @@ const Category = () => {
         </CategoryContent>
       </CategoryWrapper>
     </>
-
   );
 };
 
@@ -584,9 +606,8 @@ const Processor = styled.div`
     font-size: 0.97em;
     padding: 5px 55px 5px 8px;
     outline: none;
-    option{
- max-width: 280px !important;
-
+    option {
+      max-width: 280px !important;
     }
   }
 `;
