@@ -30,7 +30,7 @@ const WishlistTables = () => {
                 <ProductName>{item.description}</ProductName>
               </ProductNameTd>
               <ProductData style={{ color: "#000000" }}>
-                <DelTag>{item?.price?.original}</DelTag> {item?.price?.current}
+                <DelTag>{item?.price}</DelTag> {item?.discountPrice} ₼
               </ProductData>
               <ProductData>In Stock</ProductData>
             </ProductTr>

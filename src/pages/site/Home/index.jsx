@@ -13,7 +13,7 @@ const Home = () => {
       {/* <Loading /> */}
       <MainSection>
         <Banner />
-        <ProductSection sectionHeader={"Ən Çox Satılanlar"}  order={2}  />
+        <ProductSection sectionHeader={"Ən Çox Satılanlar"}  order={1}  />
         <ProductSection sectionHeader={"Təzə Endirimlər"}  order={2} />
         <ProductSection sectionHeader={"Yeni Məhsullar"} order={2} />
         <DiscountProductSection />

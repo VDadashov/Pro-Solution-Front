@@ -244,7 +244,7 @@ const SubCategoryList = styled.ul`
   background-color: #ffffff;
   left: 100%;
   top: 0;
-  height: 100%;
+  /* height: 100%; */
   width: 100%;
   cursor: default;
 `;

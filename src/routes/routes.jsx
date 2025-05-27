@@ -25,9 +25,12 @@ const ROUTES = [
   {
     path: "/",
     element: (
+
         <ScrollToTop>
           <SiteRoot />
         </ScrollToTop>
+
+    
     ),
     children: [
       {
