@@ -20,7 +20,7 @@ const Search = () => {
     const query = `?slug=${slugParam}&search=${encodeURIComponent(
       searchInput
     )}`;
-    navigate(`/product-category${query}`);
+    navigate(`/product-category/${slugParam}${query}`);
   };
   
   useEffect(() => {
@@ -42,8 +42,8 @@ const Search = () => {
             All
           </option>
           {categories?.$values?.map((category) => (
-            <option key={category.name} value={category.name}>
-              {category.title}
+            <option key={category.name} value={category.slug}>
+              {category.slug}
             </option>
           ))}
         </SearchCategories>
@@ -54,7 +54,7 @@ const Search = () => {
           width: `calc(100% - ${selectWidth}px - 5px)`,
         }}
       >
-        <SearchInput  
+        <SearchInput
           type="text"
           placeholder="Axtar..."
           value={searchInput}

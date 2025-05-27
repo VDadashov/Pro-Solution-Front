@@ -21,12 +21,10 @@ const StyledHeader = styled.header`
     isScrolled ? "translateY(-140px)" : "translateY(0)"};
   z-index: 2;
   width: 100%;
-  transition: ${({ isScrolled }) => (isScrolled ? "0.5s" : "0")};
-  /* @media (max-width: 850px) {
-    border: 1px solid rgba(0, 0, 0, 0.09);
-  } */
+  transition: top 0.5s ease, transform 0.5s ease;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 `;
+
 
 const StyledTopHeader = styled.div`
   display: flex;
