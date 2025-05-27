@@ -349,6 +349,9 @@ const CategoryContent = styled.div`
   @media (max-width: 950px) {
     width: 100%;
   }
+    @media (max-width: 1060px) {
+    width: 100%;
+  }
 `;
 const CategoryHead = styled.div`
   display: flex;
@@ -364,6 +367,10 @@ const CategoryHead = styled.div`
     width: 100%;
     justify-content: center;
     align-items: center;
+  }
+  @media (max-width: 1250px) {
+    width: 100%;
+
   }
   .category-links ul {
     display: flex;
@@ -456,9 +463,9 @@ const CategoryCards = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  gap: 20px;
+  gap: 15px;
   width: 100%;
-  @media (max-width: 1093px) {
+  @media (max-width: 930px) {
     justify-content: center;
   }
 `;
