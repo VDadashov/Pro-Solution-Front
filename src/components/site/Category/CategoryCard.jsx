@@ -73,19 +73,20 @@ const CategoryProductCard = ({ item }) => {
             src={item.images?.$values?.find((img) => img.isMain)?.imagePath || ""}
           />
         </CategoryCardLink>
-        <div className="heartIcon"
-          onClick={() => {
-            addToWishlist(item);
-            if (!liked) {
-              toast.success("Product added to wishlist!");
-            } else {
-              toast.error("Product removed from wishlist.");
-            }
-            setLiked(!liked);
-          }}
-        >
-          <CiHeart />
-        </div>
+        <div
+  className={`heartIcon ${liked ? "liked" : ""}`}
+  onClick={() => {
+    addToWishlist(item);
+    if (!liked) {
+      toast.success("Product added to wishlist!");
+    } else {
+      toast.error("Product removed from wishlist.");
+    }
+    setLiked(!liked);
+  }}
+>
+  <CiHeart />
+</div>
       </CategoryCardHeadImage>
 
       <CategoryCardBody>
@@ -138,6 +139,8 @@ const CategoryCard = styled.div`
 const ProductName = styled.h5`
   max-width: 100%;
  overflow-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: 15px;
   color: #149295;
   margin: 10px 0;
@@ -197,7 +200,11 @@ const CategoryCardHeadImage = styled.div`
   ${CategoryCard}:hover & .heartIcon {
     opacity: 1;
   }
-
+ .heartIcon.liked {
+    color: white;
+    background-color: #b20000;
+    border-color: #b20000;
+  }
 `;
 const CategoryCardBody = styled.div`
   padding: 5px;
