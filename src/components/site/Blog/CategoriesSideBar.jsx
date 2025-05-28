@@ -59,9 +59,9 @@ const CategoriesSidebar = () => {
             ))
           : categories?.$values?.map((category, index) => (
               <React.Fragment key={index}>
-                <Link
-                to={`/product-category/${toKebabCase(category.title)}`}
-                >{category.title}</Link>
+                <Link to={`/product-category/${category.slug}?slug=${category.slug}`}>
+                  {category.title}
+                </Link>
               </React.Fragment>
             ))}
       </CategoriesSection>

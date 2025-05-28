@@ -32,9 +32,9 @@ const Navbar = () => {
   }, []);
   function toKebabCase(str) {
     return str
-      .replace(/([a-z])([A-Z])/g, '$1-$2')       // insert dash between camelCase
-      .replace(/[\s_]+/g, '-')                   // replace spaces and underscores with dash
-      .toLowerCase();                            // lowercase everything
+      .replace(/([a-z])([A-Z])/g, '$1-$2')       
+      .replace(/[\s_]+/g, '-')                  
+      .toLowerCase();                           
   }
   const isHomePage = location.pathname === "/";
  

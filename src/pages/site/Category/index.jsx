@@ -33,7 +33,7 @@ const Category = () => {
   //     ENDPOINTS.getAllFiltered
   //   }?slug=${category}&search=${search}&take=${"1"}&skip=${"10"}&order=${"1"}&isDeleted=${false}`
   // );
-  console.log(products);
+  // console.log(products);
 
   useEffect(() => {
     fetch(
@@ -43,14 +43,14 @@ const Category = () => {
     )
       .then((response) => response.json())
       .then((result) => {
-        setProducts(result); // nəticəni state-ə yaz
+        setProducts(result); 
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Xəta baş verdi:", error);
+        // console.error("Xəta baş verdi:", error);
         setLoading(false);
       });
-  }, [slug, subcategory, search]);
+  }, [slug, subcategory, search, category]);
 
   const handleClearMinPrice = () => {
     setPriceRange((prev) => ({ ...prev, min: null }));
