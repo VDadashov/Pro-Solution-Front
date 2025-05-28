@@ -25,12 +25,9 @@ const ROUTES = [
   {
     path: "/",
     element: (
-
-        <ScrollToTop>
-          <SiteRoot />
-        </ScrollToTop>
-
-    
+      <ScrollToTop>
+        <SiteRoot />
+      </ScrollToTop>
     ),
     children: [
       {
@@ -62,7 +59,7 @@ const ROUTES = [
         element: <Discount />,
       },
       {
-        path: "/category/:id",
+        path: "/category/:slug",
         element: <CategoryDetail />,
       },
       {
