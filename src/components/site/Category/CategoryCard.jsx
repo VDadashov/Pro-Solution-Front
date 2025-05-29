@@ -63,7 +63,6 @@ const CategoryProductCard = ({ item }) => {
   useEffect(() => {
     const isLiked = wishlist.some(x => x.id === item.id);
     setLiked(isLiked);
-    console.log(item.productSlugs?.$values?.[0]?.slug)
   }, [wishlist, item]);
 
 
