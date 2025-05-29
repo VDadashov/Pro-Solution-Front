@@ -7,9 +7,7 @@ import { ENDPOINTS } from '@utils/constants/Endpoints';
 
 const ProcessorSelect = () => {
   const {data: featureoptions, isLoading, error }=useGet("featureoptions",ENDPOINTS.featureOptions)
-  console.log(featureoptions)
-  console.log("loading:", isLoading);
-console.log("error:", error);
+
   const processors = [
     "Intel® Celeron® N4000",
     "Intel® Core™ i3-1115G4",
