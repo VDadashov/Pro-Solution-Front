@@ -363,6 +363,7 @@ const Category = () => {
 //   const orderParam = searchParams.get("order");
 // const order = orderParam !== null && orderParam !== "" ? parseInt(orderParam) : null;
 
+
 const minPriceRaw = searchParams.get("minPrice");
 const maxPriceRaw = searchParams.get("maxPrice");
   const isDeleted = searchParams.get("isDeleted");
@@ -393,6 +394,8 @@ const maxPrice = maxPriceRaw !== null && maxPriceRaw !== "undefined" ? parseFloa
       
   }, [slug, search, take, skip, order, minPrice, maxPrice, isDeleted]);
 console.log("products:", products);
+
+
 
 
   useEffect(() => {

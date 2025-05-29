@@ -1,6 +1,6 @@
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { useGet } from "@utils/hooks/useCustomQuery";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled, { keyframes } from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -17,12 +17,12 @@ const pulse = keyframes`
      }
    `;
 
-   function toKebabCase(str) {
-     return str
-       .replace(/([a-z])([A-Z])/g, "$1-$2") // insert dash between camelCase
-       .replace(/[\s_]+/g, "-") // replace spaces and underscores with dash
-       .toLowerCase(); // lowercase everything
-   }
+  //  function toKebabCase(str) {
+  //    return str
+  //      .replace(/([a-z])([A-Z])/g, "$1-$2") // insert dash between camelCase
+  //      .replace(/[\s_]+/g, "-") // replace spaces and underscores with dash
+  //      .toLowerCase(); // lowercase everything
+  //  }
    
   const LoadingSkeleton = styled(Skeleton)`
     animation: ${pulse} 1.5s infinite ease-in-out;
@@ -59,9 +59,9 @@ const CategoriesSidebar = () => {
             ))
           : categories?.$values?.map((category, index) => (
               <React.Fragment key={index}>
-                <Link
-                to={`/product-category/${toKebabCase(category.title)}`}
-                >{category.title}</Link>
+                <Link to={`/product-category/${category.slug}?slug=${category.slug}`}>
+                  {category.title}
+                </Link>
               </React.Fragment>
             ))}
       </CategoriesSection>
@@ -72,7 +72,6 @@ const CategoriesSidebar = () => {
 export default CategoriesSidebar;
 
 const SidebarWrapper = styled.div`
-  // padding: 20px;
   display: flex;
   align-items: flex-start;
   flex-direction: column;

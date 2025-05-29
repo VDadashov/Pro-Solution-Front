@@ -63,36 +63,46 @@ const CategoryProductCard = ({ item }) => {
   useEffect(() => {
     const isLiked = wishlist.some(x => x.id === item.id);
     setLiked(isLiked);
+    console.log(item.productSlugs?.$values?.[0]?.slug)
   }, [wishlist, item]);
+
+
 
   return (
     <CategoryCard>
       <CategoryCardHeadImage>
-        <CategoryCardLink to={`/category/${item.id}`}>
+        <CategoryCardLink to={`/category/${item.detailSlug}`}>
           <img
-            src={item.images?.$values?.find((img) => img.isMain)?.imagePath || ""}
+            src={
+              item.images?.$values?.find((img) => img.isMain)?.imagePath || ""
+            }
           />
         </CategoryCardLink>
+
         <div
-  className={`heartIcon ${liked ? "liked" : ""}`}
-  onClick={() => {
-    addToWishlist(item);
-    if (!liked) {
-      toast.success("Product added to wishlist!");
-    } else {
-      toast.error("Product removed from wishlist.");
-    }
-    setLiked(!liked);
-  }}
->
-  <CiHeart />
-</div>
+          className={`heartIcon ${liked ? "liked" : ""}`}
+          onClick={() => {
+            addToWishlist(item);
+            if (!liked) {
+              toast.success("Product added to wishlist!");
+            } else {
+              toast.error("Product removed from wishlist.");
+            }
+            setLiked(!liked);
+          }}
+        >
+          <CiHeart />
+        </div>
       </CategoryCardHeadImage>
 
       <CategoryCardBody>
-        <span>{item.categories?.$values ? item.categories.$values[0]?.title : item.categories?.[0]?.title}</span>
+        <span>
+          {item.categories?.$values
+            ? item.categories.$values[0]?.title
+            : item.categories?.[0]?.title}
+        </span>
 
-        <Link to={`/category/${item.id}`}>  
+        <Link to={`/category/${item.detailSlug}`}>
           <ProductName>{item?.title} </ProductName>
         </Link>
         <PriceBox>
@@ -105,10 +115,12 @@ const CategoryProductCard = ({ item }) => {
             <NewPrice>{item.price} ₼</NewPrice>
           )}
         </PriceBox>
-        <ButtonLink to={`/category/${item.id}`}>Davamını oxu</ButtonLink>
+        <ButtonLink to={`/category/${item.detailSlug}`}>
+          Davamını oxu
+        </ButtonLink>
       </CategoryCardBody>
     </CategoryCard>
-  )
+  );
 }
 
 export default CategoryProductCard

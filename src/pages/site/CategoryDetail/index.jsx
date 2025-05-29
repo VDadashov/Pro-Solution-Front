@@ -22,9 +22,10 @@ import { WishlistContext } from "@Context/wishlistContext";
 import { FaHeart } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import { useGetOne } from "@utils/hooks/useCustomQuery";
-import  { keyframes } from "styled-components";
+import { keyframes } from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+
 const pulse = keyframes`
   0% {
     opacity: 1;
@@ -42,7 +43,7 @@ const LoadingSkeleton = styled(Skeleton)`
   animation: ${pulse} 1.5s infinite ease-in-out;
 `;
 
-const DetailSkeleton = ({ imageCount}) => (
+const DetailSkeleton = ({ imageCount }) => (
   <DetailWrapper>
     <Wrapper>
       <DetailHead>
@@ -55,15 +56,17 @@ const DetailSkeleton = ({ imageCount}) => (
         <DetailCard>
           <ThumbnailList>
             {[...Array(imageCount)].map((_, i) => (
-              <LoadingSkeleton key={i} width={60} height={60} style={{ marginBottom: "10px" }} />
+              <LoadingSkeleton
+                key={i}
+                width={60}
+                height={60}
+                style={{ marginBottom: "10px" }}
+              />
             ))}
           </ThumbnailList>
 
           <MainImageWrapper>
-          
-   <LoadingSkeleton height={"100%"}  width={"100%"}/>
-          
-         
+            <LoadingSkeleton height={"100%"} width={"100%"} />
           </MainImageWrapper>
         </DetailCard>
 
@@ -82,14 +85,14 @@ const DetailSkeleton = ({ imageCount}) => (
                 </DetailItem>
               ))}
             </DetailList>
-                <DetailFoot>
-                <p>
-                  <LoadingSkeleton height={15} width={"40%"} />
-                </p>
-                <Socials>
-                 <LoadingSkeleton height={15} width={"100%"} />
-                </Socials>
-              </DetailFoot>
+            <DetailFoot>
+              <p>
+                <LoadingSkeleton height={15} width={"40%"} />
+              </p>
+              <Socials>
+                <LoadingSkeleton height={15} width={"100%"} />
+              </Socials>
+            </DetailFoot>
           </div>
         </DetailInfo>
       </DetailBody>
@@ -102,14 +105,37 @@ const CategoryDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
   const [liked, setLiked] = useState(false);
-  const { id } = useParams();
-  const { data: product,isLoading } = useGetOne("productsId", ENDPOINTS.productsId, id);
-
+  const [product, setProduct] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const { slug } = useParams();
+  // const { data: product, isLoading } = useGetOne(
+  //   "productsSlug",
+  //   `${ENDPOINTS.productsSlug}/${slug}` // slug-u URL-ə əlavə et
+  // );
   const { wishlist, addToWishlist } = useContext(WishlistContext);
+  const { category, subcategory } = useParams();
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(`${ENDPOINTS.productsSlug}/${slug}`);
+        const data = await res.json();
+        setProduct(data);
+      } catch (error) {
+        console.error("Product fetch error:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (slug) {
+      fetchProduct();
+    }
+  }, [slug]);
 
   useEffect(() => {
     if (product) {
-      const isLiked = wishlist.some(item => item.id === product.id);
+      const isLiked = wishlist.some((item) => item.id === product.id);
       setLiked(isLiked);
     }
   }, [wishlist, product]);
@@ -127,26 +153,25 @@ const CategoryDetail = () => {
     setSelectedIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
-
-
-
-  return (
-    isLoading ? <DetailSkeleton imageCount={product?.images?.$values?.length}/> : (
-       <DetailWrapper>
+  return isLoading ? (
+    <DetailSkeleton imageCount={product?.images?.$values?.length} />
+  ) : (
+    <DetailWrapper>
       <Wrapper>
         <DetailHead>
           <Nav>
             <li>
               <Link to="/">Əsas səhifə</Link>
             </li>
-            {
+            {/* {
               product?.$values?.categories?.map((item) => (
-                <li key={item.id}>
+                <li key={item.slug}>
                   <Link to=""> / {item.title}</Link>
                 </li>
               ))
-            }
+            } */}
 
+            <Link>{category == undefined ? "/" : `/ ${category} /`} </Link>
           </Nav>
           <SwitchProduct>
             <li>
@@ -167,7 +192,7 @@ const CategoryDetail = () => {
             <ThumbnailList>
               {images?.map((img, i) => (
                 <Thumbnail
-                  key={img.id || i}
+                  key={img.slug || i}
                   src={img?.imagePath}
                   active={i === selectedIndex}
                   onClick={() => setSelectedIndex(i)}
@@ -177,8 +202,7 @@ const CategoryDetail = () => {
 
             <MainImageWrapper>
               <ImgWrap>
-                <MainImage src={images[selectedIndex]?.imagePath}
-                />
+                <MainImage src={images[selectedIndex]?.imagePath} />
               </ImgWrap>
               <HoverIcons>
                 <ArrowLeft onClick={prevImage}>
@@ -200,7 +224,6 @@ const CategoryDetail = () => {
                 >
                   <CiHeart />
                 </LikeIcon>
-
               </HoverIcons>
               <ZoomIcon onClick={() => setIsModalOpen(true)}>
                 <MdOutlineZoomOutMap />
@@ -241,7 +264,7 @@ const CategoryDetail = () => {
                   }}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setIsZoomed(!isZoomed)
+                    setIsZoomed(!isZoomed);
                   }}
                 />
                 <ModalBtn onClick={(e) => e.stopPropagation()}>
@@ -265,40 +288,45 @@ const CategoryDetail = () => {
               <h2> {product?.title}</h2>
               <hr />
               <div className="price">
-                {
-                  product?.discountPrice > 0 ? (
-                    <>
-                      <p className="old">{product?.price} ₼</p>
-                      <p className="new">{product.discountPrice} ₼</p>
-                    </>
-                  ) : (
-                    <p className="new">{product?.price} ₼</p>
-                  )
-                }
+                {product?.discountPrice > 0 ? (
+                  <>
+                    <p className="old">{product?.price} ₼</p>
+                    <p className="new">{product.discountPrice} ₼</p>
+                  </>
+                ) : (
+                  <p className="new">{product?.price} ₼</p>
+                )}
               </div>
               <DetailList>
-                {
-                  product?.featureOptionItems?.$values?.map((item) => (
-                    <DetailItem key={item.id || item.name}>
-                      <p>{item.featureOption?.name} :</p>
-                      <span>{item?.name}</span>
-                      <span>{item?.parent?.name}</span>
-                    </DetailItem>
-                  ))
-                }
-                <WishContainer onClick={() => {
-                  setLiked(true);
-                  addToWishlist(product);
-                }}>
+                {product?.featureOptionItems?.$values?.map((item) => (
+                  <DetailItem key={item.id || item.name}>
+                    <p>{item.featureOption?.name} :</p>
+                    <span>{item?.name}</span>
+                    <span>{item?.parent?.name}</span>
+                  </DetailItem>
+                ))}
+                <WishContainer
+                  onClick={() => {
+                    setLiked(true);
+                    addToWishlist(product);
+                  }}
+                >
                   <WishIcon>
-                    {liked ? <FaHeart style={{ color: "black" }} /> : <FaRegHeart />}
+                    {liked ? (
+                      <FaHeart style={{ color: "black" }} />
+                    ) : (
+                      <FaRegHeart />
+                    )}
                   </WishIcon>
 
                   <WishText>
                     {liked ? (
                       <>
                         <Gray>Product added</Gray>
-                        <BrowseLink to="/wishlist" onClick={(e) => e.stopPropagation()}>
+                        <BrowseLink
+                          to="/wishlist"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           Browse wishlist
                         </BrowseLink>
                       </>
@@ -310,10 +338,10 @@ const CategoryDetail = () => {
               </DetailList>
               <DetailFoot>
                 <p>
-                  Kateqoriya: {product?.$values?.categories?.map((item) => (
+                  Kateqoriya:{" "}
+                  {product?.$values?.categories?.map((item) => (
                     <span>{item.title} </span>
                   ))}
-
                   {/* <span>Acer,Noutbuklar </span> */}
                 </p>
                 <Socials>
@@ -350,8 +378,6 @@ const CategoryDetail = () => {
       </Wrapper>
       <ProductDetailTabs product={product} />
     </DetailWrapper>
-     )
-   
   );
 };
 
@@ -403,30 +429,27 @@ const SwitchProduct = styled.ul`
       padding: 6px;
       border: 2px solid #c0c0c0;
       border-radius: 50%;
-           &:hover{
-    background-color: teal;
-    color: white;
-  }
+      &:hover {
+        background-color: teal;
+        color: white;
+      }
     }
- 
   }
-
 `;
 const DetailBody = styled.div`
   display: flex;
   justify-content: center;
   gap: 3rem;
   margin: 0 auto;
-  max-width:80%;
+  max-width: 80%;
   @media (max-width: 851px) {
     flex-direction: column;
     margin-top: 2rem;
     gap: 30px;
   }
- 
 `;
 const DetailCard = styled.div`
-width: 45%;
+  width: 45%;
   display: flex;
   gap: 30px;
   position: relative;
@@ -489,7 +512,7 @@ const DetailItem = styled.li`
   line-height: 1.3;
   border-bottom: 1px solid #ececec;
   text-align: left;
-  p{
+  p {
     font-weight: bolder;
     font-size: 16px;
     color: #777777;
@@ -609,8 +632,8 @@ const WishIcon = styled.i`
 const WishText = styled.span`
   font-size: 16px;
   color: #149295;
-  &:hover{
-    color:black;
+  &:hover {
+    color: black;
   }
 `;
 
@@ -622,15 +645,15 @@ const ThumbnailList = styled.div`
   overflow-y: auto;
   padding-right: 7px;
   &::-webkit-scrollbar {
-    width: 2px; 
+    width: 2px;
   }
 
   &::-webkit-scrollbar-track {
-    background:rgba(240, 240, 240, 0.8); 
+    background: rgba(240, 240, 240, 0.8);
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color:rgba(204, 204, 204, 0.83);
+    background-color: rgba(204, 204, 204, 0.83);
     border-radius: 3px;
   }
 
@@ -640,7 +663,7 @@ const ThumbnailList = styled.div`
     overflow-x: auto;
 
     &::-webkit-scrollbar {
-      height: 6px; 
+      height: 6px;
     }
   }
 `;
@@ -657,7 +680,7 @@ const Thumbnail = styled.img`
   }
 `;
 const MainImageWrapper = styled.div`
-   position: relative;
+  position: relative;
   width: 450px;
   height: 440px;
   display: flex;
@@ -672,11 +695,10 @@ const MainImageWrapper = styled.div`
     width: 100%;
     height: auto;
   }
-
 `;
 const ZoomIcon = styled.div`
   position: absolute;
-  bottom:0;
+  bottom: 0;
   left: 10px;
   pointer-events: all;
   display: flex;
@@ -693,22 +715,20 @@ const ZoomIcon = styled.div`
     color: white;
     border: none;
   }
-  @media(max-width:565px){
+  @media (max-width: 565px) {
     bottom: 0;
   }
 `;
 const ImgWrap = styled.div`
-width: 100%;
-height: 100%;
-display: flex;
-justify-content: center;
-align-items: center;
-
-`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 const MainImage = styled.img`
   object-fit: contain;
   border-radius: 6px;
-
 `;
 const HoverIcons = styled.div`
   position: absolute;
@@ -762,27 +782,26 @@ const LikeIcon = styled.div`
   }
   @media (max-width: 951px) {
     right: 60px;
-
   }
-  @media(max-width:565px){
+  @media (max-width: 565px) {
     right: 10px;
     font-size: 20px;
   }
 `;
 
 const BrowseLink = styled(Link)`
-text-decoration: none;
-color:  #149295;
-&:hover{
-  color: black;
-}
-`
+  text-decoration: none;
+  color: #149295;
+  &:hover {
+    color: black;
+  }
+`;
 const Gray = styled.p`
-color: gray;
-`
+  color: gray;
+`;
 const Blue = styled.span`
-color:  #149295;
-`
+  color: #149295;
+`;
 const Modal = styled.div`
   position: fixed;
   inset: 0;
@@ -836,4 +855,3 @@ const ModalImage = styled.img`
   max-width: 90%;
   max-height: 90%;
 `;
-
