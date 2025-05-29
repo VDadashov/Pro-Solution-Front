@@ -63,7 +63,7 @@ const CategoryProductCard = ({ item }) => {
   useEffect(() => {
     const isLiked = wishlist.some(x => x.id === item.id);
     setLiked(isLiked);
-    console.log(item.productSlugs?.$values?.[0]?.slug)
+    console.log(item.detailSlug)
   }, [wishlist, item]);
 
 
@@ -105,7 +105,9 @@ const CategoryProductCard = ({ item }) => {
         <Link to={`/category/${item.detailSlug}`}>
           <ProductName>{item?.title} </ProductName>
         </Link>
-        <PriceBox>
+
+      </CategoryCardBody>
+      <CardButton>        <PriceBox>
           {item.discountPrice > 0 ? (
             <>
               <OldPrice>{item.price} ₼</OldPrice>
@@ -118,7 +120,7 @@ const CategoryProductCard = ({ item }) => {
         <ButtonLink to={`/category/${item.detailSlug}`}>
           Davamını oxu
         </ButtonLink>
-      </CategoryCardBody>
+      </CardButton>
     </CategoryCard>
   );
 }
@@ -126,6 +128,10 @@ const CategoryProductCard = ({ item }) => {
 export default CategoryProductCard
 
 const CategoryCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
   border-radius: 8px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   padding: 10px;
@@ -134,34 +140,41 @@ const CategoryCard = styled.div`
   transition: all 0.3s ease;
   cursor: pointer;
   width: 180px;
-&:hover{
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-}
+  &:hover {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  }
   &:hover img {
     transform: scale(1.1);
   }
   @media (max-width: 930px) {
     width: 150px;
+    // min-height: 270px;
   }
   @media (max-width: 1100px) {
     width: 170px;
   }
+  @media (min-width: 900px) {
+    // height: 280px;
+  }
 `;
 
 const ProductName = styled.h5`
-  max-width: 100%;
- overflow-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 100%;
   font-size: 15px;
   color: #149295;
-  margin: 10px 0;
+  margin: 10px 0 0 0;
   font-weight: 500;
-  overflow: hidden;
+
   &:hover {
     color: black;
   }
 `;
+
 const CategoryCardLink = styled(Link)``;
 const CategoryCardHeadImage = styled.div`
   position: relative;
@@ -219,11 +232,10 @@ const CategoryCardHeadImage = styled.div`
   }
 `;
 const CategoryCardBody = styled.div`
+  flex-grow: 1;
+
   padding: 5px;
-  @media (max-width: 930px) {
-    line-height: 0.9;
-    padding: 5px;
-  }
+ 
   span {
     font-size: 13px;
     color: gray;
@@ -240,10 +252,15 @@ const CategoryCardBody = styled.div`
       font-weight: 600;
     }
   }
-
+`;
+const CardButton = styled.div`
+  margin-top: auto;
+  display: flex;
+  flex-direction:column;
+  align-items: flex-start;
 `;
 const ButtonLink = styled(Link)`
- margin-top: 10px;
+ margin-top: 5px;
     width: 65%;
     background-color: #149295;
     color: white;
