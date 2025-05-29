@@ -30,7 +30,7 @@ gap: 10px;
 justify-content: center;
 li{
     cursor: pointer;
-    width: 150px;
+   width: 170px;
     display: flex;
     background-color: #f1f1f1;
     border: 1px solid rgba(0, 0, 0, .1);
