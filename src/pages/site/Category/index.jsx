@@ -343,6 +343,7 @@ import { Link } from "react-router-dom";
 
 const Category = () => {
   const [products, setProducts] = useState([]);
+  console.log("products:", products);
   const [isLoading, setLoading] = useState(true);
   const [showFilter, setShowFilter] = useState(false);
   const [sortOption, setSortOption] = useState("Standart Sıralama");
@@ -354,15 +355,13 @@ const Category = () => {
   const navigate = useNavigate();
   const { category } = useParams();
   const searchParams = new URLSearchParams(location.search);
-
   const search = searchParams.get("search") || "";
   const slug = searchParams.get("slug") || "";
   const take = parseInt(searchParams.get("take")) || 8;
   const skip = parseInt(searchParams.get("skip")) || 1;
-  const order = parseInt(searchParams.get("order")) ;
-//   const orderParam = searchParams.get("order");
-// const order = orderParam !== null && orderParam !== "" ? parseInt(orderParam) : null;
-
+  // const order = parseInt(searchParams.get("order")) ;
+  const orderParam = searchParams.get("order");
+const order = orderParam !== null && orderParam !== "" ? parseInt(orderParam) : 4;
 
 const minPriceRaw = searchParams.get("minPrice");
 const maxPriceRaw = searchParams.get("maxPrice");
@@ -372,19 +371,17 @@ const maxPrice = maxPriceRaw !== null && maxPriceRaw !== "undefined" ? parseFloa
 
   useEffect(() => {
     setLoading(true);
-
     let url = `${ENDPOINTS.getAllFiltered}?slug=${slug}&search=${search}&take=${take}&skip=${skip}&order=${order}`;
     if (minPrice !== null) url += `&minPrice=${minPrice}`;
     if (maxPrice !== null) url += `&maxPrice=${maxPrice}`;
     if (isDeleted !== null) url += `&isDeleted=${isDeleted}`;
+    if (order !== null) url += `&order=${order}`;
 
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
   
-       
-        
         setLoading(false);
       })
       .catch((err) => {
@@ -393,10 +390,6 @@ const maxPrice = maxPriceRaw !== null && maxPriceRaw !== "undefined" ? parseFloa
       });
       
   }, [slug, search, take, skip, order, minPrice, maxPrice, isDeleted]);
-console.log("products:", products);
-
-
-
 
   useEffect(() => {
     if (priceRange.min === null && priceRange.max === null) {
@@ -449,12 +442,8 @@ const handleClearMaxPrice = () => {
   });
 };
 
-
-
   const sortedProducts = products?.items?.$values || [];
-
   const totalPages = products?.totalPage || 1;
-
   const handlePageChange = (pageNumber) => {
     const newSkip = pageNumber ;
     const params = new URLSearchParams(location.search);
@@ -505,7 +494,7 @@ const handleClearMaxPrice = () => {
             </ResponsiveFilter>
 
             <CategorySelect>
-              <p>Sort by:</p>
+              <p>149 nəticədən 1-12 nəticə göstərilir</p>
               <select
   value={order !== null ? order : ""}
   onChange={(e) => {
@@ -519,7 +508,7 @@ const handleClearMaxPrice = () => {
   }}
 
 >
-  <option value="">Standart sıralama</option>
+  <option value="4">Standart sıralama</option>
   <option value="5">Qiymət: aşağıdan yuxarı</option>
   <option value="6">Qiymət: yuxarıdan aşağı</option>
   <option value="7">Ən yüksək reytinq</option>
