@@ -66,20 +66,18 @@ const CategoryProductCard = ({ item }) => {
     console.log(item.productSlugs?.$values?.[0]?.slug)
   }, [wishlist, item]);
 
+
+
   return (
     <CategoryCard>
       <CategoryCardHeadImage>
-        {/* <CategoryCardLink to={`/category/${item.id}`}>
+        <CategoryCardLink to={`/category/${item.detailSlug}`}>
           <img
             src={
               item.images?.$values?.find((img) => img.isMain)?.imagePath || ""
             }
           />
-        </CategoryCardLink> */}
-
-        <CategoryCardLink to={`/category/${item.productslugs?.$values?.[0]?.slug}`}>
-  <img src={item.images?.$values?.find(img => img.isMain)?.imagePath || ""} />
-</CategoryCardLink>
+        </CategoryCardLink>
 
         <div
           className={`heartIcon ${liked ? "liked" : ""}`}
@@ -104,7 +102,7 @@ const CategoryProductCard = ({ item }) => {
             : item.categories?.[0]?.title}
         </span>
 
-        <Link to={`/category/${item.id}`}>
+        <Link to={`/category/${item.detailSlug}`}>
           <ProductName>{item?.title} </ProductName>
         </Link>
         <PriceBox>
@@ -117,7 +115,7 @@ const CategoryProductCard = ({ item }) => {
             <NewPrice>{item.price} ₼</NewPrice>
           )}
         </PriceBox>
-        <ButtonLink to={`/category/${item.productSlugs?.$values?.[0]?.slug}`}>
+        <ButtonLink to={`/category/${item.detailSlug}`}>
           Davamını oxu
         </ButtonLink>
       </CategoryCardBody>

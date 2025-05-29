@@ -3,7 +3,6 @@ export const MAIN_URL = "https://prosolution.runasp.net";
 export const ENDPOINTS = {
   categories: `${MAIN_URL}/api/categories/all`,
   products: `${MAIN_URL}/api/products/getall`,
-  // productsSlug: `${MAIN_URL}/api/products/getbySlug?slug=${slug}  `,
   productsSlug: `${MAIN_URL}/api/products/getbyslug`,
   getAllFiltered: `${MAIN_URL}/api/products/getallfiltered`,
 

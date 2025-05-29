@@ -105,18 +105,33 @@ const CategoryDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
   const [liked, setLiked] = useState(false);
+  const [product, setProduct] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const { slug } = useParams();
   // const { data: product, isLoading } = useGetOne(
   //   "productsSlug",
-  //   ENDPOINTS.productsSlug,
-  //   slug
+  //   `${ENDPOINTS.productsSlug}/${slug}` // slug-u URL-ə əlavə et
   // );
-  const { data: product, isLoading } = useGetOne(
-    "productsSlug",
-    `${ENDPOINTS.productsSlug}?slug=${slug}` // slug-u URL-ə əlavə et
-  );
   const { wishlist, addToWishlist } = useContext(WishlistContext);
   const { category, subcategory } = useParams();
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(`${ENDPOINTS.productsSlug}/${slug}`);
+        const data = await res.json();
+        setProduct(data);
+      } catch (error) {
+        console.error("Product fetch error:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (slug) {
+      fetchProduct();
+    }
+  }, [slug]);
 
   useEffect(() => {
     if (product) {
