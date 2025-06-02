@@ -32,7 +32,6 @@ const PriceFilter = ({ onChange, onSubmit, minPrice, maxPrice, rangeMin, rangeMa
     onSubmit();
   };
 
-  console.log("minPrice:", minPrice, "maxPrice:", maxPrice, "rangeMin:", rangeMin, "rangeMax:", rangeMax);
 
   return (
     <Wrapper>

@@ -86,7 +86,6 @@ const AdjustablePartnerSectionSkeleton=()=>{
 }
 const AdjustablePartnerSection = ({ headerName }) => {
   const { data: partners,isLoading } = useGet("partners", ENDPOINTS.partners);
-  console.log(partners)
 
   return (
     <AdjustableContainer>

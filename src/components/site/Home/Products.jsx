@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, FreeMode, Autoplay } from "swiper/modules";
 
-// Swiper Css Imports
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -14,8 +13,7 @@ import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
 
 const ProductSection = ({ sectionHeader, display, order }) => {
-  const { data: products, isLoading } = useGet("getAllFiltered", `${ENDPOINTS.getAllFiltered}?order=${order}&take=20&skip=1`);
-
+  const { data: products, isLoading } = useGet(`getAllFiltered${order}`, `${ENDPOINTS.getAllFiltered}?order=${order}&take=20&skip=1&isDeleted=${false}`);
 
   return (
     <SectionContainer>

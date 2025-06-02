@@ -11,7 +11,7 @@ import { WishlistContext } from "@Context/wishlistContext";
 
 const Navbar = () => {
   const location = useLocation();
-  const [iScrolled, setIsScrolled] = useState(false);
+  const [iscrolled, setIsScrolled] = useState(false);
   const { wishlist } = useContext(WishlistContext);
   const { data: categories } = useGet("categories", ENDPOINTS.categories);
   const navigate = useNavigate();
@@ -49,12 +49,12 @@ const Navbar = () => {
                 <p> Məhsullarımız</p>
                 <ArrowDown />
                 <CategoryListContainer
-                  className={iScrolled || !isHomePage ? "hoverable" : ""}
+                  className={iscrolled || !isHomePage ? "hoverable" : ""}
                 >
                   <CategoryList>
                     {categories?.$values?.map((item) => (
                       <CategoryElement
-                        key={item.name}
+                        key={item.id}
                         onClick={() =>
                           navigate(
                             `/product-category/${item.slug}?slug=${item.slug}`

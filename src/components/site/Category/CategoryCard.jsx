@@ -64,8 +64,6 @@ const CategoryProductCard = ({ item }) => {
     const isLiked = wishlist.some(x => x.id === item.id);
     setLiked(isLiked);
 
-    console.log(item.detailSlug)
-
   }, [wishlist, item]);
 
 
@@ -133,7 +131,6 @@ const CategoryCard = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
   border-radius: 8px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   padding: 10px;
@@ -150,7 +147,7 @@ const CategoryCard = styled.div`
   }
   @media (max-width: 930px) {
     width: 150px;
-    // min-height: 270px;
+
   }
   @media (max-width: 1100px) {
     width: 170px;

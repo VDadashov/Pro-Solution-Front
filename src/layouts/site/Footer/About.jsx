@@ -1,20 +1,32 @@
 import LayoutLogo from "@styles/common/LayoutLogo";
+import { ENDPOINTS } from "@utils/constants/Endpoints";
+import { useGet } from "@utils/hooks/useCustomQuery";
 import React from "react";
 import styled from "styled-components";
 
 const About = () => {
+  const { data } = useGet("settings", ENDPOINTS.settings);
+
+  // Hazırda lazım olan dəyərləri tapırıq:
+  const getValue = (key) => {
+    return data?.$values?.find((item) => item.key === key)?.value || "";
+  };
+  const WorkTime =getValue("WorkTime")
+  const address = getValue("Address");
+  const phone = getValue("PhoneNumber");
+  const email = getValue("SupportEmail");
+  const whiteLogo = getValue("WhiteLogo");
+
   return (
     <StyledAbout>
-      <LayoutLogo logoScr={"/images/psa-logo-white.png"} />
-      <StyledAboutText>Satış şöbəsi</StyledAboutText>
+      <LayoutLogo logoScr={whiteLogo || "/images/psa-logo-white.png"} />
+      <StyledAboutText>Satış şöbəsi :{WorkTime}</StyledAboutText>
       <StyledAboutText>
-        +994 70 329 90 94
+        {phone}
         <StyledBr />
-        <Email href="mailto:sales@prosolution.ltd">sales@prosolution.ltd</Email>
+        <Email href={`mailto:${email}`}>{email}</Email>
       </StyledAboutText>
-      <StyledAboutText>
-        Nərimanov rayonu,Əhməd Rəcəbli küçəsi,1963-cü məhəllə
-      </StyledAboutText>
+      <StyledAboutText>{address}</StyledAboutText>
     </StyledAbout>
   );
 };

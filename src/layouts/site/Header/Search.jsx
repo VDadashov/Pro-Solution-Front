@@ -42,7 +42,7 @@ const Search = () => {
             All
           </option>
           {categories?.$values?.map((category) => (
-            <option key={category.name} value={category.slug}>
+            <option key={category.id} value={category.slug}>
               {category.slug}
             </option>
           ))}
