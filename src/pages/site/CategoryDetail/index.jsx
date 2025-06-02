@@ -21,7 +21,7 @@ import ProductSection from "@components/site/Home/Products";
 import { WishlistContext } from "@Context/wishlistContext";
 import { FaHeart } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
-import { useGetOne } from "@utils/hooks/useCustomQuery";
+import { useGet } from "@utils/hooks/useCustomQuery";
 import { keyframes } from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -108,13 +108,11 @@ const CategoryDetail = () => {
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { slug } = useParams();
-  // const { data: product, isLoading } = useGetOne(
-  //   "productsSlug",
-  //   `${ENDPOINTS.productsSlug}/${slug}` // slug-u URL-ə əlavə et
-  // );
   const { wishlist, addToWishlist } = useContext(WishlistContext);
+
   const { category, subcategory } = useParams();
 console.log(product?.categories?.$values[0]?.slug, "product categories slug");
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -152,7 +150,12 @@ console.log(product?.categories?.$values[0]?.slug, "product categories slug");
   const prevImage = () => {
     setSelectedIndex((prev) => (prev - 1 + images.length) % images.length);
   };
+  const { data } = useGet("settings", ENDPOINTS.settings);
 
+  const getValue = (key) => {
+    return data?.$values?.find((item) => item.key === key)?.value || "";
+  };
+  console.log(product)
   return isLoading ? (
     <DetailSkeleton imageCount={product?.images?.$values?.length} />
   ) : (
@@ -163,6 +166,7 @@ console.log(product?.categories?.$values[0]?.slug, "product categories slug");
             <li>
               <Link to="/">Əsas səhifə</Link> /
             </li>
+
             {/* {
               product?.$values?.categories?.map((item) => (
                 <li key={item.slug}>
@@ -173,6 +177,7 @@ console.log(product?.categories?.$values[0]?.slug, "product categories slug");
             <li>
               <Link>{product?.categories?.$values[0]?.slug?.split("/")[0]} </Link>
             </li>
+
           </Nav>
           <SwitchProduct>
             <li>
@@ -345,33 +350,40 @@ console.log(product?.categories?.$values[0]?.slug, "product categories slug");
                   ))}
                   {/* <span>Acer,Noutbuklar </span> */}
                 </p>
-                <Socials>
-                  <li className="facebook" data-tooltip="Share on Facebook">
-                    <Link>
-                      <FaFacebookF />
-                    </Link>
-                  </li>
-                  <li className="twitter" data-tooltip="Share on Twitter">
-                    <Link>
-                      <FaXTwitter />
-                    </Link>
-                  </li>
-                  <li className="email" data-tooltip="Send via Email">
-                    <Link>
-                      <TfiEmail />
-                    </Link>
-                  </li>
-                  <li className="pinterest" data-tooltip="Pin it on Pinterest">
-                    <Link>
-                      <FaPinterest />
-                    </Link>
-                  </li>
-                  <li className="linkedin" data-tooltip="Share on LinkedIn">
-                    <Link>
-                      <FaLinkedin />
-                    </Link>
-                  </li>
-                </Socials>
+              <Socials>
+  <li className="facebook" data-tooltip="Share on Facebook">
+    <Link to={getValue("FacebookLink") || "#"} target="_blank">
+      <FaFacebookF />
+    </Link>
+  </li>
+
+  <li className="twitter" data-tooltip="Share on Twitter">
+    {/* Twitter üçün ayrıca link `settings` içində yoxdur, varsa əlavə et */}
+    <Link to="#" target="_blank">
+      <FaXTwitter />
+    </Link>
+  </li>
+
+  <li className="email" data-tooltip="Send via Email">
+    <Link to={`mailto:${getValue("SupportEmail") || "support@example.com"}`} target="_blank">
+      <TfiEmail />
+    </Link>
+  </li>
+
+  <li className="pinterest" data-tooltip="Pin it on Pinterest">
+    {/* Pinterest linki də settings-də yoxdur, əlavə etmək olar */}
+    <Link to="#" target="_blank">
+      <FaPinterest />
+    </Link>
+  </li>
+
+  <li className="linkedin" data-tooltip="Share on LinkedIn">
+    <Link to={getValue("LinkedInLink") || "#"} target="_blank">
+      <FaLinkedin />
+    </Link>
+  </li>
+</Socials>
+
               </DetailFoot>
             </div>
           </DetailInfo>

@@ -3,9 +3,8 @@ import styled from "styled-components";
 import { RiEqualizerLine } from "react-icons/ri";
 import PriceFilter from "@components/site/Category/FilterPrice";
 import ActiveFilter from "@components/site/Category/ActiveFilter";
-import ProcessorSelect from "@components/site/Category/ProcessorSelect";
+import ProcessorSelect from "@components/site/Category/ProcessorSelectIntel";
 import CategoriesSidebar from "@components/site/Blog/CategoriesSideBar";
-
 import CategoryProductCard, {
   CategoryProductCardSkelaton,
 } from "@components/site/Category/CategoryCard";
@@ -15,57 +14,57 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { Link } from "react-router-dom";
+import ProcessorSelectIntel from "@components/site/Category/ProcessorSelectIntel";
+import ProsessorSelectAmd from "@components/site/Category/ProsessorSelectAmd";
 
 const Category = () => {
   const [products, setProducts] = useState([]);
-  console.log("products:", products);
   const [isLoading, setLoading] = useState(true);
   const [showFilter, setShowFilter] = useState(false);
-  const [sortOption, setSortOption] = useState("Standart Sıralama");
   const [priceRange, setPriceRange] = useState({ min: null, max: null });
   const [filterApplied, setFilterApplied] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-
+   const [minAvailablePrice, setMinAvailablePrice] = useState(null);
+const [maxAvailablePrice, setMaxAvailablePrice] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
   const { category } = useParams();
+  const totalPages = products?.totalPage || 1;
   const searchParams = new URLSearchParams(location.search);
   const search = searchParams.get("search") || "";
   const slug = searchParams.get("slug") || "";
   const take = parseInt(searchParams.get("take")) || 8;
   const skip = parseInt(searchParams.get("skip")) || 1;
-  // const order = parseInt(searchParams.get("order")) ;
   const orderParam = searchParams.get("order");
-const order = orderParam !== null && orderParam !== "" ? parseInt(orderParam) : 4;
+  const order = orderParam !== null && orderParam !== "" ? parseInt(orderParam) : 4;
+  const minPriceRaw = searchParams.get("minPrice");
+  const maxPriceRaw = searchParams.get("maxPrice");
+  const minPrice = minPriceRaw !== null && minPriceRaw !== "undefined" ? parseFloat(minPriceRaw) : null;
+  const maxPrice = maxPriceRaw !== null && maxPriceRaw !== "undefined" ? parseFloat(maxPriceRaw) : null;
+  const featureId = searchParams.get("featureId")||"";
+useEffect(() => {
+  setLoading(true);
+  let url = `${ENDPOINTS.getAllFiltered}?slug=${slug}&search=${search}&take=${take}&skip=${skip}&isDeleted=false&isDiscount=false&featureId=${featureId}`;
+  if (minPrice !== null) url += `&minPrice=${minPrice}`;
+  if (maxPrice !== null) url += `&maxPrice=${maxPrice}`;
+  if (order !== null) url += `&order=${order}`;
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+      setProducts(data);
+      setLoading(false);
 
-const minPriceRaw = searchParams.get("minPrice");
-const maxPriceRaw = searchParams.get("maxPrice");
-  const isDeleted = searchParams.get("isDeleted");
-const minPrice = minPriceRaw !== null && minPriceRaw !== "undefined" ? parseFloat(minPriceRaw) : null;
-const maxPrice = maxPriceRaw !== null && maxPriceRaw !== "undefined" ? parseFloat(maxPriceRaw) : null;
+      if (minPrice === null && maxPrice === null) {
+        setMinAvailablePrice(data?.minAvailablePrice || null);
+        setMaxAvailablePrice(data?.maxAvailablePrice || null);
+      }
+    })
+    .catch((err) => {
+      console.error("Xəta baş verdi:", err);
+      setLoading(false);
+    });
+}, [slug, search, take, skip, order, minPrice, maxPrice,featureId]);
 
-  useEffect(() => {
-    setLoading(true);
-    let url = `${ENDPOINTS.getAllFiltered}?slug=${slug}&search=${search}&take=${take}&skip=${skip}&order=${order}`;
-    if (minPrice !== null) url += `&minPrice=${minPrice}`;
-    if (maxPrice !== null) url += `&maxPrice=${maxPrice}`;
-    if (isDeleted !== null) url += `&isDeleted=${isDeleted}`;
-    if (order !== null) url += `&order=${order}`;
-
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data);
   
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Xəta baş verdi:", err);
-        setLoading(false);
-      });
-      
-  }, [slug, search, take, skip, order, minPrice, maxPrice, isDeleted]);
-
   useEffect(() => {
     if (priceRange.min === null && priceRange.max === null) {
       setFilterApplied(false);
@@ -73,9 +72,8 @@ const maxPrice = maxPriceRaw !== null && maxPriceRaw !== "undefined" ? parseFloa
   }, [priceRange]);
 
 useEffect(() => {
-  if (minPrice !== null || maxPrice !== null) {
-    setFilterApplied(true);
-  }
+  setPriceRange({ min: minPrice, max: maxPrice });
+  setFilterApplied(minPrice !== null || maxPrice !== null);
 }, [minPrice, maxPrice]);
 
   const handlePriceChange = (range) => {
@@ -91,109 +89,119 @@ useEffect(() => {
     navigate(`${location.pathname}?${params.toString()}`);
     setFilterApplied(true);
   };
-const handleClearMinPrice = () => {
-  setPriceRange((prev) => {
-    const newRange = { ...prev, min: null };
+  const handleClearMinPrice = () => {
+    setPriceRange((prev) => {
+      const newRange = { ...prev, min: null };
 
-    const params = new URLSearchParams(location.search);
-    params.delete("minPrice");
+      const params = new URLSearchParams(location.search);
+      params.delete("minPrice");
 
-    navigate(`${location.pathname}?${params.toString()}`);
-    if (prev.max === null) setFilterApplied(false);
-    return newRange;
-  });
+      navigate(`${location.pathname}?${params.toString()}`);
+      if (prev.max === null) setFilterApplied(false);
+      return newRange;
+    });
+  };
+
+  const handleClearMaxPrice = () => {
+    setPriceRange((prev) => {
+      const newRange = { ...prev, max: null };
+
+      const params = new URLSearchParams(location.search);
+      params.delete("maxPrice");
+
+      navigate(`${location.pathname}?${params.toString()}`);
+      if (prev.min === null) setFilterApplied(false);
+      return newRange;
+    });
+  };
+  const renderActiveFilters = () =>
+    filterApplied && (
+      <ActiveFiltr>
+        <h3>Aktiv Filtrlər</h3>
+        <hr />
+        <ActiveFilter
+          priceRange={priceRange}
+          onClearMin={handleClearMinPrice}
+          onClearMax={handleClearMaxPrice}
+        />
+      </ActiveFiltr>
+    );
+    const getShowingText = () => {
+  if (!products?.count) return null;
+  const start = take * (skip - 1) + 1;
+  const end = Math.min(take * skip, products.count);
+  return `${products.count} nəticədən ${start}-${end} nəticə göstərilir`;
 };
 
-const handleClearMaxPrice = () => {
-  setPriceRange((prev) => {
-    const newRange = { ...prev, max: null };
 
-    const params = new URLSearchParams(location.search);
-    params.delete("maxPrice");
-
-    navigate(`${location.pathname}?${params.toString()}`);
-    if (prev.min === null) setFilterApplied(false);
-    return newRange;
-  });
-};
-
-  const sortedProducts = products?.items?.$values || [];
-  const totalPages = products?.totalPage || 1;
   const handlePageChange = (pageNumber) => {
-    const newSkip = pageNumber ;
+    const newSkip = pageNumber;
     const params = new URLSearchParams(location.search);
     params.set("skip", newSkip);
     navigate(`${location.pathname}?${params.toString()}`);
-    setCurrentPage(pageNumber);
   };
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [slug, search, sortOption]);
+
 
   return (
     <>
       <Helmet>
-  <title>
-    {search ? `"${search}" nəticələri - ` : ""}
-    {category ? `${category} - ` : ""}
-    Məhsullar
-  </title>
-</Helmet>
+        <title>
+          {search ? `"${search}" nəticələri - ` : ""}
+          {category ? `${category} - ` : ""}
+          Məhsullar
+        </title>
+      </Helmet>
 
       <CategoryWrapper>
         <CategoryContent>
           <CategoryHead>
-             <div className="category-links">
-      <ul>
-    <li>
-                   <Link>Əsas səhifə </Link>
-                 </li>
-                 <li>
-                   <Link>
-                     {category == undefined ? "/" : `/ ${category} /`}{" "}
-                   </Link>
-                   <Link> {search}</Link>
-                 </li>
-                 {products?.categories?.map((item) => (
-                   <li key={item.id}>
-                     <Link>{item.title}</Link>
-                   </li>
-                 ))}
-               </ul>
-             </div>
+            <div className="category-links">
+              <ul>
+                <li>
+                  <Link>Əsas səhifə </Link>
+                </li>
+                <li>
+                  <Link>
+                    {category == undefined ? "/" : `/ ${category} /`}{" "}
+                  </Link>
+                  <Link> {search}</Link>
+                </li>
+
+              </ul>
+            </div>
 
             <ResponsiveFilter onClick={() => setShowFilter(true)}>
               <i><RiEqualizerLine /></i>
               <p>Filtr</p>
+
             </ResponsiveFilter>
 
             <CategorySelect>
-              <p>149 nəticədən 1-12 nəticə göstərilir</p>
+            <p>{getShowingText()}</p>
               <select
-  value={order !== null ? order : ""}
-  onChange={(e) => {
-    const params = new URLSearchParams(location.search);
-    if (e.target.value === "") {
-      params.delete("order"); 
-    } else {
-      params.set("order", e.target.value);
-    }
-    navigate(`${location.pathname}?${params.toString()}`);
-  }}
+                value={order !== null ? order : ""}
+                onChange={(e) => {
+                  const params = new URLSearchParams(location.search);
+                  if (e.target.value === "") {
+                    params.delete("order");
+                  } else {
+                    params.set("order", e.target.value);
+                  }
+                  navigate(`${location.pathname}?${params.toString()}`);
+                }}
 
->
-  <option value="4">Standart sıralama</option>
-  <option value="5">Qiymət: aşağıdan yuxarı</option>
-  <option value="6">Qiymət: yuxarıdan aşağı</option>
-  <option value="7">Ən yüksək reytinq</option>
-   <option value="8">Ən aşağı reytinq</option>
-  <option value="2">Ən yenilər</option>
-  <option value="9">Populyarlığa görə</option>
-  <option value="1">A-dan Z-yə</option>
-  <option value="3">Z-dən A-ya</option>
-
-</select>
+              >
+                <option value="4">Standart sıralama</option>
+                <option value="5">Qiymət: aşağıdan yuxarı</option>
+                <option value="6">Qiymət: yuxarıdan aşağı</option>
+                <option value="7">Ən yüksək reytinq</option>
+                <option value="8">Ən aşağı reytinq</option>
+                <option value="2">Ən yenilər</option>
+                <option value="9">Populyarlığa görə</option>
+                <option value="1">A-dan Z-yə</option>
+                <option value="3">Z-dən A-ya</option>
+              </select>
             </CategorySelect>
           </CategoryHead>
 
@@ -204,44 +212,21 @@ const handleClearMaxPrice = () => {
                   <ModalButton onClick={() => setShowFilter(false)}>×</ModalButton>
                 </TransparentBackground>
                 <SidebarFilter $isOpenModal={showFilter}>
-                  {filterApplied && (
-                    <ActiveFiltr>
-                      <h3>Aktiv Filtrlər</h3>
-                      <hr />
-                      <ActiveFilter
-                        priceRange={priceRange}
-                        onClearMin={() => {
-                          handleClearMinPrice();
-                          if (priceRange.max === null) setFilterApplied(false);
-                        }}
-                        onClearMax={() => {
-                          handleClearMaxPrice();
-                          if (priceRange.min === null) setFilterApplied(false);
-                        }}
-                      />
-                    </ActiveFiltr>
-                  )}
+                  {renderActiveFilters()}
                   <div className="price-section">
                     <h3>QIYMƏT</h3>
                     <hr />
-<PriceFilter
-  minPrice={products?.minPrice}
-  maxPrice={products?.maxPrice}
-  rangeMin={products?.minAvailablePrice}
-  rangeMax={products?.maxAvailablePrice}
-  onChange={handlePriceChange}
-  onSubmit={() => setFilterApplied(true)}
-/>
+                    <PriceFilter
+                      minPrice={products?.minPrice}
+                      maxPrice={products?.maxPrice}
+                      rangeMin={minAvailablePrice}
+                      rangeMax={maxAvailablePrice}
+                      onChange={handlePriceChange}
+                      onSubmit={() => setFilterApplied(true)}
+                    />
                   </div>
-                  <Processor>
-                    <h3>PROSESSOR-AMD</h3>
-                    <hr />
-                    <select>
-                      <option>AMD Ryzen 5tm 5600H</option>
-                      <option>AMD Ryzen 7tm 6800H</option>
-                    </select>
-                  </Processor>
-                  <ProcessorSelect />
+                  <ProsessorSelectAmd  products={products}/>
+                  <ProcessorSelectIntel  products={products}/>
                   <Categories>
                     <CategoriesSidebar />
                   </Categories>
@@ -253,21 +238,21 @@ const handleClearMaxPrice = () => {
               <CategoryCards>
                 {isLoading
                   ? Array.from({ length: 8 }).map((_, i) => (
-                      <CategoryProductCardSkelaton key={i} />
-                    ))
-                  : sortedProducts.length > 0
-                  ? sortedProducts.map((item) => (
+                    <CategoryProductCardSkelaton key={i} />
+                  ))
+                  : products?.items?.$values.length > 0
+                    ? products?.items?.$values.map((item) => (
                       <CategoryProductCard key={item.$id || item.id} item={item} />
                     ))
-                  : <p style={{ textAlign: "center", width: "100%" }}>Axtarışa uyğun məhsul tapılmadı.</p>
+                    : <p style={{ textAlign: "center", width: "100%" }}>Axtarışa uyğun məhsul tapılmadı.</p>
                 }
               </CategoryCards>
 
               {totalPages >= 1 && (
                 <PaginationWrapper>
                   <PageButton
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
+                    onClick={() => handlePageChange(skip - 1)}
+                    disabled={skip === 1}
                   >
                     &laquo;
                   </PageButton>
@@ -275,60 +260,38 @@ const handleClearMaxPrice = () => {
                     <PageButton
                       key={i}
                       onClick={() => handlePageChange(i + 1)}
-                      active={currentPage === i + 1}
+                      active={skip === i + 1}
                     >
                       {i + 1}
                     </PageButton>
                   ))}
                   <PageButton
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
+                    onClick={() => handlePageChange(skip + 1)}
+                    disabled={skip === totalPages}
                   >
                     &raquo;
                   </PageButton>
                 </PaginationWrapper>
               )}
+
             </CategoryCardsWrapper>
 
             <CategoryFilter>
-            {filterApplied && (
-                 <ActiveFiltr>
-                  <h3>Aktiv Filtrlər</h3>
-                   <hr />
-                   <ActiveFilter
-                     priceRange={priceRange}
-                     onClearMin={() => {
-                       handleClearMinPrice();
-                       if (priceRange.max === null) setFilterApplied(false);
-                     }}
-                     onClearMax={() => {
-                       handleClearMaxPrice();
-                       if (priceRange.min === null) setFilterApplied(false);
-                     }}
-                   />
-                 </ActiveFiltr>
-               )}
+              {renderActiveFilters()}
               <Price>
                 <h3>Qiymət</h3>
                 <hr />
                 <PriceFilter
                   minPrice={products?.minPrice}
-  maxPrice={products?.maxPrice}
-  rangeMin={products?.minAvailablePrice}
-  rangeMax={products?.maxAvailablePrice}
-  onChange={handlePriceChange}
-  onSubmit={() => setFilterApplied(true)}
+                  maxPrice={products?.maxPrice}
+                  rangeMin={minAvailablePrice}
+                  rangeMax={maxAvailablePrice}
+                  onChange={handlePriceChange}
+                  onSubmit={() => setFilterApplied(true)}
                 />
               </Price>
-              <Processor>
-                <h3>PROSESSOR-AMD</h3>
-                <hr />
-                <select>
-                  <option>AMD Ryzen 5tm 5600H</option>
-                  <option>AMD Ryzen 7tm 6800H</option>
-                </select>
-              </Processor>
-              <ProcessorSelect />
+<ProsessorSelectAmd  products={products}/>
+            <ProcessorSelectIntel  products={products}/>
               <Categories>
                 <CategoriesSidebar />
               </Categories>

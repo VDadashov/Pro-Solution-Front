@@ -2,23 +2,53 @@
 import CategoriesSidebar from '@components/site/Blog/CategoriesSideBar';
 import CategoryProductCard, { CategoryProductCardSkelaton } from '@components/site/Category/CategoryCard';
 import { ENDPOINTS } from '@utils/constants/Endpoints';
-import { useGet } from '@utils/hooks/useCustomQuery';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
+import { useLocation, useNavigate } from 'react-router';
 import styled from 'styled-components';
 
 const Discount = () => {
-  const { data: products, isLoading } = useGet("products", ENDPOINTS.products);
-  const [currentPage, setCurrentPage] = useState(1);
-  const postsPerPage = 8;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const searchParams = new URLSearchParams(location.search);
+  const take = parseInt(searchParams.get("take")) || 8;
+  const skip = parseInt(searchParams.get("skip")) || 1;
+  const orderParam = searchParams.get("order");
+  const order = orderParam !== null && orderParam !== "" ? parseInt(orderParam) : 1;
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(skip);
 
-  const productsArray = products?.$values || [];
-  const totalPages = Math.ceil(productsArray.length / postsPerPage);
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = productsArray.slice(indexOfFirstPost, indexOfLastPost);
+  useEffect(() => {
+    setLoading(true);
+    const url = `${ENDPOINTS.getAllFiltered}?isDiscount=true&take=${take}&skip=${currentPage}&isDeleted=false&order=${order}`;
+    fetch(url)
+      .then((res) => res.json())
+    .then((data) => {
+  setProducts(data.items?.$values || []);
+  setTotalPages(data.totalPage || 1);
+  setLoading(false);
+})
 
-  const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
+      .catch((err) => {
+        console.error("Xəta baş verdi:", err);
+        setLoading(false);
+      });
+  }, [order, take, currentPage]);
+
+  const handlePageChange = (pageNumber) => {
+    if (pageNumber < 1 || pageNumber > totalPages) return;
+    setCurrentPage(pageNumber);
+
+    const params = new URLSearchParams(location.search);
+    params.set("skip", pageNumber);
+    navigate(`${location.pathname}?${params.toString()}`);
+  };
+
+  useEffect(() => {
+    setCurrentPage(skip);
+  }, [skip]);
 
   return (
     <>
@@ -30,11 +60,11 @@ const Discount = () => {
           <CategoryBody>
             <CategoryCardsWrapper>
               <CategoryCards>
-                {isLoading
-                  ? Array.from({ length: 8 }).map((_, index) => (
+                {loading
+                  ? Array.from({ length: take }).map((_, index) => (
                       <CategoryProductCardSkelaton key={index} />
                     ))
-                  : currentPosts.map((item) => (
+                  : products.map((item) => (
                       <CategoryProductCard key={item.id} item={item} />
                     ))}
               </CategoryCards>
@@ -82,7 +112,6 @@ const Discount = () => {
 
 export default Discount;
 
-// Styled Components
 const CategoryWrapper = styled.section`
   width: 100%;
   display: flex;

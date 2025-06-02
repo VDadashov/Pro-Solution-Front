@@ -66,7 +66,7 @@ const ProductsCard = ({ item }) => {
  
       <ProductCard>
           <ProductCardHeadImage>
-            <ProductCardLink to={`/category/${item.id}`}>
+            <ProductCardLink to={`/category/${item.detailSlug}`}>
              <img
             src={item.images?.$values?.find((img) => img.isMain)?.imagePath || ""}
           />
@@ -88,10 +88,11 @@ const ProductsCard = ({ item }) => {
     
           <ProductCardBody>
              <span>{item.categories?.$values ? item.categories.$values[0]?.title : item.categories?.[0]?.title}</span>
-            <Link to={`/category/${item.id}`}>
+            <Link to={`/category/${item.detailSlug}`}>
               <ProductName>{item?.title}</ProductName>
             </Link>
-            <PriceBox>
+           <CardButton>
+             <PriceBox>
               {item.discountPrice > 0 ? (
                 <>
                   <OldPrice>{item.price} ₼</OldPrice>
@@ -101,7 +102,9 @@ const ProductsCard = ({ item }) => {
                 <NewPrice>{item.price} ₼</NewPrice>
               )}
             </PriceBox>
-            <ButtonLink to={`/category/${item.id}`}>Davamını oxu</ButtonLink>
+                        <ButtonLink to={`/category/${item.detailSlug}`}>Davamını oxu</ButtonLink>
+
+           </CardButton>
           </ProductCardBody>
         </ProductCard>
   );
@@ -218,6 +221,13 @@ const ProductCardBody = styled.div`
   }
 
 `;
+const CardButton = styled.div`
+  margin-top: auto;
+  display: flex;
+  flex-direction:column;
+  align-items: flex-start;
+`;
+
 const ButtonLink = styled(Link)`
  margin-top: 10px;
     width: 65%;

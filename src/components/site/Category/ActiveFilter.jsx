@@ -15,9 +15,6 @@ const ActiveFilter = ({ priceRange, onClearMin, onClearMax }) => {
       </Wrapper>
     );
   };
-  
-  
-
 export default ActiveFilter
 
 const Wrapper=styled.div`

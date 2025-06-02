@@ -82,7 +82,6 @@ const AdjustableSectionSkeleton = () => {
 const AdjustableSection = ({ headerName}) => {
 const { data: brand, isLoading } = useGet("brand", ENDPOINTS.brand);
 
-console.log(data)
 
   return (
     <AdjustableContainer>
