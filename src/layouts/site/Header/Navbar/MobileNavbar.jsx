@@ -4,6 +4,7 @@ import MobileSearch from "../MobileSearch";
 import { IoClose } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { StyledLinkButton } from "../ActionButtons";
+import Search from "../Search";
 
 const MobileNavbar = ({ $isOpenModal, closeModal }) => {
   useEffect(() => {
@@ -28,7 +29,7 @@ const MobileNavbar = ({ $isOpenModal, closeModal }) => {
       </TransparentBackground>
       <MobileNavContainer $isOpenModal={$isOpenModal}>
         <MainMenu>
-          <MobileSearch />
+          <Search $isMobile={true} />
           <MenuComponent>
             <Link to={"/discount"}>
               <LinkText>Endirimlər</LinkText>
@@ -67,13 +68,11 @@ const MobileNavContainer = styled.nav`
   bottom: 0;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
   left: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
   top: 0;
   transform: ${({ $isOpenModal }) =>
     $isOpenModal ? "" : "translateX(-270px)"};
   transition: transform 0.5s;
-  width: 260px;
+  padding: 0px 20px;
   height: 100vh;
   z-index: 3;
 `;
@@ -97,7 +96,7 @@ const MenuComponent = styled.li`
 const LinkText = styled.span`
   display: flex;
   color: hsla(0, 0%, 40%, 0.85);
-  padding: 15px 20px;
+  padding: 15px 20px ;
   font-weight: bolder;
   width: 100%;
   height: 100%;
