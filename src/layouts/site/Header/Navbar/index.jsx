@@ -130,11 +130,7 @@ const Navbar = () => {
     </NavigationBar>
   );
 };
-const CategoryLink = styled(Link)`
-width:"100%";
-height:"100%";
 
-`
 const NavbarLink = styled(NavLink)`
   &.active {
     color: #fff;

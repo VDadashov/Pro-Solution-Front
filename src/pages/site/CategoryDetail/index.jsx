@@ -114,7 +114,7 @@ const CategoryDetail = () => {
   // );
   const { wishlist, addToWishlist } = useContext(WishlistContext);
   const { category, subcategory } = useParams();
-
+console.log(product?.categories?.$values[0]?.slug, "product categories slug");
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -161,7 +161,7 @@ const CategoryDetail = () => {
         <DetailHead>
           <Nav>
             <li>
-              <Link to="/">Əsas səhifə</Link>
+              <Link to="/">Əsas səhifə</Link> /
             </li>
             {/* {
               product?.$values?.categories?.map((item) => (
@@ -170,8 +170,9 @@ const CategoryDetail = () => {
                 </li>
               ))
             } */}
-
-            <Link>{category == undefined ? "/" : `/ ${category} /`} </Link>
+            <li>
+              <Link>{product?.categories?.$values[0]?.slug?.split("/")[0]} </Link>
+            </li>
           </Nav>
           <SwitchProduct>
             <li>
