@@ -9,15 +9,15 @@ const WishlistTables = () => {
     <WishlistTable>
       <TableHead>
         <TableRow>
-          <TableHeaderProduct>Product name</TableHeaderProduct>
-          <TableHeaderData>Unit price</TableHeaderData>
-          <TableHeaderData>Stock status</TableHeaderData>
+          <TableHeaderProduct>Məhsulun Adı</TableHeaderProduct>
+          <TableHeaderData>Qiymət</TableHeaderData>
+          <TableHeaderData>Stock dəyəri</TableHeaderData>
         </TableRow>
       </TableHead>
       <TableBody>
         {wishlist.length == 0 ? (
           <EmptyTr>
-            <EmptyTd colSpan={3}>No products added to the wishlist</EmptyTd>
+            <EmptyTd colSpan={3}>Favorilərə əlavə edilmiş məhsul tapılmadı</EmptyTd>
           </EmptyTr>
         ) : (
           wishlist?.map((item) => (
@@ -27,12 +27,12 @@ const WishlistTables = () => {
                   <IoClose />
                 </DeleteWishlist>
                 <ProductImage src="./images/laptop.webp" />
-                <ProductName>{item.description}</ProductName>
+                <ProductName>{item.title}</ProductName>
               </ProductNameTd>
               <ProductData style={{ color: "#000000" }}>
                 <DelTag>{item?.price}</DelTag> {item?.discountPrice} ₼
               </ProductData>
-              <ProductData>In Stock</ProductData>
+              <ProductData>Stock'da</ProductData>
             </ProductTr>
           ))
         )}
