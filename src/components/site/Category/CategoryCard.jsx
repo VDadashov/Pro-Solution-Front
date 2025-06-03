@@ -137,7 +137,6 @@ const CategoryCard = styled.div`
   overflow: hidden;
   background-color: #fff;
   transition: all 0.3s ease;
-  cursor: pointer;
   width: 180px;
   &:hover {
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
