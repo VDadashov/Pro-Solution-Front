@@ -1,128 +1,206 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+
 import styled from "styled-components";
 import { RiEqualizerLine } from "react-icons/ri";
 import PriceFilter from "@components/site/Category/FilterPrice";
 import ActiveFilter from "@components/site/Category/ActiveFilter";
-import ProcessorSelect from "@components/site/Category/ProcessorSelect";
+import ProcessorSelect from "@components/site/Category/ProcessorSelectIntel";
 import CategoriesSidebar from "@components/site/Blog/CategoriesSideBar";
-import { useGet } from "@utils/hooks/useCustomQuery";
-import { ENDPOINTS } from "@utils/constants/Endpoints";
-import CategoryProductCard, { CategoryProductCardSkelaton } from "@components/site/Category/CategoryCard";
+import CategoryProductCard, {
+  CategoryProductCardSkelaton,
+} from "@components/site/Category/CategoryCard";
+
+import React, { useEffect, useState } from "react";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { ENDPOINTS } from "@utils/constants/Endpoints";
+import { Link } from "react-router-dom";
+import ProcessorSelectIntel from "@components/site/Category/ProcessorSelectIntel";
+import ProsessorSelectAmd from "@components/site/Category/ProsessorSelectAmd";
 
 const Category = () => {
+  const [products, setProducts] = useState([]);
+  const [isLoading, setLoading] = useState(true);
   const [showFilter, setShowFilter] = useState(false);
-  const [sortOption, setSortOption] = useState("Standart Sıralama");
   const [priceRange, setPriceRange] = useState({ min: null, max: null });
-  const { data: products, isLoading } = useGet("products", ENDPOINTS.products);
-
-  const handleClearMinPrice = () => {
-    setPriceRange((prev) => ({ ...prev, min: null }));
-  };
-  const handleClearMaxPrice = () => {
-    setPriceRange((prev) => ({ ...prev, max: null }));
-  };
-  const handlePriceChange = (range) => {
-    setPriceRange(range);
-  };
   const [filterApplied, setFilterApplied] = useState(false);
+   const [minAvailablePrice, setMinAvailablePrice] = useState(null);
+const [maxAvailablePrice, setMaxAvailablePrice] = useState(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { category } = useParams();
+  const totalPages = products?.totalPage || 1;
+  const searchParams = new URLSearchParams(location.search);
+  const search = searchParams.get("search") || "";
+  const slug = searchParams.get("slug") || "";
+  const take = parseInt(searchParams.get("take")) || 8;
+  const skip = parseInt(searchParams.get("skip")) || 1;
+  const orderParam = searchParams.get("order");
+  const order = orderParam !== null && orderParam !== "" ? parseInt(orderParam) : 4;
+  const minPriceRaw = searchParams.get("minPrice");
+  const maxPriceRaw = searchParams.get("maxPrice");
+  const minPrice = minPriceRaw !== null && minPriceRaw !== "undefined" ? parseFloat(minPriceRaw) : null;
+  const maxPrice = maxPriceRaw !== null && maxPriceRaw !== "undefined" ? parseFloat(maxPriceRaw) : null;
+  const featureId = searchParams.get("featureId")||"";
+useEffect(() => {
+  setLoading(true);
+  let url = `${ENDPOINTS.getAllFiltered}?slug=${slug}&search=${search}&take=${take}&skip=${skip}&isDeleted=false&isDiscount=false&featureId=${featureId}`;
+  if (minPrice !== null) url += `&minPrice=${minPrice}`;
+  if (maxPrice !== null) url += `&maxPrice=${maxPrice}`;
+  if (order !== null) url += `&order=${order}`;
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+      setProducts(data);
+      setLoading(false);
+
+      if (minPrice === null && maxPrice === null) {
+        setMinAvailablePrice(data?.minAvailablePrice || null);
+        setMaxAvailablePrice(data?.maxAvailablePrice || null);
+      }
+    })
+    .catch((err) => {
+      console.error("Xəta baş verdi:", err);
+      setLoading(false);
+    });
+}, [slug, search, take, skip, order, minPrice, maxPrice,featureId]);
+
+  
   useEffect(() => {
     if (priceRange.min === null && priceRange.max === null) {
       setFilterApplied(false);
     }
   }, [priceRange]);
-  const parsePrice = (value) => {
-    if (typeof value === "string") {
-      return Number(value.replace(/[^\d.]/g, ""));
-    }
-    return Number(value);
+
+useEffect(() => {
+  setPriceRange({ min: minPrice, max: maxPrice });
+  setFilterApplied(minPrice !== null || maxPrice !== null);
+}, [minPrice, maxPrice]);
+
+  const handlePriceChange = (range) => {
+    setPriceRange(range);
+
+    const params = new URLSearchParams(location.search);
+    if (range.min !== null) params.set("minPrice", range.min);
+    else params.delete("minPrice");
+
+    if (range.max !== null) params.set("maxPrice", range.max);
+    else params.delete("maxPrice");
+
+    navigate(`${location.pathname}?${params.toString()}`);
+    setFilterApplied(true);
   };
-  const filteredProducts = products?.filter((item) => {
-    const price = parsePrice(item.discountPrice > 0 ? item.discountPrice : item.price);
-    const minValid = priceRange.min === null || price >= priceRange.min;
-    const maxValid = priceRange.max === null || price <= priceRange.max;
-    return minValid && maxValid;
-  });
+  const handleClearMinPrice = () => {
+    setPriceRange((prev) => {
+      const newRange = { ...prev, min: null };
 
-  const sortedProducts = (filteredProducts || []).sort((a, b) => {
-    const priceA = parsePrice(a.discountPrice > 0 ? a.discountPrice : a.price);
-    const priceB = parsePrice(b.discountPrice > 0 ? b.discountPrice : b.price);
-    switch (sortOption) {
-      case "Qiymət: aşağıdan yuxarı":
-        return priceA - priceB;
-      case "Qiymət: yuxarıdan aşağı":
-        return priceB - priceA;
-      case "Ən yüksək reytinq":
-        return b.rating - a.rating;
-      case "Ən yenilər":
-        return new Date(b.createdAt) - new Date(a.createdAt);
-      case "Populyarlığa görə":
-        return b.popularity - a.popularity;
-      default:
-        return 0;
-    }
-  });
+      const params = new URLSearchParams(location.search);
+      params.delete("minPrice");
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 11;
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = sortedProducts.slice(
-    indexOfFirstProduct,
-    indexOfLastProduct
-  );
-  const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
+      navigate(`${location.pathname}?${params.toString()}`);
+      if (prev.max === null) setFilterApplied(false);
+      return newRange;
+    });
+  };
+
+  const handleClearMaxPrice = () => {
+    setPriceRange((prev) => {
+      const newRange = { ...prev, max: null };
+
+      const params = new URLSearchParams(location.search);
+      params.delete("maxPrice");
+
+      navigate(`${location.pathname}?${params.toString()}`);
+      if (prev.min === null) setFilterApplied(false);
+      return newRange;
+    });
+  };
+  const renderActiveFilters = () =>
+    filterApplied && (
+      <ActiveFiltr>
+        <h3>Aktiv Filtrlər</h3>
+        <hr />
+        <ActiveFilter
+          priceRange={priceRange}
+          onClearMin={handleClearMinPrice}
+          onClearMax={handleClearMaxPrice}
+        />
+      </ActiveFiltr>
+    );
+    const getShowingText = () => {
+  if (!products?.count) return null;
+  const start = take * (skip - 1) + 1;
+  const end = Math.min(take * skip, products.count);
+  return `${products.count} nəticədən ${start}-${end} nəticə göstərilir`;
+};
+
+
   const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+    const newSkip = pageNumber;
+    const params = new URLSearchParams(location.search);
+    params.set("skip", newSkip);
+    navigate(`${location.pathname}?${params.toString()}`);
   };
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [priceRange, sortOption]);
+
 
 
   return (
     <>
       <Helmet>
-        <title>Products</title>
+        <title>
+          {search ? `"${search}" nəticələri - ` : ""}
+          {category ? `${category} - ` : ""}
+          Məhsullar
+        </title>
       </Helmet>
+
       <CategoryWrapper>
         <CategoryContent>
-
           <CategoryHead>
             <div className="category-links">
               <ul>
                 <li>
-                  <Link>Əsas səhifə /</Link>
+                  <Link>Əsas səhifə </Link>
                 </li>
                 <li>
-                  <Link>Noutbuklar</Link>
+                  <Link>
+                    {category == undefined ? "/" : `/ ${category} /`}{" "}
+                  </Link>
+                  <Link> {search}</Link>
                 </li>
+
               </ul>
             </div>
+
             <ResponsiveFilter onClick={() => setShowFilter(true)}>
-              <i>
-                <RiEqualizerLine />
-              </i>
+              <i><RiEqualizerLine /></i>
               <p>Filtr</p>
+
             </ResponsiveFilter>
 
             <CategorySelect>
-              <p>Lorem ipsum dolor sit amet.</p>
+            <p>{getShowingText()}</p>
               <select
-                value={sortOption}
-                onChange={(e) => setSortOption(e.target.value)}
+                value={order !== null ? order : ""}
+                onChange={(e) => {
+                  const params = new URLSearchParams(location.search);
+                  if (e.target.value === "") {
+                    params.delete("order");
+                  } else {
+                    params.set("order", e.target.value);
+                  }
+                  navigate(`${location.pathname}?${params.toString()}`);
+                }}
+
               >
-                <option value="Standart Sıralama">Standart Sıralama</option>
-                <option value="Populyarlığa görə">Populyarlığa görə</option>
-                <option value="Ən yüksək reytinq">Ən yüksək reytinq</option>
-                <option value="Ən yenilər">Ən yenilər</option>
-                <option value="Qiymət: aşağıdan yuxarı">
-                  Qiymət: aşağıdan yuxarı
-                </option>
-                <option value="Qiymət: yuxarıdan aşağı">
-                  Qiymət: yuxarıdan aşağı
-                </option>
+                <option value="4">Standart sıralama</option>
+                <option value="5">Qiymət: aşağıdan yuxarı</option>
+                <option value="6">Qiymət: yuxarıdan aşağı</option>
+                <option value="7">Ən yüksək reytinq</option>
+                <option value="8">Ən aşağı reytinq</option>
+                <option value="2">Ən yenilər</option>
+                <option value="9">Populyarlığa görə</option>
+                <option value="1">A-dan Z-yə</option>
+                <option value="3">Z-dən A-ya</option>
               </select>
             </CategorySelect>
           </CategoryHead>
@@ -130,50 +208,25 @@ const Category = () => {
           <CategoryBody>
             {showFilter && (
               <>
-                <TransparentBackground
-                  onClick={() => setShowFilter(false)}
-                  $isOpenModal={showFilter}
-                >
-                  <ModalButton onClick={() => setShowFilter(false)}>
-                    ×
-                  </ModalButton>
+                <TransparentBackground onClick={() => setShowFilter(false)} $isOpenModal={showFilter}>
+                  <ModalButton onClick={() => setShowFilter(false)}>×</ModalButton>
                 </TransparentBackground>
-
                 <SidebarFilter $isOpenModal={showFilter}>
-                  {filterApplied && (
-                    <ActiveFiltr>
-                      <h3>Aktiv Filtrlər</h3>
-                      <hr />
-                      <ActiveFilter
-                        priceRange={priceRange}
-                        onClearMin={() => {
-                          handleClearMinPrice();
-                          if (priceRange.max === null) setFilterApplied(false);
-                        }}
-                        onClearMax={() => {
-                          handleClearMaxPrice();
-                          if (priceRange.min === null) setFilterApplied(false);
-                        }}
-                      />
-                    </ActiveFiltr>
-                  )}
+                  {renderActiveFilters()}
                   <div className="price-section">
                     <h3>QIYMƏT</h3>
                     <hr />
                     <PriceFilter
+                      minPrice={products?.minPrice}
+                      maxPrice={products?.maxPrice}
+                      rangeMin={minAvailablePrice}
+                      rangeMax={maxAvailablePrice}
                       onChange={handlePriceChange}
                       onSubmit={() => setFilterApplied(true)}
                     />
                   </div>
-                  <Processor>
-                    <h3>PROSESSOR-AMD</h3>
-                    <hr />
-                    <select>
-                      <option>AMD Ryzen 5tm 5600H</option>
-                      <option>AMD Ryzen 7tm 6800H</option>
-                    </select>
-                  </Processor>
-                  <ProcessorSelect />
+                  <ProsessorSelectAmd  products={products}/>
+                  <ProcessorSelectIntel  products={products}/>
                   <Categories>
                     <CategoriesSidebar />
                   </Categories>
@@ -183,78 +236,62 @@ const Category = () => {
 
             <CategoryCardsWrapper>
               <CategoryCards>
-                {currentProducts?.map((item) => (
-
-                  isLoading ? <CategoryProductCardSkelaton /> : <CategoryProductCard key={item.id} item={item} />
-                ))}
+                {isLoading
+                  ? Array.from({ length: 8 }).map((_, i) => (
+                    <CategoryProductCardSkelaton key={i} />
+                  ))
+                  : products?.items?.$values.length > 0
+                    ? products?.items?.$values.map((item) => (
+                      <CategoryProductCard key={item.$id || item.id} item={item} />
+                    ))
+                    : <p style={{ textAlign: "center", width: "100%" }}>Axtarışa uyğun məhsul tapılmadı.</p>
+                }
               </CategoryCards>
 
-              {totalPages > 1 && (
+              {totalPages >= 1 && (
                 <PaginationWrapper>
                   <PageButton
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    hidden={currentPage === 1}
+                    onClick={() => handlePageChange(skip - 1)}
+                    disabled={skip === 1}
                   >
                     &laquo;
                   </PageButton>
-
-                  {[...Array(totalPages)].map((_, index) => (
+                  {Array.from({ length: totalPages }).map((_, i) => (
                     <PageButton
-                      key={index}
-                      onClick={() => handlePageChange(index + 1)}
-                      active={currentPage === index + 1}
+                      key={i}
+                      onClick={() => handlePageChange(i + 1)}
+                      active={skip === i + 1}
                     >
-                      {index + 1}
+                      {i + 1}
                     </PageButton>
                   ))}
-
                   <PageButton
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    hidden={currentPage === totalPages}
+                    onClick={() => handlePageChange(skip + 1)}
+                    disabled={skip === totalPages}
                   >
                     &raquo;
                   </PageButton>
                 </PaginationWrapper>
               )}
+
             </CategoryCardsWrapper>
 
             <CategoryFilter>
-              {filterApplied && (
-                <ActiveFiltr>
-                  <h3>Aktiv Filtrlər</h3>
-                  <hr />
-                  <ActiveFilter
-                    priceRange={priceRange}
-                    onClearMin={() => {
-                      handleClearMinPrice();
-                      if (priceRange.max === null) setFilterApplied(false);
-                    }}
-                    onClearMax={() => {
-                      handleClearMaxPrice();
-                      if (priceRange.min === null) setFilterApplied(false);
-                    }}
-                  />
-                </ActiveFiltr>
-              )}
+              {renderActiveFilters()}
               <Price>
                 <h3>Qiymət</h3>
                 <hr />
                 <PriceFilter
+                  minPrice={products?.minPrice}
+                  maxPrice={products?.maxPrice}
+                  rangeMin={minAvailablePrice}
+                  rangeMax={maxAvailablePrice}
                   onChange={handlePriceChange}
                   onSubmit={() => setFilterApplied(true)}
                 />
               </Price>
-              <Processor>
-                <h3>PROSESSOR-AMD</h3>
-                <hr />
-                <select name="" id="">
-                  <option value="">AMD Ryzen 5tm 5600H</option>
-                  <option value="">AMD Ryzen 7tm 6800H</option>
-                </select>
-              </Processor>
-              <ProcessorSelect />
+<ProsessorSelectAmd  products={products}/>
+            <ProcessorSelectIntel  products={products}/>
               <Categories>
                 <CategoriesSidebar />
               </Categories>
@@ -263,7 +300,6 @@ const Category = () => {
         </CategoryContent>
       </CategoryWrapper>
     </>
-
   );
 };
 
@@ -308,9 +344,12 @@ const CategoryWrapper = styled.section`
 `;
 const CategoryContent = styled.div`
   min-height: 100vh;
-  width: 90%;
+  width: 80%;
   padding: 20px;
   @media (max-width: 950px) {
+    width: 100%;
+  }
+    @media (max-width: 1060px) {
     width: 100%;
   }
 `;
@@ -319,7 +358,7 @@ const CategoryHead = styled.div`
   justify-content: space-between;
   flex-wrap: wrap;
   align-items: center;
-  max-width: 93%;
+  max-width: 95%;
   padding-bottom: 1rem;
   @media (max-width: 850px) {
     display: flex;
@@ -328,6 +367,10 @@ const CategoryHead = styled.div`
     width: 100%;
     justify-content: center;
     align-items: center;
+  }
+  @media (max-width: 1250px) {
+    width: 100%;
+
   }
   .category-links ul {
     display: flex;
@@ -420,9 +463,9 @@ const CategoryCards = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  gap: 30px;
+  gap: 15px;
   width: 100%;
-  @media (max-width: 1093px) {
+  @media (max-width: 930px) {
     justify-content: center;
   }
 `;
@@ -456,7 +499,6 @@ const SidebarFilter = styled.div`
   .price-section {
     padding-top: 1rem;
     padding-bottom: 20px;
-    padding-left: 20px;
     h3 {
       font-size: 1em;
       font-weight: 600;
@@ -476,13 +518,12 @@ const SidebarFilter = styled.div`
   }
 `;
 const CategoryFilter = styled.div`
-  width: 30%;
+  width: 28%;
   @media (max-width: 850px) {
     display: none;
   }
 `;
 const ActiveFiltr = styled.div`
-  padding-left: 20px;
   h3 {
     font-size: 1em;
     font-weight: 600;
@@ -498,7 +539,6 @@ const ActiveFiltr = styled.div`
   }
 `;
 const Price = styled.div`
-  padding-left: 20px;
   padding-bottom: 20px;
   h3 {
     font-size: 1em;
@@ -516,7 +556,6 @@ const Price = styled.div`
 `;
 const Categories = styled.div``;
 const Processor = styled.div`
-  padding-left: 20px;
   margin-bottom: 1rem;
   line-height: 2.5;
   max-width: 300px;
@@ -545,9 +584,8 @@ const Processor = styled.div`
     font-size: 0.97em;
     padding: 5px 55px 5px 8px;
     outline: none;
-    option{
- max-width: 280px !important;
-
+    option {
+      max-width: 280px !important;
     }
   }
 `;

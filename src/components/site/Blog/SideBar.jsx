@@ -1,12 +1,12 @@
 import React from 'react'
 import styled from 'styled-components';
-import AuthorsWrapper from "@components/site/Blog/Authors";
+import Authors from "@components/site/Blog/Authors";
 import CategoriesSidebar from "@components/site/Blog/CategoriesSidebar";
 
 function SideBar() {
   return (
     <Sidebar>
-      <AuthorsWrapper />
+      <Authors />
       <CategoriesSidebar />
     </Sidebar>
   );
@@ -15,4 +15,7 @@ function SideBar() {
 export default SideBar
 
 const Sidebar = styled.div`
+@media (max-width:850px){
+padding:30px;
+}
 `

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
   Navigation,
@@ -18,15 +18,29 @@ import "swiper/css/scrollbar";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
+import Skeleton from "react-loading-skeleton";
+const pulse = keyframes`
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  `;
 
-const AdjustablePartnerSection = ({ headerName, imageSrc }) => {
-  const { data: products } = useGet("products", ENDPOINTS.products);
+const LoadingSkeleton = styled(Skeleton)`
+  animation: ${pulse} 1.5s infinite ease-in-out;
+`;
 
-  return (
-    <AdjustableContainer>
+const AdjustablePartnerSectionSkeleton=()=>{
+
+  return(
+<AdjustableContainer>
       <LayoutContainer>
         <BrandBox>
-          <StyledH2>{headerName}</StyledH2>
           <BrandsAndPartners>
             <Swiper
               navigation={true}
@@ -54,14 +68,74 @@ const AdjustablePartnerSection = ({ headerName, imageSrc }) => {
                 },
               }}
             >
-              {products?.map((item) => (
-                <SwiperSlide>
-                  <ImageContainer key={"1"}>
-                    <StyledImage src={`./images/${imageSrc}`} />
+             
+                  {Array.from({ length: 6 }).map((_, index) => (
+                <SwiperSlide key={index}>
+                  <ImageContainer>
+                    <LoadingSkeleton width={"100%"} height={"100%"} />
                   </ImageContainer>
                 </SwiperSlide>
               ))}
             </Swiper>
+          </BrandsAndPartners>
+        </BrandBox>
+      </LayoutContainer>
+    </AdjustableContainer>
+
+  )
+}
+const AdjustablePartnerSection = ({ headerName }) => {
+  const { data: partners,isLoading } = useGet("partners", ENDPOINTS.partners);
+
+  return (
+    <AdjustableContainer>
+      <LayoutContainer>
+        <BrandBox>
+          <StyledH2>{headerName}</StyledH2>
+          <BrandsAndPartners>
+          {
+            isLoading ? (
+              <AdjustablePartnerSectionSkeleton/>
+            ): (
+                 <Swiper
+              navigation={true}
+              spaceBetween={20}
+              slidesPerView={3}
+              modules={[FreeMode, Navigation, Autoplay, Pagination]}
+              breakpoints={{
+                0: {
+                  slidesPerView: 1,
+                },
+                450: {
+                  slidesPerView: 2,
+                },
+                650: {
+                  slidesPerView: 3,
+                },
+                850: {
+                  slidesPerView: 4,
+                },
+                1024: {
+                  slidesPerView: 5,
+                },
+                1200: {
+                  slidesPerView: 6,
+                },
+              }}
+            >
+              {partners?.$values?.map((item) => (
+                <SwiperSlide>
+                  <ImageContainer key={"1"}>
+                    <StyledImage src={item.imagePath
+} />
+                  </ImageContainer>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            )
+            
+          }
+         
           </BrandsAndPartners>
         </BrandBox>
       </LayoutContainer>

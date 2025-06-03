@@ -4,18 +4,17 @@ import { FaBars } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 import { FaRegHeart } from "react-icons/fa";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { WishlistContext } from "@Context/wishlistContext";
 
 const Navbar = () => {
   const location = useLocation();
-  const [iScrolled, setIsScrolled] = useState(false);
+  const [iscrolled, setIsScrolled] = useState(false);
   const { wishlist } = useContext(WishlistContext);
-    const { data: categories } = useGet("categories", ENDPOINTS.categories);
-
-  
+  const { data: categories } = useGet("categories", ENDPOINTS.categories);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,9 +30,14 @@ const Navbar = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
+  function toKebabCase(str) {
+    return str
+      .replace(/([a-z])([A-Z])/g, '$1-$2')       
+      .replace(/[\s_]+/g, '-')                  
+      .toLowerCase();                           
+  }
   const isHomePage = location.pathname === "/";
-  
+ 
   return (
     <NavigationBar>
       <StyledNavbarContainer>
@@ -42,19 +46,40 @@ const Navbar = () => {
             <HeaderNav>
               <ProductsLi>
                 <FaBars />
-                <Link to={"/category"}> Məhsullarımız</Link>
+                <p> Məhsullarımız</p>
                 <ArrowDown />
                 <CategoryListContainer
-                  className={iScrolled || !isHomePage ? "hoverable" : ""}
+                  className={iscrolled || !isHomePage ? "hoverable" : ""}
                 >
                   <CategoryList>
-                    {categories?.map((item) => (
-                      <CategoryElement key={item.name}>
+                    {categories?.$values?.map((item) => (
+                      <CategoryElement
+                        key={item.id}
+                        onClick={() =>
+                          navigate(
+                            `/product-category/${item.slug}?slug=${item.slug}`
+                          )
+                        }
+                      >
                         {item.title}
+
                         <ArrowForward />
+
                         <SubCategoryList>
-                          {item?.categoryItems?.map((categoryItem) => (
-                            <SubCategoryElement key={categoryItem.title}>
+                          {item?.categoryItems?.$values?.map((categoryItem) => (
+                            <SubCategoryElement
+                              key={categoryItem.title}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(
+                                  `/product-category/${toKebabCase(
+                                    item.title
+                                  )}/${toKebabCase(categoryItem.title)}?slug=${
+                                    item.slug
+                                  }&search=${categoryItem.title}`
+                                );
+                              }}
+                            >
                               {categoryItem.title}
                             </SubCategoryElement>
                           ))}
@@ -175,10 +200,13 @@ const CategoryListContainer = styled.div`
   left: 0;
   width: 100%;
   &.hoverable {
-    display: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.6s;
   }
   ${ProductsLi}:hover & {
-    display: block;
+    opacity: 1;
+    visibility: visible;
   }
 `;
 
@@ -205,7 +233,6 @@ const CategoryElement = styled.li`
 `;
 
 const SubCategoryList = styled.ul`
-  padding-top: 20px;
   display: none;
   position: absolute;
   box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.15);
@@ -213,7 +240,7 @@ const SubCategoryList = styled.ul`
   background-color: #ffffff;
   left: 100%;
   top: 0;
-  height: 100%;
+  /* height: 100%; */
   width: 100%;
   cursor: default;
 `;

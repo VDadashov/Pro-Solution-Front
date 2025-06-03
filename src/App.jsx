@@ -9,25 +9,25 @@ const queryClient = new QueryClient();
 function AppContent() {
   const router = createBrowserRouter(ROUTES);
   return (
-    <QueryClientProvider client={queryClient}>
-      <WishlistProvider>
-      <ToastContainer
-        position="top-center"
-        autoClose={1000}
-        hideProgressBar
-        closeOnClick
-        draggable={false}
-        pauseOnHover={false}
-        theme="light"
-      />
-   
-        <RouterProvider router={router} />
-      </WishlistProvider>
-    </QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <WishlistProvider>
+          <ToastContainer
+            position="top-center"
+            autoClose={1000}
+            hideProgressBar
+            closeOnClick
+            draggable={false}
+            pauseOnHover={false}
+            theme="light"
+          />
+          <RouterProvider router={router} />
+        </WishlistProvider>
+      </QueryClientProvider>
   );
 }
 
 function App() {
+  
   return <AppContent />;
 }
 

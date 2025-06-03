@@ -1,107 +1,266 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { IoStar } from "react-icons/io5";
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import ProductSection from '../Home/Products';
-const ProductDetailTabs = () => {
+import { ENDPOINTS } from '@utils/constants/Endpoints';
+import { usePost } from '@utils/hooks/useCustomMutation';
+import { Bounce, toast } from 'react-toastify';
+
+const ProductDetailTabs = ({ product }) => {
   const [activeTab, setActiveTab] = useState('info');
   const [rating, setRating] = useState(0);
+  const [reviews, setReviews] = useState([]); 
+
+  const { mutate: productReviewMutation } = usePost("productsCreateReview", ENDPOINTS.productsCreateReview);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("userReviewInfo");
+   
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored);
+      if (parsed.name || parsed.email) {
+        formik.setValues(prev => ({
+          ...prev,
+          name: parsed.name || '',
+          email: parsed.email || '',
+          save: true
+        }));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+
+  // const storedReviews = localStorage.getItem('userReviews');
+  console.log(product?.productReviews)
+  const storedReviews=product?.productReviews
+  if (storedReviews) {
+    try {
+      const parsedReviews = JSON.parse(storedReviews);
+      if (Array.isArray(parsedReviews)) {
+        setReviews(parsedReviews);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  }, []);
 
   const ReviewSchema = Yup.object().shape({
-    review: Yup.string()
-      .max(500, 'Ən çox 500 hərf yaza bilərsiniz')
-      .required('Rəy yazmaq məcburidir'),
+    text: Yup.string().max(500, 'Ən çox 500 hərf yaza bilərsiniz').required('Rəy yazmaq məcburidir'),
     name: Yup.string().required('Ad tələb olunur'),
     email: Yup.string().email('Düzgün e-poçt deyil').required('E-poçt tələb olunur'),
-    save: Yup.boolean()
+    rating: Yup.number(),
+    productId: Yup.string()
   });
+
+  const formik = useFormik({
+    initialValues: {
+      text: '',
+      name: '',
+      email: '',
+      rating: 0,
+      productId: product?.id || null
+    },
+    validationSchema: ReviewSchema,
+    onSubmit: (values, actions) => {
+      const formData = {
+        ...values,
+        rating: rating.toLocaleString()
+      };
+
+      if (values.save) {
+        localStorage.setItem("userReviewInfo", JSON.stringify({
+          name: values.name,
+          email: values.email
+        }));
+      } else {
+        localStorage.removeItem("userReviewInfo");
+      }
+
+      productReviewMutation(formData, {
+        onSuccess: (res) => {
+          actions.resetForm();
+          setRating(0);
+          actions.setSubmitting(false);
+          toast.success("Şərhiniz göndərildi", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+          });
+
+          const newReview = {
+            id: Date.now(),
+            name: formData.name,
+            text: formData.text,
+            rating: rating
+          };
+        setReviews(prev => {
+  const updatedReviews = [newReview, ...prev];
+  localStorage.setItem('userReviews', JSON.stringify(updatedReviews));
+  return updatedReviews;
+});
+        },
+        onError: (error) => {
+          actions.setSubmitting(false);
+          toast.error("Şərhiniz göndərilmədi", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+          });
+        }
+      });
+    }
+  });
+
+  const totalReviewCount = (reviews.length + (product?.productReviews?.length || 0));
+
+const renderReviewForm = () => (
+  <ReviewForm onSubmit={formik.handleSubmit}>
+    <h3>Be the first to review “{product?.title || 'Məhsul'}”</h3>
+
+    <label>Sizin reytinqiniz *</label>
+    <Stars>
+      {[1, 2, 3, 4, 5].map((starValue) => (
+        <Star
+          key={starValue}
+          onClick={() => {
+            setRating(starValue);
+            formik.setFieldValue('rating', starValue);
+          }}
+          active={rating >= starValue}
+        >
+          <IoStar />
+        </Star>
+      ))}
+    </Stars>
+
+    <label>Sizin rəyiniz *</label>
+    <textarea
+      name="text"
+      rows="5"
+      maxLength={500}
+      {...formik.getFieldProps('text')}
+    />
+    {formik.touched.text && formik.errors.text && (
+      <div style={{ color: 'red', fontSize: '0.9rem' }}>{formik.errors.text}</div>
+    )}
+
+    <InputRow>
+      <div>
+        <label htmlFor="name">Ad *</label>
+        <input
+          type="text"
+          id="name"
+          maxLength={100}
+          {...formik.getFieldProps('name')}
+        />
+        {formik.touched.name && formik.errors.name && (
+          <div style={{ color: 'red', fontSize: '0.9rem' }}>{formik.errors.name}</div>
+        )}
+      </div>
+      <div>
+        <label htmlFor="email">E-poçt *</label>
+        <input
+          type="email"
+          id="email"
+          maxLength={100}
+          {...formik.getFieldProps('email')}
+        />
+        {formik.touched.email && formik.errors.email && (
+          <div style={{ color: 'red', fontSize: '0.9rem' }}>{formik.errors.email}</div>
+        )}
+      </div>
+    </InputRow>
+
+    <CheckboxRow>
+      <input
+        type="checkbox"
+        name="save"
+        id="save"
+        onChange={formik.handleChange}
+        checked={formik.values.save}
+      />
+      <label htmlFor="save">
+        Save my name and email in this browser for the next time I comment.
+      </label>
+    </CheckboxRow>
+
+    <SubmitButton type="submit" disabled={formik.isSubmitting}>
+      GÖNDƏR
+    </SubmitButton>
+  </ReviewForm>
+);
+
+const renderReviewItem = (item) => (
+  <Review key={item.id} hasReview>
+    <div className="avatar">{item.name?.[0]}</div>
+    <div className="content">
+      <h2>{item.name}</h2>
+      <Stars>
+        {[1, 2, 3, 4, 5].map((starValue) => (
+          <Star key={starValue} active={item.rating >= starValue}>
+            <IoStar />
+          </Star>
+        ))}
+      </Stars>
+      <p>{item.text}</p>
+    </div>
+  </Review>
+);
+
   return (
-    <Container>
+    <Container >
       <Tabs>
         <TabButton active={activeTab === 'info'} onClick={() => setActiveTab('info')}>
-        Oxşar Məhsullar
+          Oxşar Məhsullar
         </TabButton>
         <TabButton active={activeTab === 'reviews'} onClick={() => setActiveTab('reviews')}>
-          RƏYLƏR (0)
+          RƏYLƏR ({totalReviewCount})
         </TabButton>
       </Tabs>
+
       {activeTab === 'info' && (
-          <ProductSection  display={"none"}/>
-
+        <ProductSection display={"none"} />
       )}
-      {activeTab === 'reviews' && (
-        <>
-          <Review>
-            <h2>Rəylər</h2>
-            <p>Hələ ki, rəy yoxdur.</p>
-          </Review>
-          <Formik
-            initialValues={{
-              review: '',
-              name: '',
-              email: '',
-              save: false
-            }}
-            validationSchema={ReviewSchema}
-            onSubmit={(values, actions) => {
-              const formData = {
-                ...values,
-                rating: rating
-              };
-              console.log('Form dəyərləri:', formData);
-              actions.resetForm();
-              setRating(0);
-            }}
-          >
-            {() => (
-              <ReviewForm as={Form}>
-                <h3>Be the first to review “Acer Aspire 3 A315-59 Slim (NX.K6SER.002-N)”</h3>
 
-                <label>Sizin reytinqiniz *</label>
-                <Stars>
-                  {[1, 2, 3, 4, 5].map((starValue) => (
-                    <Star
-                      key={starValue}
-                      onClick={() => setRating(starValue)}
-                      active={rating >= starValue}
-                    >
-                      <IoStar />
-                    </Star>
-                  ))}
-                </Stars>
-
-
-                <label>Sizin rəyiniz *</label>
-                <Field as="textarea" name="review" rows="5" />
-                <ErrorMessage name="review" component="div" style={{ color: 'red', fontSize: '0.9rem' }} />
-
-                <InputRow>
-                  <div>
-                    <label>Ad *</label>
-                    <Field type="text" name="name" />
-                    <ErrorMessage name="name" component="div" style={{ color: 'red', fontSize: '0.9rem' }} />
-                  </div>
-                  <div>
-                    <label>E-poçt *</label>
-                    <Field type="email" name="email" />
-                    <ErrorMessage name="email" component="div" style={{ color: 'red', fontSize: '0.9rem' }} />
-                  </div>
-                </InputRow>
-
-                <CheckboxRow>
-                  <Field type="checkbox" name="save" id="save" />
-                  <label htmlFor="save">
-                    Save my name, email, and website in this browser for the next time I comment.
-                  </label>
-                </CheckboxRow>
-
-                <SubmitButton type="submit">GÖNDƏR</SubmitButton>
-              </ReviewForm>
-            )}
-          </Formik>
-        </>
-      )}
+{activeTab === 'reviews' && (
+  <>
+    {(reviews.length > 0 || (Array.isArray(product?.productReviews) && product.productReviews.length > 0)) ? (
+      <ReviewsContainer>
+        <ReviewsList>
+          {reviews.map(renderReviewItem)}
+          {product?.$values?.productReviews?.map(renderReviewItem)}
+        </ReviewsList>
+        <ReviewFormWrapper>
+          {renderReviewForm()}
+        </ReviewFormWrapper>
+      </ReviewsContainer>
+    ) : (
+      <>
+        <Review>
+          <h2>Rəylər</h2>
+          <p>Hələ ki, rəy yoxdur.</p>
+        </Review>
+        {renderReviewForm()}
+      </>
+    )}
+  </>
+)}
 
 
     </Container>
@@ -109,6 +268,7 @@ const ProductDetailTabs = () => {
 };
 
 export default ProductDetailTabs;
+
 
 
 const Container = styled.div`
@@ -141,20 +301,93 @@ const TabButton = styled.button`
     text-align: left;
   }
 `;
+const ReviewsContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 20px;
+    @media (max-width: 950px) {
+    flex-direction: column;
+  }
+`;
+
+const ReviewsList = styled.div`
+  flex: 1 1 40%;
+  max-width: 45%;
+  word-break: break-word;
+   @media (max-width: 950px) {
+    flex: 1 1 100%;
+  max-width: 100%;
+  }
+`;
+
+const ReviewFormWrapper = styled.div`
+  flex: 1 1 55%;
+  max-width:45%;
+     @media (max-width: 950px) {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+`;
 
 const Review = styled.div`
-line-height: 2;
-padding-bottom: 3rem;
-h2{
-    font-weight: 700;
-    font-family: Manrope, sans-serif;
-    color: #149295;
-    font-size: 1.25em;
-}
-p{
-    color: #777;
-}
-`
+  ${({ hasReview }) =>
+    hasReview
+      ? `
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 30px;
+
+    .avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #d3f5f6;
+      color: #00979e;
+      font-weight: bold;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      text-transform: uppercase;
+    }
+
+    .content {
+      flex: 1;
+      line-height: 1.6;
+
+      h2 {
+        font-weight: 700;
+        font-family: Manrope, sans-serif;
+        color: #149295;
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+      }
+
+      p {
+        color: #777;
+      }
+    }
+  `
+      : `
+    line-height: 2;
+    padding-bottom: 3rem;
+
+    h2 {
+      font-weight: 700;
+      font-family: Manrope, sans-serif;
+      color: #149295;
+      font-size: 1.25em;
+    }
+
+    p {
+      color: #777;
+    }
+  `}
+`;
 
 const ReviewForm = styled.form`
 
@@ -264,4 +497,4 @@ const SubmitButton = styled.button`
   cursor: pointer;
 `;
 
-
+  

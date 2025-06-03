@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, FreeMode, Autoplay } from "swiper/modules";
 
-// Swiper Css Imports
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -13,15 +12,8 @@ import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
 
-const ProductSection = ({ sectionHeader, display }) => {
-  // const { data: categories } = useGet("categories", ENDPOINTS.categories);
-  const { data: products, isLoading } = useGet("products", ENDPOINTS.products);
-
-
-  // const getCategoryName = (categoryId) => {
-  //   const category = categories?.find((cat) => cat?.id == categoryId);
-  //   return category ? category?.name : "Unknown Category";
-  // };
+const ProductSection = ({ sectionHeader, display, order }) => {
+  const { data: products, isLoading } = useGet(`getAllFiltered${order}`, `${ENDPOINTS.getAllFiltered}?order=${order}&take=20&skip=1&isDeleted=${false}`);
 
   return (
     <SectionContainer>
@@ -52,13 +44,23 @@ const ProductSection = ({ sectionHeader, display }) => {
                 },
               }}
             >
-              {products?.map((item) => (
-                !isLoading ?
-                  <SwiperSlide key={item.id}><ProductsCardSkeleton /></SwiperSlide>
-                  : <SwiperSlide key={item.id}>
-                    <ProductsCard item={item} />
-                  </SwiperSlide>
-              ))}
+              {
+                isLoading ? (
+                  <>
+                    {Array.from({ length: 6 }).map((_, index) => (
+                      <SwiperSlide ><ProductsCardSkeleton key={index} /></SwiperSlide>
+                    ))}
+                  </>
+                ) : (
+                  products?.items?.$values.map((item) => (
+
+                    <SwiperSlide key={item.id}>
+                      <ProductsCard item={item} />
+                    </SwiperSlide>
+                  ))
+                )
+              }
+
             </Swiper>
           </ProductsMenu>
         </ProductsContainer>
@@ -70,18 +72,54 @@ const ProductSection = ({ sectionHeader, display }) => {
 const SectionContainer = styled.section`
   width: 100%;
   padding: 10px 0px 30px;
+
   .swiper-button-next,
   .swiper-button-prev {
     color: black;
     transition: color 0.3s ease;
-    transform: scale(0.7);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &::after {
+      font-size: 30px; 
+    }
   }
 
   .swiper-button-next:hover,
   .swiper-button-prev:hover {
     color: #149295;
   }
+
+  @media (max-width: 1024px) {
+    .swiper-button-next,
+    .swiper-button-prev {
+      width: 30px;
+      height: 30px;
+    }
+
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+      font-size: 25px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .swiper-button-next,
+    .swiper-button-prev {
+      width: 14px;
+      height: 14px;
+    }
+
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+      font-size: 18px;
+    }
+  }
 `;
+
 
 const ProductsContainer = styled.div`
   width: 100%;
@@ -99,5 +137,6 @@ const ContainerHeader = styled.h3`
 `;
 
 const ContainerSpan = styled.span``;
+
 
 export default ProductSection;

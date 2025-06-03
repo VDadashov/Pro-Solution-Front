@@ -5,7 +5,6 @@ import styled from "styled-components";
 
 const WishlistTables = () => {
   const { wishlist, addToWishlist } = useContext(WishlistContext);
-
   return (
     <WishlistTable>
       <TableHead>
@@ -28,15 +27,16 @@ const WishlistTables = () => {
                   <IoClose />
                 </DeleteWishlist>
                 <ProductImage src="./images/laptop.webp" />
-                <ProductName>{item.name}</ProductName>
+                <ProductName>{item.description}</ProductName>
               </ProductNameTd>
               <ProductData style={{ color: "#000000" }}>
-                <DelTag>{item.price.original}</DelTag> {item.price.current}
+                <DelTag>{item?.price}</DelTag> {item?.discountPrice} ₼
               </ProductData>
               <ProductData>In Stock</ProductData>
             </ProductTr>
           ))
         )}
+
       </TableBody>
     </WishlistTable>
   );
