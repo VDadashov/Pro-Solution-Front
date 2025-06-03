@@ -8,7 +8,7 @@ const Wishlist = () => {
     <WishlistContainer>
       <LayoutContainer>
         <ContainerBox>
-          <WishlistTop>My Wishlist</WishlistTop>
+          <WishlistTop>Favorilər</WishlistTop>
           <WishlistTables />
         </ContainerBox>
       </LayoutContainer>

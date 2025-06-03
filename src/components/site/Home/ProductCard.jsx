@@ -236,9 +236,11 @@ const ButtonLink = styled(Link)`
     border: none;
     padding: 5px;
     display: flex;
+    justify-content: center;
     font-size: 13px;
     font-family: inherit;
     cursor: pointer;
+  
     &:hover {
       background-color: rgb(16, 114, 116);
     }

@@ -7,3 +7,9 @@
     font-family: "Manrope-Bold";
     src: url("/fonts/Manrope-Bold.ttf");
 }
+
+@font-face{
+    font-family: "Nunito-Regular400";
+    src: url("/fonts/Nunito-Regular.ttf");
+    font-weight: 400;
+}

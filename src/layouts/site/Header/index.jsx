@@ -11,19 +11,21 @@ import LoginRegister from "./LoginRegister";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
 
 const StyledHeader = styled.header`
-  position: relative;
   background-color: #fff;
   display: flex;
   flex-direction: column;
   position: ${(props) => (props.$isscrolled ? "fixed" : "relative")};
-  top: ${({ $isscrolled }) => ($isscrolled ? "140px" : "0")};
-  transform: ${({ $isscrolled }) =>
-    $isscrolled ? "translateY(-140px)" : "translateY(0)"};
+  top: ${(props) => (props.$isscrolled ? "0" : "20px")};
   z-index: 2;
   width: 100%;
-  transition: top 0.5s ease, transform 0.5s ease;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  opacity: ${(props) => (props.$isscrolled ? 1 : 1)};
+  transform: ${(props) =>
+    props.$isscrolled ? "translateY(0)" : "translateY(-20px)"};
+  transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+  box-shadow: ${({ $isscrolled }) =>
+    $isscrolled ? "rgba(0, 0, 0, 0.24) 0px 3px 8px" : "none"};
 `;
+
 
 
 const StyledTopHeader = styled.div`
