@@ -7,7 +7,7 @@ import { ENDPOINTS } from "@utils/constants/Endpoints";
 
 const MobileSearch = () => {
   const { data: categories } = useGet("categories", ENDPOINTS.categories);
-  const [selected, setSelected] = useState("All");
+  const [selected, setSelected] = useState("Hamısı")
   const [selectWidth, setSelectWidth] = useState(0);
   const textMeasureRef = useRef(null);
 
@@ -24,9 +24,10 @@ const MobileSearch = () => {
         <SearchCategories
           value={selected}
           onChange={(e) => setSelected(e.target.value)}
-          style={{ width: `${selectWidth}px` }}
+          style={{ 
+            width: `${selectWidth}px` }}
         >
-          <option key={"All"} value={"All"}>
+          <option style={{paddingRight:"30px"}} key={"All"} value={"All"}>
             All
           </option>
           {categories?.$values?.$values?.map((category) => (

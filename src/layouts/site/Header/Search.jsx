@@ -5,17 +5,32 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { useNavigate } from "react-router-dom";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import axios from "axios";
 
+const renderSkeleton = () => (
+  <SkeletonItem>
+    <Skeleton width={30} height={30} style={{ marginRight: "15px" }} />
+    <div style={{ flex: 1 }}>
+      <Skeleton height={20} width="80%" />
+      <Skeleton height={16} width="60%" />
+    </div>
+  </SkeletonItem>
+);
 const Search = ({ $isMobile }) => {
   const { data: categories } = useGet("categories", ENDPOINTS.categories);
-  const [selected, setSelected] = useState("All");
+  const [selected, setSelected] = useState("Hamısı");
   const [searchInput, setSearchInput] = useState("");
-
+  const [loading, setLoading] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
   const [selectWidth, setSelectWidth] = useState(0);
+  const [suggestions, setSuggestions] = useState([]);
   const textMeasureRef = useRef(null);
   const navigate = useNavigate();
-
   const handleSearch = () => {
+    setSearchInput("");
+    setShowDropdown(false);
     const slugParam = selected === "All" ? "" : selected;
     const query = `?slug=${slugParam}&search=${encodeURIComponent(
       searchInput
@@ -24,10 +39,56 @@ const Search = ({ $isMobile }) => {
   };
 
   useEffect(() => {
+    if (searchInput.length > 0) {
+      console.log(searchInput);
+      const fetchSuggestions = async () => {
+        setLoading(true); // Start loading
+        const slugParam = selected === "All" ? "" : selected;
+
+        try {
+          const { data } = await axios.get(
+            `${
+              ENDPOINTS.getAllFiltered
+            }?slug=${slugParam}&order=${4}&search=${searchInput}&take=${100}&skip=${1}&isDeleted=false&isDiscount=false`
+          );
+          setSuggestions(data);
+          // console.log(data);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setLoading(false); // Stop loading
+        }
+      };
+
+      fetchSuggestions();
+    } else {
+      setSuggestions([]);
+    }
+  }, [searchInput, selected]);
+
+  useEffect(() => {
     if (textMeasureRef.current) {
       setSelectWidth(textMeasureRef.current.offsetWidth + 20);
     }
   }, [selected]);
+
+  const handleItemClick = (slug) => {
+    setSearchInput("");
+    setShowDropdown(false);
+    navigate(`/category/${slug}`);
+  };
+
+  const highlightMatch = (text, query) => {
+    const index = text.toLowerCase().indexOf(query.toLowerCase());
+    if (index === -1) return text;
+    return (
+      <>
+        {text.slice(0, index)}
+        <strong>{text.slice(index, index + query.length)}</strong>
+        {text.slice(index + query.length)}
+      </>
+    );
+  };  
 
   return (
     <SearchContainer $isMobile={$isMobile}>
@@ -39,8 +100,8 @@ const Search = ({ $isMobile }) => {
           $isMobile={$isMobile}
           selectWidth={selectWidth}
         >
-          <option key={"All"} value={"All"}>
-            All
+          <option key={"Hamısı"} value={"Hamısı"}>
+            Hamısı
           </option>
           {categories?.$values?.map((category) => (
             <option key={category.id} value={category.slug}>
@@ -55,15 +116,106 @@ const Search = ({ $isMobile }) => {
           type="text"
           placeholder="Axtar..."
           value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
+          onChange={(e) => {
+            setSearchInput(e.target.value);
+            setShowDropdown(e.target.value.trim().length > 0);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSearch();
+            }
+          }}
         />
         <SearchButton>
           <MagnifyingIcon onClick={handleSearch} />
         </SearchButton>
+
+        {showDropdown && (
+          <Dropdown>
+            {loading
+              ? Array.from({ length: 4 }).map((_, index) => (
+                  <li key={index}>{renderSkeleton()}</li>
+                ))
+              : suggestions?.items?.$values?.map((suggestion, index) => (
+                  <DropdownItem
+                    key={index}
+                    onClick={() => handleItemClick(suggestion?.detailSlug)}
+                  >
+                    <ItemLogo
+                      src={suggestion.images?.$values[0]?.imagePath}
+                      alt={suggestion.title}
+                    />
+                    <ItemDetails>
+                      <ItemTitle>
+                        {highlightMatch(suggestion.title, searchInput)}
+                        {suggestion.lastVersion &&
+                          ` -v${suggestion?.lastVersion}`}
+                      </ItemTitle>
+                      <ItemCategory>{suggestion.subTitle}</ItemCategory>
+                    </ItemDetails>
+                  </DropdownItem>
+                ))}
+          </Dropdown>
+        )}
       </SearchBar>
     </SearchContainer>
   );
 };
+const SkeletonItem = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+`;
+const Dropdown = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 1000;
+  max-height: 250px;
+  overflow-y: auto;
+`;
+
+const DropdownItem = styled.li`
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f5f5f5;
+  }
+`;
+
+const ItemLogo = styled.img`
+  width: 30px;
+  height: 30px;
+  margin-right: 15px;
+  object-fit: contain;
+`;
+
+const ItemDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const ItemTitle = styled.span`
+  font-size: 14px;
+  color: #333;
+  font-family: Nunito-Regular400;
+`;
+
+const ItemCategory = styled.span`
+  font-size: 12px;
+  color: #999;
+`;
+
 const SearchButton = styled.button`
   position: absolute;
   right: 5%;
