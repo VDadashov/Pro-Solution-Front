@@ -77,7 +77,6 @@ const SearchContainer = styled.div`
   align-items: center;
   justify-content: center;
   gap: 5px;
-  padding: ${({ $isMobile }) => ($isMobile ? "0 15px " : "")};
   margin-bottom: ${({ $isMobile }) => ($isMobile ? "20px" : "")};
   width: ${({ $isMobile }) => ($isMobile ? "230px" : "450px")};
   @media (max-width: 850px) {
