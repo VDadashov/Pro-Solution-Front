@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import { MAIN_URL } from '../constants/Endpoints';
 
 const getToken = () => {
-  return  Cookies.get("token");
+  return  Cookies.get("token") || sessionStorage.getItem("token") || null;
 };
 
 const axiosInstance = axios.create({

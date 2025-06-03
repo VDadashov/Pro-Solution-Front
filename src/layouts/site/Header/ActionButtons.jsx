@@ -1,7 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import { useMainContext } from "@Context/MainContext";
 
 const ActionButtons = ({ openRegister }) => {
+     const { contextData: { userShort, isLogin } } = useMainContext();
+
   return (
     <ButtonContainer>
       <StyledLinkContainer>
@@ -14,7 +17,19 @@ const ActionButtons = ({ openRegister }) => {
         </StyledLinkButton>
       </StyledLinkContainer>
       <StyledLoginContainer>
-        <StyledLoginButton onClick={openRegister}>Giriş</StyledLoginButton>
+       {
+        isLogin ? (
+          <StyledLoginButton>
+            {userShort?.name || "Profil"}
+          </StyledLoginButton>
+        ) : (
+          <StyledLoginButton
+            onClick={openRegister}
+          >
+            Giriş / Qeydiyyat
+          </StyledLoginButton>
+        )
+      }
       </StyledLoginContainer>
     </ButtonContainer>
   );
