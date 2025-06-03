@@ -82,6 +82,7 @@ function BlogDetail() {
       {data?.$values?.blogReviews?.map((item)=>(
         <Reviews  item={item} ></Reviews>
       ))}
+      
       <HorizontalLine width="100%" />
       <CommentForm blogId={id} />
     </BlogDetailWrapper>

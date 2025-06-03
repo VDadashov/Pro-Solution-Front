@@ -31,7 +31,7 @@ const Search = ({ $isMobile }) => {
   const handleSearch = () => {
     setSearchInput("");
     setShowDropdown(false);
-    const slugParam = selected === "All" ? "" : selected;
+    const slugParam = selected === "Hamısı" ? "" : selected;
     const query = `?slug=${slugParam}&search=${encodeURIComponent(
       searchInput
     )}`;
@@ -43,7 +43,7 @@ const Search = ({ $isMobile }) => {
       console.log(searchInput);
       const fetchSuggestions = async () => {
         setLoading(true); // Start loading
-        const slugParam = selected === "All" ? "" : selected;
+        const slugParam = selected === "Hamısı" ? "" : selected;
 
         try {
           const { data } = await axios.get(
