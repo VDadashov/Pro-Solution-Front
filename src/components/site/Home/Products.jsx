@@ -12,9 +12,8 @@ import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
 
-const ProductSection = ({ sectionHeader, display, order }) => {
-  const { data: products, isLoading } = useGet(`getAllFiltered${order}`, `${ENDPOINTS.getAllFiltered}?order=${order}&take=20&skip=1&isDeleted=${false}`);
-
+const ProductSection = ({ sectionHeader, display, order ,slug}) => {
+  const { data: products, isLoading } = useGet(`getAllFiltered${order}`, `${ENDPOINTS.getAllFiltered}?order=${order}&take=20&skip=1&isDeleted=${false}&slug=${slug}`);
   return (
     <SectionContainer>
       <LayoutContainer>
