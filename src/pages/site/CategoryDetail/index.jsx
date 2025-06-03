@@ -21,34 +21,127 @@ import ProductSection from "@components/site/Home/Products";
 import { WishlistContext } from "@Context/wishlistContext";
 import { FaHeart } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
-import { useGetOne } from "@utils/hooks/useCustomQuery";
+import { useGet } from "@utils/hooks/useCustomQuery";
+import { keyframes } from "styled-components";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+const pulse = keyframes`
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
+
+const LoadingSkeleton = styled(Skeleton)`
+  width: 100%;
+  animation: ${pulse} 1.5s infinite ease-in-out;
+`;
+
+const DetailSkeleton = ({ imageCount }) => (
+  <DetailWrapper>
+    <Wrapper>
+      <DetailHead>
+        <Nav>
+          <LoadingSkeleton width={100} height={20} />
+        </Nav>
+      </DetailHead>
+
+      <DetailBody>
+        <DetailCard>
+          <ThumbnailList>
+            {[...Array(imageCount)].map((_, i) => (
+              <LoadingSkeleton
+                key={i}
+                width={60}
+                height={60}
+                style={{ marginBottom: "10px" }}
+              />
+            ))}
+          </ThumbnailList>
+
+          <MainImageWrapper>
+            <LoadingSkeleton height={"100%"} width={"100%"} />
+          </MainImageWrapper>
+        </DetailCard>
+
+        <DetailInfo>
+          <div className="DetailInfoHead">
+            <LoadingSkeleton height="100%" width="80%" />
+            <hr />
+            <div className="price">
+              <LoadingSkeleton height={20} width={80} />
+            </div>
+
+            <DetailList>
+              {[...Array(10)].map((_, i) => (
+                <DetailItem key={i}>
+                  <LoadingSkeleton height={15} width={"40%"} />
+                </DetailItem>
+              ))}
+            </DetailList>
+            <DetailFoot>
+              <p>
+                <LoadingSkeleton height={15} width={"40%"} />
+              </p>
+              <Socials>
+                <LoadingSkeleton height={15} width={"100%"} />
+              </Socials>
+            </DetailFoot>
+          </div>
+        </DetailInfo>
+      </DetailBody>
+    </Wrapper>
+  </DetailWrapper>
+);
 
 const CategoryDetail = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
   const [liked, setLiked] = useState(false);
-  const { id } = useParams();
-  console.log(id)
-  const { data: product,error } = useGetOne("productsId", ENDPOINTS.productsId, id);
-  console.log(product?.featureOptionItems); 
-  console.log(error)
+  const [product, setProduct] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const { slug } = useParams();
   const { wishlist, addToWishlist } = useContext(WishlistContext);
+
+  const { category, subcategory } = useParams();
+console.log(product?.categories?.$values[0]?.slug, "product categories slug");
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(`${ENDPOINTS.productsSlug}/${slug}`);
+        const data = await res.json();
+        setProduct(data);
+      } catch (error) {
+        console.error("Product fetch error:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (slug) {
+      fetchProduct();
+    }
+  }, [slug]);
 
   useEffect(() => {
     if (product) {
-      const isLiked = wishlist.some(item => item.id === product.id);
+      const isLiked = wishlist.some((item) => item.id === product.id);
       setLiked(isLiked);
     }
   }, [wishlist, product]);
 
-  if (!product) {
-    return <div>Product not found</div>;
-  }
-
-  const mainImage = product?.images?.find((img) => img.isMain);
-const otherImages = product?.images?.filter((img) => !img.isMain);
-const images = mainImage ? [mainImage, ...otherImages] : [];
+  const imageValues = product?.images?.$values || [];
+  const mainImage = imageValues.find((img) => img.isMain);
+  const otherImages = imageValues.filter((img) => !img.isMain);
+  const images = mainImage ? [mainImage, ...otherImages] : imageValues;
 
   const nextImage = () => {
     setSelectedIndex((prev) => (prev + 1) % images.length);
@@ -57,18 +150,34 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
   const prevImage = () => {
     setSelectedIndex((prev) => (prev - 1 + images.length) % images.length);
   };
+  const { data } = useGet("settings", ENDPOINTS.settings);
 
-  return (
+  const getValue = (key) => {
+    return data?.$values?.find((item) => item.key === key)?.value || "";
+  };
+  console.log(product)
+  return isLoading ? (
+    <DetailSkeleton imageCount={product?.images?.$values?.length} />
+  ) : (
     <DetailWrapper>
       <Wrapper>
         <DetailHead>
           <Nav>
             <li>
-            <Link to="/">Əsas səhifə /</Link>
+              <Link to="/">Əsas səhifə</Link> /
             </li>
+
+            {/* {
+              product?.$values?.categories?.map((item) => (
+                <li key={item.slug}>
+                  <Link to=""> / {item.title}</Link>
+                </li>
+              ))
+            } */}
             <li>
-            <Link to="">Noutbuklar</Link>
+              <Link>{product?.categories?.$values[0]?.slug?.split("/")[0]} </Link>
             </li>
+
           </Nav>
           <SwitchProduct>
             <li>
@@ -83,24 +192,24 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
             </li>
           </SwitchProduct>
         </DetailHead>
+
         <DetailBody>
           <DetailCard>
             <ThumbnailList>
-              {images.map((img, i) => (
-    <Thumbnail
-     key={img.id || i}
-      src={img.imagePath}
-      active={i === selectedIndex}
-      onClick={() => setSelectedIndex(i)}
-    />
-  ))}
+              {images?.map((img, i) => (
+                <Thumbnail
+                  key={img.slug || i}
+                  src={img?.imagePath}
+                  active={i === selectedIndex}
+                  onClick={() => setSelectedIndex(i)}
+                />
+              ))}
             </ThumbnailList>
 
             <MainImageWrapper>
-            <ImgWrap>
-<MainImage  src={images[selectedIndex]?.imagePath}
-               />
-            </ImgWrap>
+              <ImgWrap>
+                <MainImage src={images[selectedIndex]?.imagePath} />
+              </ImgWrap>
               <HoverIcons>
                 <ArrowLeft onClick={prevImage}>
                   <FaChevronLeft />
@@ -109,19 +218,18 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
                   <FaChevronRight />
                 </ArrowRight>
                 <LikeIcon
-  onClick={() => {
-    addToWishlist(product);
-    if (!liked) {
-      toast.success("Product added to wishlist!");
-    } else {
-      toast.error("Product removed from wishlist.");
-    }
-    setLiked(!liked);
-  }}
->
-  <CiHeart />
-</LikeIcon>
-
+                  onClick={() => {
+                    addToWishlist(product);
+                    if (!liked) {
+                      toast.success("Product added to wishlist!");
+                    } else {
+                      toast.error("Product removed from wishlist.");
+                    }
+                    setLiked(!liked);
+                  }}
+                >
+                  <CiHeart />
+                </LikeIcon>
               </HoverIcons>
               <ZoomIcon onClick={() => setIsModalOpen(true)}>
                 <MdOutlineZoomOutMap />
@@ -160,9 +268,10 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
                     transition: "transform 0.3s ease",
                     cursor: isZoomed ? "zoom-out" : "zoom-in",
                   }}
-                  onClick={(e) =>{e.stopPropagation();
-                    setIsZoomed(!isZoomed)
-                  } }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsZoomed(!isZoomed);
+                  }}
                 />
                 <ModalBtn onClick={(e) => e.stopPropagation()}>
                   <CloseBtn
@@ -182,82 +291,105 @@ const images = mainImage ? [mainImage, ...otherImages] : [];
           </DetailCard>
           <DetailInfo>
             <div className="DetailInfoHead">
-              <h2> {product?.description}</h2>
+              <h2> {product?.title}</h2>
               <hr />
               <div className="price">
-                <p className="old">{product?.price} ₼</p>
-                <p className="new">{product.discountPrice} ₼</p>
+                {product?.discountPrice > 0 ? (
+                  <>
+                    <p className="old">{product?.price} ₼</p>
+                    <p className="new">{product.discountPrice} ₼</p>
+                  </>
+                ) : (
+                  <p className="new">{product?.price} ₼</p>
+                )}
               </div>
-<DetailList>
-{
-product?.featureOptionItems?.map((item)=>(
-  <DetailItem key={item.id || item.name}>
-    <p>{item.parent?.featureOption?.name} :</p>
-    <span>{item?.name}</span>
-    <span>{item?.parent?.name}</span>
-  </DetailItem>
-))
-}
+              <DetailList>
+                {product?.featureOptionItems?.$values?.map((item) => (
+                  <DetailItem key={item.id || item.name}>
+                    <p>{item.featureOption?.name} :</p>
+                    <span>{item?.name}</span>
+                    <span>{item?.parent?.name}</span>
+                  </DetailItem>
+                ))}
+                <WishContainer
+                  onClick={() => {
+                    setLiked(true);
+                    addToWishlist(product);
+                  }}
+                >
+                  <WishIcon>
+                    {liked ? (
+                      <FaHeart style={{ color: "black" }} />
+                    ) : (
+                      <FaRegHeart />
+                    )}
+                  </WishIcon>
 
-  <WishContainer onClick={() => {
-    setLiked(true);
-    addToWishlist(product);
-  }}>
-    <WishIcon>
-      {liked ? <FaHeart style={{ color: "black" }} /> : <FaRegHeart />}
-    </WishIcon>
-
-    <WishText>
-      {liked ? (
-        <>
-          <Gray>Product added</Gray>
-          <BrowseLink to="/wishlist" onClick={(e) => e.stopPropagation()}>
-            Browse wishlist
-          </BrowseLink>
-        </>
-      ) : (
-        <Blue>Add to wishlist</Blue>
-      )}
-    </WishText>
-  </WishContainer>
-</DetailList>
+                  <WishText>
+                    {liked ? (
+                      <>
+                        <Gray>Product added</Gray>
+                        <BrowseLink
+                          to="/wishlist"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Browse wishlist
+                        </BrowseLink>
+                      </>
+                    ) : (
+                      <Blue>Add to wishlist</Blue>
+                    )}
+                  </WishText>
+                </WishContainer>
+              </DetailList>
               <DetailFoot>
                 <p>
-                  Kateqoriya: <span>Acer,Noutbuklar </span>
+                  Kateqoriya:{" "}
+                  {product?.$values?.categories?.map((item) => (
+                    <span>{item.title} </span>
+                  ))}
+                  {/* <span>Acer,Noutbuklar </span> */}
                 </p>
-                <Socials>
-                  <li className="facebook" data-tooltip="Share on Facebook">
-                    <Link>
-                      <FaFacebookF />
-                    </Link>
-                  </li>
-                  <li className="twitter" data-tooltip="Share on Twitter">
-                    <Link>
-                      <FaXTwitter />
-                    </Link>
-                  </li>
-                  <li className="email" data-tooltip="Send via Email">
-                    <Link>
-                      <TfiEmail />
-                    </Link>
-                  </li>
-                  <li className="pinterest" data-tooltip="Pin it on Pinterest">
-                    <Link>
-                      <FaPinterest />
-                    </Link>
-                  </li>
-                  <li className="linkedin" data-tooltip="Share on LinkedIn">
-                    <Link>
-                      <FaLinkedin />
-                    </Link>
-                  </li>
-                </Socials>
+              <Socials>
+  <li className="facebook" data-tooltip="Share on Facebook">
+    <Link to={getValue("FacebookLink") || "#"} target="_blank">
+      <FaFacebookF />
+    </Link>
+  </li>
+
+  <li className="twitter" data-tooltip="Share on Twitter">
+    {/* Twitter üçün ayrıca link `settings` içində yoxdur, varsa əlavə et */}
+    <Link to="#" target="_blank">
+      <FaXTwitter />
+    </Link>
+  </li>
+
+  <li className="email" data-tooltip="Send via Email">
+    <Link to={`mailto:${getValue("SupportEmail") || "support@example.com"}`} target="_blank">
+      <TfiEmail />
+    </Link>
+  </li>
+
+  <li className="pinterest" data-tooltip="Pin it on Pinterest">
+    {/* Pinterest linki də settings-də yoxdur, əlavə etmək olar */}
+    <Link to="#" target="_blank">
+      <FaPinterest />
+    </Link>
+  </li>
+
+  <li className="linkedin" data-tooltip="Share on LinkedIn">
+    <Link to={getValue("LinkedInLink") || "#"} target="_blank">
+      <FaLinkedin />
+    </Link>
+  </li>
+</Socials>
+
               </DetailFoot>
             </div>
           </DetailInfo>
         </DetailBody>
       </Wrapper>
-      <ProductDetailTabs />
+      <ProductDetailTabs product={product} />
     </DetailWrapper>
   );
 };
@@ -310,6 +442,10 @@ const SwitchProduct = styled.ul`
       padding: 6px;
       border: 2px solid #c0c0c0;
       border-radius: 50%;
+      &:hover {
+        background-color: teal;
+        color: white;
+      }
     }
   }
 `;
@@ -318,16 +454,15 @@ const DetailBody = styled.div`
   justify-content: center;
   gap: 3rem;
   margin: 0 auto;
-  max-width:80%;
+  max-width: 80%;
   @media (max-width: 851px) {
     flex-direction: column;
     margin-top: 2rem;
     gap: 30px;
   }
- 
 `;
 const DetailCard = styled.div`
-width: 45%;
+  width: 45%;
   display: flex;
   gap: 30px;
   position: relative;
@@ -337,7 +472,7 @@ width: 45%;
   }
 `;
 const DetailInfo = styled.div`
-  width: 32%;
+  width: 35%;
   @media (max-width: 851px) {
     width: 100%;
     padding-left: 1rem;
@@ -390,7 +525,7 @@ const DetailItem = styled.li`
   line-height: 1.3;
   border-bottom: 1px solid #ececec;
   text-align: left;
-  p{
+  p {
     font-weight: bolder;
     font-size: 16px;
     color: #777777;
@@ -510,8 +645,8 @@ const WishIcon = styled.i`
 const WishText = styled.span`
   font-size: 16px;
   color: #149295;
-  &:hover{
-    color:black;
+  &:hover {
+    color: black;
   }
 `;
 
@@ -523,15 +658,15 @@ const ThumbnailList = styled.div`
   overflow-y: auto;
   padding-right: 7px;
   &::-webkit-scrollbar {
-    width: 2px; 
+    width: 2px;
   }
 
   &::-webkit-scrollbar-track {
-    background:rgba(240, 240, 240, 0.8); 
+    background: rgba(240, 240, 240, 0.8);
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color:rgba(204, 204, 204, 0.83);
+    background-color: rgba(204, 204, 204, 0.83);
     border-radius: 3px;
   }
 
@@ -541,7 +676,7 @@ const ThumbnailList = styled.div`
     overflow-x: auto;
 
     &::-webkit-scrollbar {
-      height: 6px; 
+      height: 6px;
     }
   }
 `;
@@ -549,7 +684,7 @@ const ThumbnailList = styled.div`
 const Thumbnail = styled.img`
   width: 100px;
   height: 100px;
-  object-fit: cover;
+  object-fit: contain;
   border: 1px solid ${({ active }) => (active ? " #666666" : "none")};
   cursor: pointer;
   @media (max-width: 851px) {
@@ -558,7 +693,7 @@ const Thumbnail = styled.img`
   }
 `;
 const MainImageWrapper = styled.div`
-   position: relative;
+  position: relative;
   width: 450px;
   height: 440px;
   display: flex;
@@ -576,7 +711,7 @@ const MainImageWrapper = styled.div`
 `;
 const ZoomIcon = styled.div`
   position: absolute;
-  bottom: 30px;
+  bottom: 0;
   left: 10px;
   pointer-events: all;
   display: flex;
@@ -593,26 +728,20 @@ const ZoomIcon = styled.div`
     color: white;
     border: none;
   }
-  @media(max-width:565px){
+  @media (max-width: 565px) {
     bottom: 0;
   }
 `;
-const ImgWrap=styled.div`
-width: 100%;
-height: 100%;
-display: flex;
-justify-content: center;
-align-items: center;
-
-`
-const MainImage = styled.img`
+const ImgWrap = styled.div`
   width: 100%;
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const MainImage = styled.img`
   object-fit: contain;
   border-radius: 6px;
-  @media (max-width: 1420px) {
-   object-fit: cover;
-  }
 `;
 const HoverIcons = styled.div`
   position: absolute;
@@ -666,27 +795,26 @@ const LikeIcon = styled.div`
   }
   @media (max-width: 951px) {
     right: 60px;
-
   }
-  @media(max-width:565px){
+  @media (max-width: 565px) {
     right: 10px;
     font-size: 20px;
   }
 `;
 
 const BrowseLink = styled(Link)`
-text-decoration: none;
-color:  #149295;
-&:hover{
-  color: black;
-}
-`
+  text-decoration: none;
+  color: #149295;
+  &:hover {
+    color: black;
+  }
+`;
 const Gray = styled.p`
-color: gray;
-`
+  color: gray;
+`;
 const Blue = styled.span`
-color:  #149295;
-`
+  color: #149295;
+`;
 const Modal = styled.div`
   position: fixed;
   inset: 0;
@@ -740,4 +868,3 @@ const ModalImage = styled.img`
   max-width: 90%;
   max-height: 90%;
 `;
-

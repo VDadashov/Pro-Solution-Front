@@ -15,18 +15,16 @@ const StyledHeader = styled.header`
   background-color: #fff;
   display: flex;
   flex-direction: column;
-  position: ${(props) => (props.isScrolled ? "fixed" : "relative")};
-  top: ${({ isScrolled }) => (isScrolled ? "140px" : "0")};
-  transform: ${({ isScrolled }) =>
-    isScrolled ? "translateY(-140px)" : "translateY(0)"};
+  position: ${(props) => (props.$isscrolled ? "fixed" : "relative")};
+  top: ${({ $isscrolled }) => ($isscrolled ? "140px" : "0")};
+  transform: ${({ $isscrolled }) =>
+    $isscrolled ? "translateY(-140px)" : "translateY(0)"};
   z-index: 2;
   width: 100%;
-  transition: ${({ isScrolled }) => (isScrolled ? "0.5s" : "0")};
-  /* @media (max-width: 850px) {
-    border: 1px solid rgba(0, 0, 0, 0.09);
-  } */
+  transition: top 0.5s ease, transform 0.5s ease;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 `;
+
 
 const StyledTopHeader = styled.div`
   display: flex;
@@ -54,11 +52,13 @@ const SideBarOpener = styled.a`
   }
 `;
 
-const BarIcon = styled(FaBars)``;
+const BarIcon = styled(FaBars)`
+ font-size: 24px;
+`;
 
 const Header = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isscrolled, setIsScrolled] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   const openRegister = () => {
@@ -97,7 +97,7 @@ const Header = () => {
   return (
     <>
       <LoginRegister $showModal={showModal} closeRegister={closeRegister} />
-      <StyledHeader isScrolled={isScrolled}>
+      <StyledHeader $isscrolled={isscrolled}>
         <MobileNavbar $isOpenModal={isOpenModal} closeModal={closeModal} />
         <LayoutContainer>
           <StyledTopHeader>

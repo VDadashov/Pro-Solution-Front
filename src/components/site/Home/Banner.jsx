@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
   Navigation,
@@ -10,46 +10,97 @@ import {
   Autoplay,
 } from "swiper/modules";
 
-// Swiper Css Imports
+
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
+import { ENDPOINTS } from "@utils/constants/Endpoints";
+import { useGet } from "@utils/hooks/useCustomQuery";
+import Skeleton from "react-loading-skeleton";
+const pulse = keyframes`
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  `;
 
-const Banner = () => {
+const LoadingSkeleton = styled(Skeleton)`
+  animation: ${pulse} 1.5s infinite ease-in-out;
+`;
+
+const BannerSkeleton = () => {
   return (
     <BannerSection>
       <LayoutContainer>
         <BannerContainer>
           <SwiperContainer>
             <Swiper
-              navigation={true}
-              pagination={{ clickable: true }}
-              loop={true}
-              spaceBetween={0}
-              slidesPerView={1}
-              modules={[FreeMode, Navigation, Autoplay, Pagination]}
-              autoplay={{ delay: 2000, disableOnInteraction: false }}
-            >
-              <SwiperSlide>
-                <StyledImage src={"./images/maxresdefault.webp"} />
-              </SwiperSlide>
-              <SwiperSlide>
-                <StyledImage src={"./images/maxresdefault-jpg2.webp"} />
-              </SwiperSlide>
-              <SwiperSlide>
-                <StyledImage
-                  src={"./images/fcbae5e02653dba533d39dfd3b891a28.webp"}
-                />
-              </SwiperSlide>
-            </Swiper>
+                navigation={true}
+                pagination={{ clickable: true }}
+                loop={true}
+                spaceBetween={0}
+                slidesPerView={1}
+                modules={[FreeMode, Navigation, Autoplay, Pagination]}
+                autoplay={{ delay: 2000, disableOnInteraction: false }}
+              >
+                {
+                  Array.from({length:1}).map((_,index)=>(
+  <SwiperSlide key={index}>
+                    <LoadingSkeleton width={"100%"} height={"100%"}/>
+                  </SwiperSlide>
+                  ))
+                }
+                
+             
+              </Swiper>
           </SwiperContainer>
         </BannerContainer>
       </LayoutContainer>
     </BannerSection>
   );
 };
+
+
+const Banner = () => {
+  const { data: sliders,isLoading } = useGet("sliders", ENDPOINTS.sliders);
+  return (
+    <BannerSection>
+      <LayoutContainer>
+        <BannerContainer>
+      <SwiperContainer>
+            {isLoading || !sliders?.$values?.length ? (
+              <BannerSkeleton />
+            ) : (
+              <Swiper
+                navigation={true}
+                pagination={{ clickable: true }}
+                loop={true}
+                spaceBetween={0}
+                slidesPerView={1}
+                modules={[FreeMode, Navigation, Autoplay, Pagination]}
+                autoplay={{ delay: 2000, disableOnInteraction: false }}
+              >
+                {sliders.$values.map((item) => (
+                  <SwiperSlide key={item.id}>
+                    <StyledImage src={item.imagePath} />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            )}
+          </SwiperContainer>
+        </BannerContainer>
+      </LayoutContainer>
+    </BannerSection>
+  );
+};
+
 
 const BannerSection = styled.section`
   padding: 20px 0px;
@@ -66,6 +117,10 @@ const BannerContainer = styled.div`
 
 const SwiperContainer = styled.div`
   max-width: 75%;
+    @media(max-width:850px){
+max-width: 100%;
+
+  }
   .swiper-pagination-bullet {
     background-color: transparent;
     border: 1px solid #ffffff;
@@ -84,6 +139,7 @@ const SwiperContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: all 0.3s ease;
   }
 
   .swiper-button-next::after,
@@ -96,18 +152,31 @@ const SwiperContainer = styled.div`
   .swiper-button-prev:hover {
     background-color: rgba(0, 0, 0, 0.5);
   }
-
-  @media (max-width: 850px) {
+    @media (max-width: 850px) {
     .swiper-button-next,
     .swiper-button-prev {
-      font-size: 1.5rem;
-      width: 40px;
-      height: 40px;
+      font-size: 1.2rem;
+      width: 35px;
+      height: 35px;
     }
 
     .swiper-button-next::after,
     .swiper-button-prev::after {
-      font-size: 1.5rem;
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .swiper-button-next,
+    .swiper-button-prev {
+      font-size: 1rem;
+      width: 20px;
+      height: 28px;
+    }
+
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+      font-size: 0.8rem;
     }
   }
 `;

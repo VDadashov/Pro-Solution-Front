@@ -6,7 +6,7 @@ import { usePost } from "@utils/hooks/useCustomMutation";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { Bounce, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-function CommentForm() {
+function CommentForm({blogId}) {
   const { mutate: commentMutation } = usePost(
     "blogsReviews",
     ENDPOINTS.blogsReviews
@@ -18,19 +18,18 @@ function CommentForm() {
     email: Yup.string()
       .email("Düzgün email daxil edin")
       .required("Email boş buraxıla bilməz"),
-    comment: Yup.string()
+    text: Yup.string()
       .required("Şərh boş buraxıla bilməz")
       .max(maxChars, `${maxChars} simvoldan artıq olmamalıdır`),
   });
 
   const formik = useFormik({
     initialValues: {
-      comment: "",
+      text: "",
       name: "",
       email: "",
-      saveInfo: false,
-      followUp: false,
-      newPosts: false,
+      blogId: blogId,
+ 
     },
     validationSchema: validationSchema,
     onSubmit: (values, actions) => {
@@ -75,23 +74,23 @@ function CommentForm() {
         işarələnmişdir
       </p>
 
-      <label htmlFor="comment">Şərh *</label>
+      <label htmlFor="text">Şərh *</label>
       <TextareaWrapper>
         <CharCounter>
-          {formik.values.comment.length}/{maxChars}
+          {formik.values.text.length}/{maxChars}
         </CharCounter>
         <textarea
-          id="comment"
-          name="comment"
-          value={formik.values.comment}
+          id="text"
+          name="text"
+          value={formik.values.text}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           rows="5"
           maxLength={maxChars}
         />
-        {formik.touched.comment && formik.errors.comment && (
+        {formik.touched.text && formik.errors.text && (
           <div style={{ color: "red", fontSize: "13px" }}>
-            {formik.errors.comment}
+            {formik.errors.text}
           </div>
         )}
       </TextareaWrapper>
@@ -133,7 +132,7 @@ function CommentForm() {
         </div>
       </FormInputs>
 
-      <CheckboxGroup>
+      {/* <CheckboxGroup>
         <label>
           <input
             type="checkbox"
@@ -162,11 +161,11 @@ function CommentForm() {
           />{" "}
           Notify me of new posts by email.
         </label>
-      </CheckboxGroup>
+      </CheckboxGroup> */}
 
       <SubmitButton
         type="submit"
-        disabled={formik.values.comment.length === 0 || formik.isSubmitting}
+        disabled={formik.values.text.length === 0 || formik.isSubmitting}
       >
         ŞƏRH GÖNDƏR
       </SubmitButton>
@@ -245,24 +244,25 @@ const FormInputs = styled.div`
   }
 `;
 
-const CheckboxGroup = styled.div`
-  margin-top: 20px;
-  label {
-    display: block;
-    font-size: 14px;
-    margin-bottom: 8px;
-  }
+// const CheckboxGroup = styled.div`
+//   margin-top: 20px;
+//   label {
+//     display: block;
+//     font-size: 14px;
+//     margin-bottom: 8px;
+//   }
 
-  input {
-    margin-right: 8px;
-  }
-`;
+//   input {
+//     margin-right: 8px;
+//   }
+// `;
+
 
 const SubmitButton = styled.button`
   background-color: #009688;
   color: white;
   padding: 10px 20px;
-  margin-top: 20px;
+  margin-top: 40px;
   border: none;
   font-weight: bold;
   font-size: 15px;

@@ -1,159 +1,93 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import moment from "moment"
-// const staticBlogs = [
-//   {
-//     date: "22",
-//     month: "iyl",
-//     title: "Ram-nədir?",
-//     excerpt: "Ram-nədir?[...]",
-//     to: "/blog/ram-nedir",
-//     img: "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2024/07/444444444444444.jpg?w=1080&ssl=1",
-//   },
-//   {
-//     date: "13",
-//     month: "iyn",
-//     title: "CPU-nədir?",
-//     excerpt: "CPU-nədir?[...]",
-//     to: "/blog/ram-nedir",
-//     img: "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2024/06/2222222222222222222222222222222222222.jpg?w=1080&ssl=1",
-//   },
-//   {
-//     date: "13",
-//     month: "iyn",
-//     title: "CPU-nədir?",
-//     excerpt: "CPU-nədir?[...]",
-//     to: "/blog/ram-nedir",
-//     img: "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2024/06/2222222222222222222222222222222222222.jpg?w=1080&ssl=1",
-//   },
-//   {
-//     date: "13",
-//     month: "iyn",
-//     title: "CPU-nədir?",
-//     excerpt: "CPU-nədir?[...]",
-//     to: "/blog/ram-nedir",
-//     img: "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2024/06/2222222222222222222222222222222222222.jpg?w=1080&ssl=1",
-//   },
-//   {
-//     date: "13",
-//     month: "iyn",
-//     title: "CPU-nədir?",
-//     excerpt: "CPU-nədir?[...]",
-//     to: "/blog/ram-nedir",
-//     img: "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2024/06/2222222222222222222222222222222222222.jpg?w=1080&ssl=1",
-//   },
-//   {
-//     date: "13",
-//     month: "iyn",
-//     title: "CPU-nədir?",
-//     excerpt: "CPU-nədir?[...]",
-//     to: "/blog/ram-nedir",
-//     img: "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2024/06/2222222222222222222222222222222222222.jpg?w=1080&ssl=1",
-//   },
-//   {
-//     date: "13",
-//     month: "iyn",
-//     title: "CPU-nədir?",
-//     excerpt: "CPU-nədir?[...]",
-//     to: "/blog/ram-nedir",
-//     img: "https://i0.wp.com/prosolution.ltd/wp-content/uploads/2024/06/2222222222222222222222222222222222222.jpg?w=1080&ssl=1",
-//   },
-// ];
+import styled, { keyframes } from "styled-components";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
-// const BlogListSkeleton= ()=>{
-//   return (
+const pulse = keyframes`
+     0% {
+       opacity: 1;
+     }
+     50% {
+       opacity: 0.5;
+     }
+     100% {
+       opacity: 1;
+     }
+   `;
 
-//     <div>
-//       <BlogCardsContainer>
-//         {blogs?.map((blog, index) => (
-//           <BlogCard key={index}>
-//             <BlogDetail>
-//               <BlogDate>
-//                 <h3>{blogs.date}</h3>
-//                 <p>{blogs.month}</p>
-//               </BlogDate>
-//               <BlogImg>
-//                 <img src={blogs.img} alt={blogs.title} />
-//               </BlogImg>
-//             </BlogDetail>
-//             <BlogContent>
-//               <Question to={blogs.to}>{blogs.title}</Question>
-//               <hr />
-//               <p>{blogs.excerpt}</p>
-//             </BlogContent>
-//           </BlogCard>
-//         ))}
-//         {totalPages > 1 && (
-//           <PaginationWrapper>
-//             <PageButton
-//               onClick={() => paginate(currentPage - 1)}
-//               disabled={currentPage === 1}
-//               hidden={currentPage === 1}
-//             >
-//               &laquo;
-//             </PageButton>
+  const LoadingSkeleton = styled(Skeleton)`
+    animation: ${pulse} 1.5s infinite ease-in-out;
+  `;
 
-//             {[...Array(totalPages)].map((_, index) => (
-//               <PageButton
-//                 key={index}
-//                 onClick={() => paginate(index + 1)}
-//                 active={currentPage === index + 1}
-//               >
-//                 {index + 1}
-//               </PageButton>
-//             ))}
-
-//             <PageButton
-//               onClick={() => paginate(currentPage + 1)}
-//               disabled={currentPage === totalPages}
-//               hidden={currentPage === totalPages}
-//             >
-//               &raquo;
-//             </PageButton>
-//           </PaginationWrapper>
-//         )}
-//       </BlogCardsContainer>
-
-//     </div>
-//   )
-// }
+  const BlogSkeleton= ({index})=>{
+    return (
+      <BlogCardsContainer key={`skeleton-${index}`}>
+        <BlogCard>
+          <BlogDetail>
+            <div>
+              <LoadingSkeleton width={"40px"} height={"40px"} />
+            </div>
+            <BlogImg>
+              <LoadingSkeleton width={"220px"} height={"150px"} />
+            </BlogImg>
+          </BlogDetail>
+          <BlogContent>
+            <Question>
+              <LoadingSkeleton width={"90px"} height={20} />
+            </Question>
+            <hr />
+            <LoadingSkeleton width={"90px"} height={20} />
+          </BlogContent>
+        </BlogCard>
+      </BlogCardsContainer>
+    );
+  }
 
 const BlogList = () => {
-  const { data: blogs } = useGet("blogs", ENDPOINTS.blogs);
+  const { data: blogs, isLoading } = useGet("blogs", ENDPOINTS.blogs);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 3;
 
   const totalPages = Math.ceil(blogs?.length / postsPerPage);
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = blogs?.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPosts = blogs?.$values?.slice(indexOfFirstPost, indexOfLastPost);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div>
+    <>
       <BlogCardsContainer>
-        {currentPosts?.map((blog, index) => (
-          <BlogCard key={index}>
-            <BlogDetail>
-              <BlogDate>
-                <h3>{moment(blog?.createdAt).format("MM")}</h3>
-                <p>{moment(blog?.createdAt).format("MMMM")}</p>
-              </BlogDate>
-              <BlogImg>
-                <img src={blog.imageUrl} alt={blog.title} />
-              </BlogImg>
-            </BlogDetail>
-            <BlogContent>
-              <Question to={blog.id}>{blog.title}</Question>
-              <hr />
-              <p>{blog.title}</p>
-            </BlogContent>
-          </BlogCard>
-        ))}
+        {isLoading ? (
+          <>
+            {Array.from({ length: 3 }).map((_, index) => (
+              <BlogSkeleton key={index}/>
+            ))}
+          </>
+        ) : (
+          currentPosts?.map((blog, index) => (
+            <BlogCard key={index}>
+              <BlogDetail>
+                <BlogDate>
+                  <h3>{moment(blog?.createdAt).format("MM")}</h3>
+                  <p>{moment(blog?.createdAt).format("MMMM")}</p>
+                </BlogDate>
+                <BlogImg>
+                  <img src={blog.imageUrl} alt={blog.title} loading="lazy" />
+                </BlogImg>
+              </BlogDetail>
+              <BlogContent>
+                <Question to={blog.id}>{blog.title}</Question>
+                <hr />
+                <p>{blog.title}</p>
+              </BlogContent>
+            </BlogCard>
+          ))
+        )}
         {totalPages > 1 && (
           <PaginationWrapper>
             <PageButton
@@ -184,7 +118,7 @@ const BlogList = () => {
           </PaginationWrapper>
         )}
       </BlogCardsContainer>
-    </div>
+    </>
   );
 };
 
@@ -195,8 +129,17 @@ const BlogCardsContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 130vh;
-  padding: 30px 0 30px 0;
+  min-height: 30vh;
+  gap:50px;
+  // background-color:green;
+
+    @media (max-width:850px){
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:100px;
+
+  }
 `;
 
 const BlogContent = styled.div`
@@ -205,7 +148,8 @@ const BlogContent = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-
+// background-color:green;
+width:200px;
   hr {
     width: 30px;
     border-top: 3px solid lightgray;
@@ -221,8 +165,12 @@ const BlogDetail = styled.div`
   justify-content: center;
   align-items: flex-start;
   position: relative;
-  gap:10px;
-  // background-color:green;
+  gap: 10px;
+  // background-color: green;
+  @media (max-width: 600px) {
+    width: 100%;
+  }
+    
 `;
 const BlogDate = styled(Link)`
   display: flex;
@@ -235,15 +183,16 @@ const BlogDate = styled(Link)`
   background-color: transparent;
   color: #149295;
   transition: all 0.3s ease;
-  // position: absolute;
+  position: absolute;
+  top: 5px;
+  left: -30px;
 
-  // top: 20px;
-  // left: -10px;
   @media (max-width: 600px) {
     width: 40px;
     height: 40px;
-    top: 50px;
+    top: 0px;
     font-size: 13px;
+    left: 0px;
   }
   /* @media (max-width: 400px) {
     width: 20px;
@@ -251,20 +200,26 @@ const BlogDate = styled(Link)`
     top: 0px;
     font-size: 6px;
   } */
+  @media (max-width: 550px) {
+  }
+  // @media (max-width: 1240px) {
+  //   position: absolute;
+  //   left: 2000px px;
+  // }
 `;
 
 const BlogImg = styled.div`
-  height: 150px;
+  // height: 200px;
   width: 80%;
-  overflow: hidden;
   display: flex;
   justify-content: space-between;
   align-items: center;
-
+  // background-color: blue;
   img {
-    height: 350px;
+    width: 100%;
+    height: 100%;
     cursor: pointer;
-    object-fit: contain;
+    object-fit: cover;
   }
 `;
 
@@ -275,7 +230,8 @@ const BlogCard = styled.div`
   align-items: center;
   padding-left: 50px;
   padding-right: 50px;
-  // background-color:red;
+  position:relative;
+  // background-color:yellow; 
 
   &:hover ${BlogDate} {
     background-color: #149295;
@@ -285,9 +241,13 @@ const BlogCard = styled.div`
     flex-direction: column;
     padding: 0;
     width: 100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
   }
   @media (max-width: 650px) {
-    // gap: 10px;
+    gap: 10px;
     width: 100%;
   }
 `;

@@ -1,16 +1,21 @@
-import React, {useState } from "react";
+import React, {useEffect, useState } from "react";
 import styled from "styled-components";
 
-const PriceFilter = ({ onChange, onSubmit }) => {
-  const min = 0;
-  const max = 5500;
-  const initialMin = 400;
-  const initialMax = 4200;
+const PriceFilter = ({ onChange, onSubmit, minPrice, maxPrice, rangeMin, rangeMax }) => {
+  const min = rangeMin ?? 0;
+  const max = rangeMax ?? 10000;
+  const [minValue, setMinValue] = useState(minPrice ?? min);
+  const [maxValue, setMaxValue] = useState(maxPrice ?? max);
 
-  const [minValue, setMinValue] = useState(initialMin);
-  const [maxValue, setMaxValue] = useState(initialMax);
+  useEffect(() => {
+    setMinValue(minPrice ?? min);
+    setMaxValue(maxPrice ?? max);
+  }, [minPrice, maxPrice, min, max]);
 
-  const getLeft = (value) => `${((value - min) / (max - min)) * 100}%`;
+  const getLeft = (value) => {
+    if (max === min) return "0%";
+    return `${((value - min) / (max - min)) * 100}%`;
+  };
 
   const handleMinChange = (value) => {
     const newValue = Math.min(Number(value), maxValue - 100);
@@ -26,6 +31,7 @@ const PriceFilter = ({ onChange, onSubmit }) => {
     onChange({ min: minValue, max: maxValue });
     onSubmit();
   };
+
 
   return (
     <Wrapper>
