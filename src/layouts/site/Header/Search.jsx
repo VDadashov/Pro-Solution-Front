@@ -27,36 +27,32 @@ const Search = ({ $isMobile }) => {
   const [selectWidth, setSelectWidth] = useState(0);
   const [suggestions, setSuggestions] = useState([]);
   const textMeasureRef = useRef(null);
+  const searchRef = useRef(null); 
   const navigate = useNavigate();
+
   const handleSearch = () => {
     setSearchInput("");
     setShowDropdown(false);
     const slugParam = selected === "Hamısı" ? "" : selected;
-    const query = `?slug=${slugParam}&search=${encodeURIComponent(
-      searchInput
-    )}`;
+    const query = `?slug=${slugParam}&search=${encodeURIComponent(searchInput)}`;
     navigate(`/product-category/${slugParam}${query}`);
   };
 
   useEffect(() => {
     if (searchInput.length > 0) {
-      console.log(searchInput);
       const fetchSuggestions = async () => {
         setLoading(true); 
         const slugParam = selected === "Hamısı" ? "" : selected;
 
         try {
           const { data } = await axios.get(
-            `${
-              ENDPOINTS.getAllFiltered
-            }?slug=${slugParam}&order=${4}&search=${searchInput}&take=${100}&skip=${1}&isDeleted=false&isDiscount=false`
+            `${ENDPOINTS.getAllFiltered}?slug=${slugParam}&order=4&search=${searchInput}&take=100&skip=1&isDeleted=false&isDiscount=false`
           );
           setSuggestions(data);
-          // console.log(data);
         } catch (error) {
           console.log(error);
         } finally {
-          setLoading(false); // Stop loading
+          setLoading(false);
         }
       };
 
@@ -88,7 +84,21 @@ const Search = ({ $isMobile }) => {
         {text.slice(index + query.length)}
       </>
     );
-  };  
+  };
+
+ 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <SearchContainer $isMobile={$isMobile}>
@@ -111,7 +121,9 @@ const Search = ({ $isMobile }) => {
         </SearchCategories>
         <ArrowIcon />
       </SelectWrapper>
-      <SearchBar $isMobile={$isMobile} selectWidth={selectWidth}>
+
+    
+      <SearchBar ref={searchRef} $isMobile={$isMobile} selectWidth={selectWidth}>
         <SearchInput
           type="text"
           placeholder="Axtar..."
@@ -161,6 +173,7 @@ const Search = ({ $isMobile }) => {
     </SearchContainer>
   );
 };
+
 const SkeletonItem = styled.div`
   display: flex;
   align-items: center;
