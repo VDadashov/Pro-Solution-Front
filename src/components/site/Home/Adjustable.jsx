@@ -83,7 +83,15 @@ const AdjustableSectionSkeleton = () => {
 
 const AdjustableSection = ({ headerName }) => {
   const { data: brand, isLoading } = useGet("brand", ENDPOINTS.brand);
-  console.log(brand?.$values);
+  const [brands, setBrands] = React.useState([]);
+  console.log(brands);
+  
+
+  
+  React.useEffect(() => {
+    setBrands(brand?.$values || []);
+    
+  }, [brand]);
 
   return (
     <AdjustableContainer>
@@ -122,10 +130,12 @@ const AdjustableSection = ({ headerName }) => {
                   },
                 }}
               >
-                {brand?.$values?.map((item) => (
+                {brands.map((item) => (
                   <SwiperSlide>
                     <Link
-                      to={`/product-category/${item?.slug}?slug=${item?.slug}`}
+                      to={`/product-category/${item?.slug
+                        .split("/")
+                        .pop()}?slug=${item?.slug}`}
                     >
                       <ImageContainer key={item.id}>
                         <StyledImage src={item.imagePath} />
