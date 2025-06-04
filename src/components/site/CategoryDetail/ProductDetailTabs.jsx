@@ -7,17 +7,14 @@ import ProductSection from '../Home/Products';
 import { ENDPOINTS } from '@utils/constants/Endpoints';
 import { usePost } from '@utils/hooks/useCustomMutation';
 import { Bounce, toast } from 'react-toastify';
-
 const ProductDetailTabs = ({ product }) => {
   const [activeTab, setActiveTab] = useState('info');
   const [rating, setRating] = useState(0);
-  const [reviews, setReviews] = useState([]); 
-
+  const [reviews, setReviews] = useState(product?.productReviews?.$values||[]); 
   const { mutate: productReviewMutation } = usePost("productsCreateReview", ENDPOINTS.productsCreateReview);
 
   useEffect(() => {
     const stored = localStorage.getItem("userReviewInfo");
-   
   if (stored) {
     try {
       const parsed = JSON.parse(stored);
@@ -55,7 +52,6 @@ const ProductDetailTabs = ({ product }) => {
     rating: Yup.number(),
     productId: Yup.string()
   });
-
   const formik = useFormik({
     initialValues: {
       text: '',
@@ -96,19 +92,9 @@ const ProductDetailTabs = ({ product }) => {
             transition: Bounce,
           });
 
-          const newReview = {
-            id: Date.now(),
-            name: formData.name,
-            text: formData.text,
-            rating: rating
-          };
-        setReviews(prev => {
-  const updatedReviews = [newReview, ...prev];
-  localStorage.setItem('userReviews', JSON.stringify(updatedReviews));
-  return updatedReviews;
-});
+       
         },
-        onError: (error) => {
+        onError: () => {
           actions.setSubmitting(false);
           toast.error("Şərhiniz göndərilmədi", {
             position: "top-right",
@@ -233,7 +219,7 @@ const renderReviewItem = (item) => (
       </Tabs>
 
       {activeTab === 'info' && (
-        <ProductSection display={"none"} />
+        <ProductSection display={"none"} order={4} slug={product?.productSlugs?.$values[0]?.slug} />
       )}
 
 {activeTab === 'reviews' && (
@@ -259,8 +245,6 @@ const renderReviewItem = (item) => (
     )}
   </>
 )}
-
-
     </Container>
   );
 };

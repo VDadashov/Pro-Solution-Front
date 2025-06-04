@@ -13,12 +13,10 @@ import {
 } from '@styles/common/prosessorSelect';
 
 const ProcessorSelectAmd = ({ products }) => {
- console.log(products?.amd?.id)
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
   const [amdProcessors, setAmdProcessors] = useState([]);
-
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -33,22 +31,33 @@ const ProcessorSelectAmd = ({ products }) => {
     }
   }, [location.search, amdProcessors]);
 
-  // AMD prosessorlarını ID və title ilə yığ
+  // useEffect(() => {
+  //   if (products?.items?.$values) {
+  //     const amdList = [
+  //       ...new Map(
+  //         products.items.$values
+  //           .filter((product) => product.title?.toLowerCase().includes('amd'))
+  //           .map((product) => [product.id, {
+  //             id: product.id,
+  //             title: product.title.trim()
+  //           }])
+  //       ).values(),
+  //     ];
+  //     setAmdProcessors(amdList);
+  //   }
+  // }, [products]);
+
+
   useEffect(() => {
-    if (products?.items?.$values) {
-      const amdList = [
-        ...new Map(
-          products.items.$values
-            .filter((product) => product.title?.toLowerCase().includes('amd'))
-            .map((product) => [product.id, {
-              id: product.id,
-              title: product.title.trim()
-            }])
-        ).values(),
-      ];
-      setAmdProcessors(amdList);
-    }
-  }, [products]);
+  if (products?.amd?.children?.$values) {
+    const amdList = products.amd.children.$values.map((child) => ({
+      id: child.id,
+      title: child.name
+    }));
+    setAmdProcessors(amdList);
+  }
+  
+}, [products]);
 
   const filteredProcessors = amdProcessors.filter((item) =>
     item.title.toLowerCase().includes(search.toLowerCase())
@@ -65,7 +74,6 @@ const ProcessorSelectAmd = ({ products }) => {
     } else {
       params.delete('featureId');
     }
-
     navigate(`${location.pathname}?${params.toString()}`);
   };
 
@@ -78,7 +86,6 @@ const ProcessorSelectAmd = ({ products }) => {
           {selected || 'İstənilən Prosessor - AMD'}
           {showDropdown ? <FaChevronUp /> : <FaChevronDown />}
         </DropdownToggle>
-
         {showDropdown && (
           <DropdownWrapper>
             <SearchInput

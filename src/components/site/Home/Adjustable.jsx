@@ -18,7 +18,7 @@ import "swiper/css/scrollbar";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
-import { data } from "react-router";
+import { data, Link, useNavigate } from "react-router";
 import Skeleton from "react-loading-skeleton";
 const pulse = keyframes`
     0% {
@@ -31,7 +31,6 @@ const pulse = keyframes`
       opacity: 1;
     }
   `;
-
 const LoadingSkeleton = styled(Skeleton)`
   animation: ${pulse} 1.5s infinite ease-in-out;
 `;
@@ -78,10 +77,9 @@ const AdjustableSectionSkeleton = () => {
   );
 };
 
-
-const AdjustableSection = ({ headerName}) => {
-const { data: brand, isLoading } = useGet("brand", ENDPOINTS.brand);
-
+const AdjustableSection = ({ headerName }) => {
+  const { data: brand, isLoading } = useGet("brand", ENDPOINTS.brand);
+  console.log(brand?.$values);
 
   return (
     <AdjustableContainer>
@@ -89,52 +87,56 @@ const { data: brand, isLoading } = useGet("brand", ENDPOINTS.brand);
         <BrandBox>
           <StyledH2>{headerName}</StyledH2>
           <BrandsAndPartners>
-
-          {
-            isLoading ? (
-              <AdjustableSectionSkeleton/>
-            ) :(
-                <Swiper
-              navigation={true}
-              spaceBetween={20}
-              slidesPerView={6}
-              modules={[FreeMode, Navigation, Autoplay, Pagination]}
-              breakpoints={{
-                0: {
-                  slidesPerView: 1,
-                },
-                450: {
-                  slidesPerView: 2,
-                },
-                650: {
-                  slidesPerView: 3,
-                },
-                850: {
-                  slidesPerView: 4,
-                },
-                1024: {
-                  slidesPerView: 5,
-                },
-                1200: {
-                  slidesPerView: 6,
-                },
-              }}
-            >
-              {brand?.$values?.map((item) => (
-                <SwiperSlide>
-                  <ImageContainer key={item.id}>
-                    <StyledImage src={item.imagePath} />
-                    <DescriptionContainer>
-                      <NameBox>{item.title}</NameBox>
-                      <CountBox className="countbox">{item.products.length} Məhsullar</CountBox>
-                    </DescriptionContainer>
-                  </ImageContainer>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-            )
-          }
-          
+            {isLoading ? (
+              <AdjustableSectionSkeleton />
+            ) : (
+              <Swiper
+                navigation={true}
+                spaceBetween={20}
+                slidesPerView={6}
+                loop={true}
+                autoplay={{ delay: 2000, disableOnInteraction: false }}
+                modules={[FreeMode, Navigation, Autoplay, Pagination]}
+                breakpoints={{
+                  0: {
+                    slidesPerView: 1,
+                  },
+                  450: {
+                    slidesPerView: 2,
+                  },
+                  650: {
+                    slidesPerView: 3,
+                  },
+                  850: {
+                    slidesPerView: 4,
+                  },
+                  1024: {
+                    slidesPerView: 5,
+                  },
+                  1200: {
+                    slidesPerView: 6,
+                  },
+                }}
+              >
+                {brand?.$values?.map((item) => (
+                  <SwiperSlide>
+                    <Link
+                      to={`/product-category/${item?.slugPath}?slug=${item?.slugPath}`}
+                    >
+                      <ImageContainer key={item.id}>
+                        <StyledImage src={item.imagePath} />
+                        <DescriptionContainer>
+                          <NameBox>{item.title}</NameBox>
+                          <CountBox className="countbox">
+                            {item.products.length} Məhsullar
+                          </CountBox>
+                        </DescriptionContainer>
+                      </ImageContainer>
+                    </Link>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            )}
           </BrandsAndPartners>
         </BrandBox>
       </LayoutContainer>

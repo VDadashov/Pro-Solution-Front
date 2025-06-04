@@ -38,9 +38,10 @@ const ROUTES = [
         element: <Contact />,
       },
       {
-        path: "/product-category",
+        path: "/product-category/",
         element: <Category />,
         children: [
+          
           {
             path: ":category",
             element: <Category />,

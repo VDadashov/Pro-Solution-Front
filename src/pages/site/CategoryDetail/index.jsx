@@ -153,7 +153,6 @@ const CategoryDetail = () => {
   const getValue = (key) => {
     return data?.$values?.find((item) => item.key === key)?.value || "";
   };
-  console.log(product)
   return isLoading ? (
     <DetailSkeleton imageCount={product?.images?.$values?.length} />
   ) : (
@@ -164,18 +163,9 @@ const CategoryDetail = () => {
             <li>
               <Link to="/">Əsas səhifə</Link> /
             </li>
-
-            {/* {
-              product?.$values?.categories?.map((item) => (
-                <li key={item.slug}>
-                  <Link to=""> / {item.title}</Link>
-                </li>
-              ))
-            } */}
             <li>
               <Link>{product?.categories?.$values[0]?.slug?.split("/")[0]} </Link>
             </li>
-
           </Nav>
           <SwitchProduct>
             <li>
@@ -326,16 +316,16 @@ const CategoryDetail = () => {
                   <WishText>
                     {liked ? (
                       <>
-                        <Gray>Product added</Gray>
+                        <Gray>Məhsul əlavə edildi</Gray>
                         <BrowseLink
                           to="/wishlist"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          Browse wishlist
+                          istək siyahısına baxın
                         </BrowseLink>
                       </>
                     ) : (
-                      <Blue>Add to wishlist</Blue>
+                      <Blue>istək siyahısına əlavə edin</Blue>
                     )}
                   </WishText>
                 </WishContainer>
@@ -346,41 +336,40 @@ const CategoryDetail = () => {
                   {product?.$values?.categories?.map((item) => (
                     <span>{item.title} </span>
                   ))}
-                  {/* <span>Acer,Noutbuklar </span> */}
+
                 </p>
-              <Socials>
-  <li className="facebook" data-tooltip="Share on Facebook">
-    <Link to={getValue("FacebookLink") || "#"} target="_blank">
-      <FaFacebookF />
-    </Link>
-  </li>
+                <Socials>
+                  <li className="facebook" data-tooltip="Share on Facebook">
+                    <Link to={getValue("FacebookLink") || "#"} target="_blank">
+                      <FaFacebookF />
+                    </Link>
+                  </li>
 
-  <li className="twitter" data-tooltip="Share on Twitter">
-    {/* Twitter üçün ayrıca link `settings` içində yoxdur, varsa əlavə et */}
-    <Link to="#" target="_blank">
-      <FaXTwitter />
-    </Link>
-  </li>
+                  <li className="twitter" data-tooltip="Share on Twitter">
 
-  <li className="email" data-tooltip="Send via Email">
-    <Link to={`mailto:${getValue("SupportEmail") || "support@example.com"}`} target="_blank">
-      <TfiEmail />
-    </Link>
-  </li>
+                    <Link to="#" target="_blank">
+                      <FaXTwitter />
+                    </Link>
+                  </li>
 
-  <li className="pinterest" data-tooltip="Pin it on Pinterest">
-    {/* Pinterest linki də settings-də yoxdur, əlavə etmək olar */}
-    <Link to="#" target="_blank">
-      <FaPinterest />
-    </Link>
-  </li>
+                  <li className="email" data-tooltip="Send via Email">
+                    <Link to={`mailto:${getValue("SupportEmail") || "support@example.com"}`} target="_blank">
+                      <TfiEmail />
+                    </Link>
+                  </li>
 
-  <li className="linkedin" data-tooltip="Share on LinkedIn">
-    <Link to={getValue("LinkedInLink") || "#"} target="_blank">
-      <FaLinkedin />
-    </Link>
-  </li>
-</Socials>
+                  <li className="pinterest" data-tooltip="Pin it on Pinterest">
+                    <Link to="#" target="_blank">
+                      <FaPinterest />
+                    </Link>
+                  </li>
+
+                  <li className="linkedin" data-tooltip="Share on LinkedIn">
+                    <Link to={getValue("LinkedInLink") || "#"} target="_blank">
+                      <FaLinkedin />
+                    </Link>
+                  </li>
+                </Socials>
 
               </DetailFoot>
             </div>
