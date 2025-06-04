@@ -27,7 +27,6 @@ function AppContent() {
       });
     }
   }, [isLogin, userShort]);
-console.log(userShort)
   useEffect(() => {
     async function getUserSummary() {
       const token = Cookies.get("token") || sessionStorage.getItem("token") || null;

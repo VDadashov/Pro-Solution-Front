@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { RiEqualizerLine } from "react-icons/ri";
 import PriceFilter from "@components/site/Category/FilterPrice";
 import ActiveFilter from "@components/site/Category/ActiveFilter";
-import ProcessorSelect from "@components/site/Category/ProcessorSelectIntel";
 import CategoriesSidebar from "@components/site/Blog/CategoriesSideBar";
 import CategoryProductCard, {
   CategoryProductCardSkelaton,
