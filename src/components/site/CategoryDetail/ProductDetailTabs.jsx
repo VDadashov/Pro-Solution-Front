@@ -35,8 +35,6 @@ const ProductDetailTabs = ({ product }) => {
   }
 
 
-  // const storedReviews = localStorage.getItem('userReviews');
-  console.log(product?.productReviews)
   const storedReviews=product?.productReviews
   if (storedReviews) {
     try {

@@ -17,7 +17,6 @@ import { FaRegHeart, FaXTwitter } from "react-icons/fa6";
 import { Link, useParams } from "react-router-dom";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import ProductDetailTabs from "@components/site/CategoryDetail/ProductDetailTabs";
-import ProductSection from "@components/site/Home/Products";
 import { WishlistContext } from "@Context/wishlistContext";
 import { FaHeart } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
@@ -111,7 +110,6 @@ const CategoryDetail = () => {
   const { wishlist, addToWishlist } = useContext(WishlistContext);
 
   const { category, subcategory } = useParams();
-console.log(product?.categories?.$values[0]?.slug, "product categories slug");
 
   useEffect(() => {
     const fetchProduct = async () => {
