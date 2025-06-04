@@ -93,49 +93,46 @@ const AdjustablePartnerSection = ({ headerName }) => {
         <BrandBox>
           <StyledH2>{headerName}</StyledH2>
           <BrandsAndPartners>
-          {
-            isLoading ? (
-              <AdjustablePartnerSectionSkeleton/>
-            ): (
-                 <Swiper
-              navigation={true}
-              spaceBetween={20}
-              slidesPerView={3}
-              modules={[FreeMode, Navigation, Autoplay, Pagination]}
-              breakpoints={{
-                0: {
-                  slidesPerView: 1,
-                },
-                450: {
-                  slidesPerView: 2,
-                },
-                650: {
-                  slidesPerView: 3,
-                },
-                850: {
-                  slidesPerView: 4,
-                },
-                1024: {
-                  slidesPerView: 5,
-                },
-                1200: {
-                  slidesPerView: 6,
-                },
-              }}
-            >
-              {partners?.$values?.map((item) => (
-                <SwiperSlide>
-                  <ImageContainer key={"1"}>
-                    <StyledImage src={item.imagePath
-} />
-                  </ImageContainer>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-            )
-            
-          }
-         
+            {isLoading ? (
+              <AdjustablePartnerSectionSkeleton />
+            ) : (
+              <Swiper
+                navigation={true}
+                spaceBetween={20}
+                slidesPerView={3}
+                loop={true}
+                autoplay={{ delay: 2000, disableOnInteraction: false }}
+                modules={[FreeMode, Navigation, Autoplay, Pagination]}
+                breakpoints={{
+                  0: {
+                    slidesPerView: 1,
+                  },
+                  450: {
+                    slidesPerView: 2,
+                  },
+                  650: {
+                    slidesPerView: 3,
+                  },
+                  850: {
+                    slidesPerView: 4,
+                  },
+                  1024: {
+                    slidesPerView: 5,
+                  },
+                  1200: {
+                    slidesPerView: 6,
+                  },
+                }}
+              >
+                {partners?.$values?.map((item) => (
+                  <SwiperSlide>
+                    <ImageContainer key={"1"}>
+                      <StyledImage src={item.imagePath} />
+                    </ImageContainer>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            )}
           </BrandsAndPartners>
         </BrandBox>
       </LayoutContainer>

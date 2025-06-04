@@ -9,11 +9,8 @@ import Blog from "@pages/site/Blog/Index";
 import BlogList from "@components/site/Blog/BlogCardsContainer";
 import BlogDetail from "@components/site/Blog/BlogDetail";
 import ErrorPage from "@pages/site/Error";
-
 import Discount from "@pages/site/Discount/Discount";
-
 import Orders from "@components/site/MyAccount/Orders";
-import LoginRegister from "@components/site/MyAccount/LoginRegister";
 import ControlPanel from "@components/site/MyAccount/ControlPanel";
 import Downloads from "@components/site/MyAccount/Downloads";
 import Address from "@components/site/MyAccount/Address";
@@ -39,9 +36,10 @@ const ROUTES = [
         element: <Contact />,
       },
       {
-        path: "/product-category",
+        path: "/product-category/",
         element: <Category />,
         children: [
+          
           {
             path: ":category",
             element: <Category />,

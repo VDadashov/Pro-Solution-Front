@@ -2,12 +2,11 @@ import LayoutLogo from "@styles/common/LayoutLogo";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import React from "react";
+import { Link } from "react-router";
 import styled from "styled-components";
 
 const About = () => {
   const { data } = useGet("settings", ENDPOINTS.settings);
-
-  // Hazırda lazım olan dəyərləri tapırıq:
   const getValue = (key) => {
     return data?.$values?.find((item) => item.key === key)?.value || "";
   };
@@ -19,7 +18,7 @@ const About = () => {
 
   return (
     <StyledAbout>
-      <LayoutLogo logoScr={whiteLogo || "/images/psa-logo-white.png"} />
+     <Link to={"/"}> <LayoutLogo logoScr={whiteLogo || "/images/psa-logo-white.png"} /></Link>
       <StyledAboutText>Satış şöbəsi :{WorkTime}</StyledAboutText>
       <StyledAboutText>
         {phone}

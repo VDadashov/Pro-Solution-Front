@@ -79,10 +79,18 @@ function BlogDetail() {
       </Socials>
 
       <HorizontalLine width="100%" />
-      {data?.$values?.blogReviews?.map((item)=>(
-        <Reviews  item={item} ></Reviews>
-      ))}
-      
+      {data?.$values?.blogReviews?.length > 0 ? (
+        data.$values.blogReviews.map((item) => (
+          <Reviews key={item.id} item={item} />
+        ))
+      ) : (
+        <p
+          style={{ textAlign: "center", padding: "20px", fontStyle: "italic" }}
+        >
+          Hələ heç bir rəy yoxdur.
+        </p>
+      )}
+
       <HorizontalLine width="100%" />
       <CommentForm blogId={id} />
     </BlogDetailWrapper>

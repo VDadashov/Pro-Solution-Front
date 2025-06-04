@@ -58,8 +58,12 @@ const Position = styled.p`
   font-size: 22px;
 `;
 
-const Number = styled.p`
+const Number = styled.a`
   font-size: 20px;
+  cursor: pointer;
+  &:hover {
+    color: black;
+    transition: color 0.2s ease;
 `;
 
 const Email = styled.a`
@@ -67,6 +71,7 @@ const Email = styled.a`
   font-size: 20px;
   &:hover {
     color: black;
+    transition: color 0.2s ease;
   }
 `;
 
@@ -163,7 +168,7 @@ const Contact = () => {
           <ContactInfo>
             <Title>Teymur Şirəliyev</Title>
             <Position>Satış Direktoru</Position>
-            <Number>+994-70-327-90-94</Number>
+            <Number href="tel:+994703279094">+994-70-327-90-94</Number>
             <Email href="mailto:sh.teymur@prosolution.ltd">
               sh.teymur@prosolution.ltd
             </Email>
@@ -171,7 +176,8 @@ const Contact = () => {
           <ContactInfo>
             <Title>Fizuli Tağıyev</Title>
             <Position>Satış Meneceri</Position>
-            <Number>+994-70-329-90-94</Number>
+            <Number href="tel:+994703279094"
+            >+994-70-329-90-94</Number>
             <Email href="mailto:t.fizuli@prosolution.ltd">
               t.fizuli@prosolution.ltd
             </Email>

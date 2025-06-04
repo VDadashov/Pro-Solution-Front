@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import LoginRegister from "@components/site/MyAccount/LoginRegister";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
 import AccountSideBar from "@components/site/MyAccount/AccountSideBar";
 import { Outlet } from "react-router-dom";
@@ -10,7 +9,6 @@ const MyAccount = () => {
     <AccountPage>
       <PageHeader>My account</PageHeader>
       <PageBottom>
-        {/* <LoginRegister /> */}
         <AccountInfo>
           <LayoutContainer>
             <AccountConfiguration>
