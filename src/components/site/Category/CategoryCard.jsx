@@ -7,6 +7,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import styled, { keyframes } from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import ProductModal from './productModal';
 
 const pulse = keyframes`
   0% {
@@ -59,6 +60,7 @@ export const CategoryProductCardSkelaton = () => {
 const CategoryProductCard = ({ item }) => {
   const { wishlist, addToWishlist } = useContext(WishlistContext);
   const [liked, setLiked] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const isLiked = wishlist.some(x => x.id === item.id);
@@ -69,59 +71,76 @@ const CategoryProductCard = ({ item }) => {
 
 
   return (
-    <CategoryCard>
-      <CategoryCardHeadImage>
-        <CategoryCardLink to={`/category/${item.detailSlug}`}>
-          <img
-            src={
-              item.images?.$values?.find((img) => img.isMain)?.imagePath || ""
-            }
-          />
-        </CategoryCardLink>
+    <>
+      <CategoryCard>
+        <CategoryCardHeadImage>
+          <CategoryCardLink to={`/category/${item.detailSlug}`}>
+            <img
+              src={
+                item.images?.$values?.find((img) => img.isMain)?.imagePath || ""
+              }
+            />
+          </CategoryCardLink>
+          <div
+            className={`heartIcon ${liked ? "liked" : ""}`}
+            onClick={() => {
+              addToWishlist(item);
+              if (!liked) {
+                toast.success("Product added to wishlist!");
+              } else {
+                toast.error("Product removed from wishlist.");
+              }
+              setLiked(!liked);
+            }}
+          >
+            <CiHeart />
+          </div>
+          <CategoryDetail
+            className="categoryDetail"
+            onClick={() => setShowModal(true)}
+          >
+            <i class="fa-light fa-eye"></i>
+          </CategoryDetail>
+        </CategoryCardHeadImage>
 
-        <div
-          className={`heartIcon ${liked ? "liked" : ""}`}
-          onClick={() => {
-            addToWishlist(item);
-            if (!liked) {
-              toast.success("Product added to wishlist!");
-            } else {
-              toast.error("Product removed from wishlist.");
-            }
-            setLiked(!liked);
-          }}
-        >
-          <CiHeart />
-        </div>
-      </CategoryCardHeadImage>
+        <CategoryCardBody>
+          <span>
+            {item.categories?.$values
+              ? item.categories.$values[0]?.title
+              : item.categories?.[0]?.title}
+          </span>
 
-      <CategoryCardBody>
-        <span>
-          {item.categories?.$values
-            ? item.categories.$values[0]?.title
-            : item.categories?.[0]?.title}
-        </span>
-
-        <Link to={`/category/${item.detailSlug}`}>
-          <ProductName>{item?.title} </ProductName>
-        </Link>
-
-      </CategoryCardBody>
-      <CardButton>        <PriceBox>
-          {item.discountPrice > 0 ? (
-            <>
-              <OldPrice>{item.price} ₼</OldPrice>
-              <NewPrice>{item.discountPrice} ₼</NewPrice>
-            </>
-          ) : (
-            <NewPrice>{item.price} ₼</NewPrice>
-          )}
-        </PriceBox>
-        <ButtonLink to={`/category/${item.detailSlug}`}>
-          Davamını oxu
-        </ButtonLink>
-      </CardButton>
-    </CategoryCard>
+          <Link to={`/category/${item.detailSlug}`}>
+            <ProductName>{item?.title} </ProductName>
+          </Link>
+        </CategoryCardBody>
+        <CardButton>
+          <PriceBox>
+            {item.discountPrice > 0 ? (
+              <>
+                <OldPrice>{item.price} ₼</OldPrice>
+                <NewPrice>{item.discountPrice} ₼</NewPrice>
+              </>
+            ) : (
+              <NewPrice>{item.price} ₼</NewPrice>
+            )}
+          </PriceBox>
+          <CategorySubSection>
+            <ButtonLink to={`/category/${item.detailSlug}`}>
+              Davamını oxu
+            </ButtonLink>
+            <BuyButton>
+              <i class="fa-light fa-bag-shopping"></i>
+            </BuyButton>
+          </CategorySubSection>
+        </CardButton>
+      </CategoryCard>
+      <ProductModal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        item={item}
+      />
+    </>
   );
 }
 
@@ -138,16 +157,19 @@ const CategoryCard = styled.div`
   background-color: #fff;
   transition: all 0.3s ease;
   cursor: pointer;
-  width: 180px;
+  width: calc(100% / 4 - 30px);
   &:hover {
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   }
   &:hover img {
     transform: scale(1.1);
   }
+
+  &:hover .categoryDetail {
+    opacity: 1;
+  }
   @media (max-width: 930px) {
     width: 150px;
-
   }
   @media (max-width: 1100px) {
     width: 170px;
@@ -175,6 +197,7 @@ const ProductName = styled.h5`
 `;
 
 const CategoryCardLink = styled(Link)``;
+
 const CategoryCardHeadImage = styled.div`
   position: relative;
   overflow: hidden;
@@ -195,9 +218,9 @@ const CategoryCardHeadImage = styled.div`
 
   .heartIcon {
     position: absolute;
-    right: 10px;
+    right: 0px;
     top: 0px;
-    font-size: 24px;
+    font-size: 16px;
     color: gray;
     background-color: transparent;
     border: 1px solid gray;
@@ -258,32 +281,6 @@ const CardButton = styled.div`
   flex-direction:column;
   align-items: flex-start;
 `;
-const ButtonLink = styled(Link)`
- margin-top: 5px;
-    width: 65%;
-    background-color: #149295;
-    color: white;
-    border: none;
-    padding: 5px;
-    display: flex;
-    font-size: 13px;
-    font-family: inherit;
-    cursor: pointer;
-   justify-content: center;
-    &:hover {
-      background-color: rgb(16, 114, 116);
-    }
-    @media (max-width:1095px) {
-      padding: 5px;
-      width: 70%;
-      font-size: 12px;
-    }
-    @media (max-width: 1100px) {
-      padding: 5px;
-      width: 70%;
-      font-size: 12px;
-    }
-`
 const PriceBox = styled.div`
   display: flex;
   gap: 10px;
@@ -304,5 +301,77 @@ const NewPrice = styled.p`
   font-weight: bold;
   @media (max-width: 1095px) {
     font-size: 13px;
+  }
+`;
+
+const CategorySubSection = styled.div`
+  display: flex;
+  align-items: baseline;
+  width: 100%;
+  justify-content: space-between;
+`
+const ButtonLink = styled(Link)`
+  margin-top: 5px;
+  width: max-content;
+  background-color: #149295;
+  color: white;
+  border: none;
+  padding: 6px;
+  border-radius: 5px;
+  display: flex;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  justify-content: center;
+  &:hover {
+    background-color: rgb(16, 114, 116);
+  }
+  @media (max-width: 1095px) {
+    padding: 5px;
+    width: 70%;
+    font-size: 12px;
+  }
+  @media (max-width: 1100px) {
+    padding: 5px;
+    width: 70%;
+    font-size: 12px;
+  }
+`;
+
+const CategoryDetail = styled.div`
+  position: absolute;
+  top: 35px;
+  font-size: 14px;
+  right: 0.5px;
+  color: gray;
+  padding: 5px;
+  border: 1px solid gray;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background-color: transparent;
+
+  &:hover {
+    background-color: #149295;
+    color: white;
+    border: none;
+  }
+`;
+
+
+const BuyButton = styled.button`
+  width: 30px;
+  height: 30px;
+  border-radius: 25%;
+  background-color: white;
+  color: rgb(0, 168, 232);
+  border: 1px solid rgb(0, 168, 232);
+  transition: all 0.4s ease;
+
+  &:hover {
+    background-color: rgb(0, 168, 232);
+    color: white;
+    transition: all 0.4s ease;
   }
 `;

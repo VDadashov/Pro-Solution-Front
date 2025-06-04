@@ -23,8 +23,8 @@ const Category = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [priceRange, setPriceRange] = useState({ min: null, max: null });
   const [filterApplied, setFilterApplied] = useState(false);
-   const [minAvailablePrice, setMinAvailablePrice] = useState(null);
-const [maxAvailablePrice, setMaxAvailablePrice] = useState(null);
+  const [minAvailablePrice, setMinAvailablePrice] = useState(null);
+  const [maxAvailablePrice, setMaxAvailablePrice] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
   const { category } = useParams();
@@ -40,62 +40,58 @@ const [maxAvailablePrice, setMaxAvailablePrice] = useState(null);
   const maxPriceRaw = searchParams.get("maxPrice");
   const minPrice = minPriceRaw !== null && minPriceRaw !== "undefined" ? parseFloat(minPriceRaw) : null;
   const maxPrice = maxPriceRaw !== null && maxPriceRaw !== "undefined" ? parseFloat(maxPriceRaw) : null;
-  const featureId = searchParams.get("featureId")||"";
-useEffect(() => {
-  setLoading(true);
-  let url = `${ENDPOINTS.getAllFiltered}?slug=${slug}&search=${search}&take=${take}&skip=${skip}&isDeleted=false&isDiscount=false&featureId=${featureId}`;
-  if (minPrice !== null) url += `&minPrice=${minPrice}`;
-  if (maxPrice !== null) url += `&maxPrice=${maxPrice}`;
-  if (order !== null) url += `&order=${order}`;
-  fetch(url)
-    .then((res) => res.json())
-    .then((data) => {
-      setProducts(data);
-      setLoading(false);
+  const featureId = searchParams.get("featureId") || "";
 
-      if (minPrice === null && maxPrice === null) {
-        setMinAvailablePrice(data?.minAvailablePrice || null);
-        setMaxAvailablePrice(data?.maxAvailablePrice || null);
-      }
-    })
-    .catch((err) => {
-      console.error("Xəta baş verdi:", err);
-      setLoading(false);
-    });
-}, [slug, search, take, skip, order, minPrice, maxPrice,featureId]);
+  useEffect(() => {
+    setLoading(true);
+    let url = `${ENDPOINTS.getAllFiltered}?slug=${slug}&search=${search}&take=${take}&skip=${skip}&isDeleted=false&isDiscount=false&featureId=${featureId}`;
+    if (minPrice !== null) url += `&minPrice=${minPrice}`;
+    if (maxPrice !== null) url += `&maxPrice=${maxPrice}`;
+    if (order !== null) url += `&order=${order}`;
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data);
+        setLoading(false);
 
-  
+        if (minPrice === null && maxPrice === null) {
+          setMinAvailablePrice(data?.minAvailablePrice || null);
+          setMaxAvailablePrice(data?.maxAvailablePrice || null);
+        }
+      })
+      .catch((err) => {
+        console.error("Xəta baş verdi:", err);
+        setLoading(false);
+      });
+  }, [slug, search, take, skip, order, minPrice, maxPrice, featureId]);
+
+
   useEffect(() => {
     if (priceRange.min === null && priceRange.max === null) {
       setFilterApplied(false);
     }
   }, [priceRange]);
 
-useEffect(() => {
-  setPriceRange({ min: minPrice, max: maxPrice });
-  setFilterApplied(minPrice !== null || maxPrice !== null);
-}, [minPrice, maxPrice]);
+  useEffect(() => {
+    setPriceRange({ min: minPrice, max: maxPrice });
+    setFilterApplied(minPrice !== null || maxPrice !== null);
+  }, [minPrice, maxPrice]);
 
   const handlePriceChange = (range) => {
     setPriceRange(range);
-
     const params = new URLSearchParams(location.search);
     if (range.min !== null) params.set("minPrice", range.min);
     else params.delete("minPrice");
-
     if (range.max !== null) params.set("maxPrice", range.max);
     else params.delete("maxPrice");
-
     navigate(`${location.pathname}?${params.toString()}`);
     setFilterApplied(true);
   };
   const handleClearMinPrice = () => {
     setPriceRange((prev) => {
       const newRange = { ...prev, min: null };
-
       const params = new URLSearchParams(location.search);
       params.delete("minPrice");
-
       navigate(`${location.pathname}?${params.toString()}`);
       if (prev.max === null) setFilterApplied(false);
       return newRange;
@@ -105,10 +101,8 @@ useEffect(() => {
   const handleClearMaxPrice = () => {
     setPriceRange((prev) => {
       const newRange = { ...prev, max: null };
-
       const params = new URLSearchParams(location.search);
       params.delete("maxPrice");
-
       navigate(`${location.pathname}?${params.toString()}`);
       if (prev.min === null) setFilterApplied(false);
       return newRange;
@@ -126,12 +120,12 @@ useEffect(() => {
         />
       </ActiveFiltr>
     );
-    const getShowingText = () => {
-  if (!products?.count) return null;
-  const start = take * (skip - 1) + 1;
-  const end = Math.min(take * skip, products.count);
-  return `${products.count} nəticədən ${start}-${end} nəticə göstərilir`;
-};
+  const getShowingText = () => {
+    if (!products?.count) return null;
+    const start = take * (skip - 1) + 1;
+    const end = Math.min(take * skip, products.count);
+    return `${products.count} nəticədən ${start}-${end} nəticə göstərilir`;
+  };
 
 
   const handlePageChange = (pageNumber) => {
@@ -163,6 +157,7 @@ useEffect(() => {
                 </li>
                 <li>
                   <Link>
+                    <BoldText></BoldText>
                     {category == undefined ? "/" : `/ ${category} /`}{" "}
                   </Link>
                   <Link> {search}</Link>
@@ -178,7 +173,7 @@ useEffect(() => {
             </ResponsiveFilter>
 
             <CategorySelect>
-            <p>{getShowingText()}</p>
+              <p>{getShowingText()}</p>
               <select
                 value={order !== null ? order : ""}
                 onChange={(e) => {
@@ -225,8 +220,8 @@ useEffect(() => {
                       onSubmit={() => setFilterApplied(true)}
                     />
                   </div>
-                  <ProsessorSelectAmd  products={products}/>
-                  <ProcessorSelectIntel  products={products}/>
+                  <ProsessorSelectAmd products={products} />
+                  <ProcessorSelectIntel products={products} />
                   <Categories>
                     <CategoriesSidebar />
                   </Categories>
@@ -290,8 +285,8 @@ useEffect(() => {
                   onSubmit={() => setFilterApplied(true)}
                 />
               </Price>
-<ProsessorSelectAmd  products={products}/>
-            <ProcessorSelectIntel  products={products}/>
+              <ProsessorSelectAmd products={products} />
+              <ProcessorSelectIntel products={products} />
               <Categories>
                 <CategoriesSidebar />
               </Categories>
@@ -304,7 +299,9 @@ useEffect(() => {
 };
 
 export default Category;
-
+const BoldText = styled.b`
+color: black;
+`
 const PageButton = styled.button`
   display: ${(props) => (props.hidden ? "none" : "inline-block")};
   background: ${(props) => (props.active ? "#00A6A6" : "#fff")};
