@@ -42,7 +42,7 @@ const Search = ({ $isMobile }) => {
     if (searchInput.length > 0) {
       console.log(searchInput);
       const fetchSuggestions = async () => {
-        setLoading(true); // Start loading
+        setLoading(true); 
         const slugParam = selected === "Hamısı" ? "" : selected;
 
         try {

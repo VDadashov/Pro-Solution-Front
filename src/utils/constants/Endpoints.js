@@ -17,6 +17,7 @@ export const ENDPOINTS = {
   blogs: `${MAIN_URL}/api/blogs`,
   blogsReviews: `${MAIN_URL}/api/blogs/reviews`,
   authors: `${MAIN_URL}/api/auth/filtered?take=10&page=1&order=5&isActivate=true`,
+  contact: `${MAIN_URL}/api/contactus/contact`,
 
 // Authentication Endpoints
   register: `${MAIN_URL}/api/auth/register`,
