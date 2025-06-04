@@ -51,13 +51,12 @@ const DiscountProductSection = () => {
     <SectionContainer>
       <TextBox>
         <ContainerHeader>
-          <strong>
+          <h3>
             Endirimlərdən <br /> Yararlanmağa Tələsin
-          </strong>
+          </h3>
         </ContainerHeader>
         <LeadUpperCase>
-          <strong>50%-ə qədər </strong>
-          endirimə düşən məhsullar
+          <h4>50%-ə qədər endirimə düşən məhsullar</h4>
         </LeadUpperCase>
         <TimerContainer>
           <TimerBox>
@@ -101,6 +100,7 @@ const TextBox = styled.div`
   justify-content: space-around;
   align-items: center;
   text-align: center;
+  font-family: Nunito-Regular400;
 `;
 
 const ContainerHeader = styled.h2`
@@ -110,6 +110,12 @@ const ContainerHeader = styled.h2`
   }
   @media (max-width: 350px) {
     font-size: 1.5em;
+  }
+  @media (min-width: 650px) {
+    font-size: 2em;
+  }
+  @media (min-width: 1024px) {
+    font-size: 2.5em;
   }
 `;
 
@@ -122,6 +128,8 @@ const LeadUpperCase = styled.h4`
   @media (max-width: 350px) {
     font-size: 0.8em;
   }
+    @media (min-width:650px){
+    font-size: 1em;}
 `;
 
 const TimerContainer = styled.div`
