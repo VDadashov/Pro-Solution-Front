@@ -34,6 +34,8 @@ const pulse = keyframes`
 const LoadingSkeleton = styled(Skeleton)`
   animation: ${pulse} 1.5s infinite ease-in-out;
 `;
+
+
 const AdjustableSectionSkeleton = () => {
   return (
     <AdjustableContainer>
@@ -76,6 +78,8 @@ const AdjustableSectionSkeleton = () => {
     </AdjustableContainer>
   );
 };
+
+
 
 const AdjustableSection = ({ headerName }) => {
   const { data: brand, isLoading } = useGet("brand", ENDPOINTS.brand);
@@ -121,7 +125,7 @@ const AdjustableSection = ({ headerName }) => {
                 {brand?.$values?.map((item) => (
                   <SwiperSlide>
                     <Link
-                      to={`/product-category/${item?.slugPath}?slug=${item?.slugPath}`}
+                      to={`/product-category/${item?.slug}?slug=${item?.slug}`}
                     >
                       <ImageContainer key={item.id}>
                         <StyledImage src={item.imagePath} />

@@ -41,7 +41,7 @@ const Search = ({ $isMobile }) => {
   useEffect(() => {
     if (searchInput.length > 0) {
       const fetchSuggestions = async () => {
-        setLoading(true);
+        setLoading(true); 
         const slugParam = selected === "Hamısı" ? "" : selected;
 
         try {
