@@ -13,7 +13,6 @@ import ErrorPage from "@pages/site/Error";
 import Discount from "@pages/site/Discount/Discount";
 
 import Orders from "@components/site/MyAccount/Orders";
-import LoginRegister from "@components/site/MyAccount/LoginRegister";
 import ControlPanel from "@components/site/MyAccount/ControlPanel";
 import Downloads from "@components/site/MyAccount/Downloads";
 import Address from "@components/site/MyAccount/Address";

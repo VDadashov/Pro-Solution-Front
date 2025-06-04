@@ -29,7 +29,21 @@ const ProductDetailTabs = ({ product }) => {
     } catch (err) {
       console.error(err);
     }
-  }},[])
+  }
+
+
+  const storedReviews=product?.productReviews
+  if (storedReviews) {
+    try {
+      const parsedReviews = JSON.parse(storedReviews);
+      if (Array.isArray(parsedReviews)) {
+        setReviews(parsedReviews);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  }, []);
 
   const ReviewSchema = Yup.object().shape({
     text: Yup.string().max(500, 'Ən çox 500 hərf yaza bilərsiniz').required('Rəy yazmaq məcburidir'),

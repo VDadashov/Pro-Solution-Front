@@ -14,7 +14,9 @@ const ActionButtons = ({ openRegister }) => {
         </StyledLinkButton>
       </StyledLinkContainer>
       <StyledLoginContainer>
-        <StyledLoginButton onClick={openRegister}>Giriş</StyledLoginButton>
+        <StyledLoginButton onClick={openRegister}>
+          <i class="fa-light fa-user"></i> Giriş
+        </StyledLoginButton>
       </StyledLoginContainer>
     </ButtonContainer>
   );
