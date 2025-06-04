@@ -157,7 +157,6 @@ const Category = () => {
                 </li>
                 <li>
                   <Link>
-                    <BoldText></BoldText>
                     {category == undefined ? "/" : `/ ${category} /`}{" "}
                   </Link>
                   <Link> {search}</Link>
