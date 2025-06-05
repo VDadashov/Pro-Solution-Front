@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useContext } from "react";
 import { CiHeart } from "react-icons/ci";
 import { Link } from "react-router-dom";
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import styled, { keyframes } from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -61,6 +61,15 @@ const CategoryProductCard = ({ item }) => {
   const { wishlist, addToWishlist } = useContext(WishlistContext);
   const [liked, setLiked] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  
+    const decrement = () => {
+      if (quantity > 1) setQuantity(quantity - 1);
+    };
+  
+    const increment = () => {
+      setQuantity(quantity + 1);
+    };
 
   useEffect(() => {
     const isLiked = wishlist.some(x => x.id === item.id);
@@ -118,17 +127,26 @@ const CategoryProductCard = ({ item }) => {
           <PriceBox>
             {item.discountPrice > 0 ? (
               <>
-                <OldPrice>{item.price} ₼</OldPrice>
-                <NewPrice>{item.discountPrice} ₼</NewPrice>
+                <OldPrice>{item.price * quantity} ₼</OldPrice>
+                <NewPrice>{item.discountPrice * quantity} ₼</NewPrice>
               </>
             ) : (
-              <NewPrice>{item.price} ₼</NewPrice>
+              <NewPrice>{item.price * quantity} ₼</NewPrice>
             )}
           </PriceBox>
+          <ButtonLink to={`/category/${item.detailSlug}`}>
+            Davamını oxu
+          </ButtonLink>
           <CategorySubSection>
-            <ButtonLink to={`/category/${item.detailSlug}`}>
-              Davamını oxu
-            </ButtonLink>
+            <ProductCalculator>
+              <InputDecrement onClick={decrement}>
+                <i class="fa-regular fa-minus"></i>
+              </InputDecrement>
+              <InputCalculator type="text" value={quantity}></InputCalculator>
+              <InputIncrement onClick={increment}>
+                <i class="fa-regular fa-plus"></i>
+              </InputIncrement>
+            </ProductCalculator>
             <BuyButton>
               <i class="fa-light fa-bag-shopping"></i>
             </BuyButton>
@@ -145,6 +163,47 @@ const CategoryProductCard = ({ item }) => {
 }
 
 export default CategoryProductCard
+
+const ProductCalculator = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const InputCalculator = styled.input`
+  width: 40px;
+  height: 32px;
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  outline: none;
+  color: rgb(0, 23, 31);
+  padding: 4px 0;
+  text-align: center;
+  font-weight: 400;
+  font-size: 14px;
+`;
+const InputDecrement = styled.button`
+  width: 32px;
+  height: 32px;
+  border-radius: 25% 0 0 25%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-right: none;
+  background-color: white;
+  color: rgb(0, 23, 31);
+  font-weight: 400;
+  font-size: 12px;
+`;
+const InputIncrement = styled.button`
+  width: 32px;
+  height: 32px;
+  border-radius: 0 25% 25% 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-left: none;
+  background-color: white;
+  color: rgb(0, 23, 31);
+  font-weight: 400;
+  font-size: 12px;
+`;
 
 const CategoryCard = styled.div`
   display: flex;
@@ -313,6 +372,7 @@ const CategorySubSection = styled.div`
 const ButtonLink = styled(Link)`
   margin-top: 5px;
   width: max-content;
+  margin-bottom: 15px;
   background-color: #149295;
   color: white;
   border: none;
