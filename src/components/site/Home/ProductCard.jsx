@@ -172,6 +172,7 @@ const ProductsCard = ({ item }) => {
           </CardButton>
         </ProductCardBody>
       </ProductCard>
+
       <ProductModal
         show={showModal}
         onClose={() => setShowModal(false)}
@@ -198,6 +199,10 @@ const InputCalculator = styled.input`
   text-align: center;
   font-weight: 400;
   font-size: 14px;
+
+  @media (max-width: 420px) {
+    width: 25px;
+  }
 `;
 const InputDecrement = styled.button`
   width: 32px;
@@ -220,6 +225,8 @@ const InputIncrement = styled.button`
   color: rgb(0, 23, 31);
   font-weight: 400;
   font-size: 12px;
+
+
 `;
 
 const ProductCard = styled.div`
@@ -251,6 +258,9 @@ const ProductCard = styled.div`
 
   @media (max-width: 500px) {
     width: 180px;
+  }
+  @media (max-width: 420px) {
+    width: 160px;
   }
 `;
 
