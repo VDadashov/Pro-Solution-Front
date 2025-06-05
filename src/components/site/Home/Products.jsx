@@ -26,7 +26,7 @@ const ProductSection = ({ sectionHeader, display, order ,slug}) => {
               loop={true}
               navigation={true}
               spaceBetween={0}
-              slidesPerView={3}
+              slidesPerView={5}
               modules={[FreeMode, Navigation, Autoplay, Pagination]}
               breakpoints={{
                 0: {
