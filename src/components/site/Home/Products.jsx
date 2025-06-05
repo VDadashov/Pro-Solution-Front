@@ -19,7 +19,7 @@ const ProductSection = ({ sectionHeader, display, order ,slug}) => {
       <LayoutContainer>
         <ProductsContainer>
           <ContainerHeader style={{ display: display }}>
-            <ContainerSpan >{sectionHeader}</ContainerSpan>
+            <ContainerSpan>{sectionHeader}</ContainerSpan>
           </ContainerHeader>
           <ProductsMenu>
             <Swiper
@@ -33,33 +33,35 @@ const ProductSection = ({ sectionHeader, display, order ,slug}) => {
                   slidesPerView: 1,
                 },
                 400: {
+                  slidesPerView: 2,
+                },
+                650: {
                   slidesPerView: 3,
                 },
                 850: {
-                  slidesPerView: 3,
+                  slidesPerView: 2,
+                  spaceBetween: 45,
                 },
                 1024: {
                   slidesPerView: 5,
                 },
               }}
             >
-              {
-                isLoading ? (
-                  <>
-                    {Array.from({ length: 6 }).map((_, index) => (
-                      <SwiperSlide ><ProductsCardSkeleton key={index} /></SwiperSlide>
-                    ))}
-                  </>
-                ) : (
-                  products?.items?.$values.map((item) => (
-
-                    <SwiperSlide key={item.id}>
-                      <ProductsCard item={item} />
+              {isLoading ? (
+                <>
+                  {Array.from({ length: 6 }).map((_, index) => (
+                    <SwiperSlide>
+                      <ProductsCardSkeleton key={index} />
                     </SwiperSlide>
-                  ))
-                )
-              }
-
+                  ))}
+                </>
+              ) : (
+                products?.items?.$values.map((item) => (
+                  <SwiperSlide key={item.id}>
+                    <ProductsCard item={item} />
+                  </SwiperSlide>
+                ))
+              )}
             </Swiper>
           </ProductsMenu>
         </ProductsContainer>
