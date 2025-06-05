@@ -32,7 +32,7 @@ const StyledFooter = styled.footer`
 const StyledFooterTop = styled.div`
   width: 100%;
   display: flex;
-  padding: 50px 0px 100px 0px;
+  padding: 20px 0px 40px 0px;
   @media (max-width: 550px) {
     flex-direction: column;
     gap: 10px;
@@ -44,7 +44,7 @@ const StyledQuarterSpace = styled.div`
 `;
 
 const StyledSmallSpace = styled.div`
-  width: 10%;
+  width: 1%;
 `;
 
 export default Footer;

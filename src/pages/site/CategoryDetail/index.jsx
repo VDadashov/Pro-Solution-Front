@@ -109,8 +109,6 @@ const CategoryDetail = () => {
   const { slug } = useParams();
   const { wishlist, addToWishlist } = useContext(WishlistContext);
 
-  const { category, subcategory } = useParams();
-
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -280,6 +278,7 @@ const CategoryDetail = () => {
           <DetailInfo>
             <div className="DetailInfoHead">
               <h2> {product?.title}</h2>
+              <DetailDesc>{product?.description}</DetailDesc> 
               <hr />
               <div className="price">
                 {product?.discountPrice > 0 ? (
@@ -497,6 +496,11 @@ const DetailInfo = styled.div`
     }
   }
 `;
+const DetailDesc=styled.p`
+color:  #666666;
+font-weight: bold;
+margin-bottom: 15px;
+`
 const DetailList = styled.ul`
   display: flex;
   flex-direction: column;
