@@ -242,11 +242,15 @@ const ProductCard = styled.div`
   &:hover .categoryDetail {
     opacity: 1;
   }
-  @media (max-width: 930px) {
-    width: 150px;
-  }
   @media (max-width: 1100px) {
     width: 170px;
+  }
+  @media (max-width: 800px) {
+    width: 185px;
+  }
+
+  @media (max-width: 500px) {
+    width: 180px;
   }
 `;
 
