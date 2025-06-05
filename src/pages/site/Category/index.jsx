@@ -40,7 +40,6 @@ const Category = () => {
   const minPrice = minPriceRaw !== null && minPriceRaw !== "undefined" ? parseFloat(minPriceRaw) : null;
   const maxPrice = maxPriceRaw !== null && maxPriceRaw !== "undefined" ? parseFloat(maxPriceRaw) : null;
   const featureId = searchParams.get("featureId") || "";
-
   useEffect(() => {
     setLoading(true);
     let url = `${ENDPOINTS.getAllFiltered}?slug=${slug}&search=${search}&take=${take}&skip=${skip}&isDeleted=false&isDiscount=false&featureId=${featureId}`;
@@ -463,6 +462,7 @@ const CategoryCards = styled.div`
   @media (max-width: 930px) {
     justify-content: center;
   }
+
 `;
 const ModalButton = styled.button`
   color: rgba(255, 255, 255, 0.51);
