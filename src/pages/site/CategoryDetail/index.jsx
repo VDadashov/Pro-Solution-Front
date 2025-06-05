@@ -109,8 +109,6 @@ const CategoryDetail = () => {
   const { slug } = useParams();
   const { wishlist, addToWishlist } = useContext(WishlistContext);
 
-  const { category, subcategory } = useParams();
-
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -153,6 +151,38 @@ const CategoryDetail = () => {
   const getValue = (key) => {
     return data?.$values?.find((item) => item.key === key)?.value || "";
   };
+  // console.log(product?.categories)
+ const getCategoryBreadcrumbs = (array) => {
+  const result = [];
+
+
+  array.forEach((element) => {
+    if (element.slug) {
+      const parts = element.slug.split('/');
+      let accumulatedPath = '';
+
+      parts.forEach((part) => {
+        accumulatedPath += (accumulatedPath ? '/' : '') + part;
+        result.push({
+          label: part,
+          to: '/' + accumulatedPath,
+        });
+      });
+    } else {
+      result.push({
+        label: element.title,
+        to: '/' + element.title,
+      });
+    }
+  });
+console.log(result)
+  return result;
+
+};
+
+
+
+
   return isLoading ? (
     <DetailSkeleton imageCount={product?.images?.$values?.length} />
   ) : (
@@ -164,7 +194,7 @@ const CategoryDetail = () => {
               <Link to="/">Əsas səhifə</Link> /
             </li>
             <li>
-              <Link>{product?.categories?.$values[0]?.slug?.split("/")[0]} </Link>
+              <Link to={`/product-category/${getCategoryBreadcrumbs(product?.categories?.$values)[0]?.label}`}>{getCategoryBreadcrumbs(product?.categories?.$values)[0]?.label}</Link>
             </li>
           </Nav>
           <SwitchProduct>
@@ -280,6 +310,7 @@ const CategoryDetail = () => {
           <DetailInfo>
             <div className="DetailInfoHead">
               <h2> {product?.title}</h2>
+              <DetailDesc>{product?.description}</DetailDesc>
               <hr />
               <div className="price">
                 {product?.discountPrice > 0 ? (
@@ -331,13 +362,29 @@ const CategoryDetail = () => {
                 </WishContainer>
               </DetailList>
               <DetailFoot>
-                <p>
+                {/* <p>
                   Kateqoriya:{" "}
-                  {product?.$values?.categories?.map((item) => (
-                    <span>{item.title} </span>
-                  ))}
+                  {product?.categories?.$values?.map((item, index) => (
+    <span key={index}>{item.title} </span>
+  ))}
+                  <span> {getCategoryBreadcrumbs(product?.categories?.$values)}</span>
+                </p> */}
+<p>
+  Kateqoriya:{" "}
+  <span>
+    {getCategoryBreadcrumbs(product?.categories?.$values).map((item, idx, arr) => (
+      <span key={idx}>
+        <Link to={`/product-category${item.to}`}>{item.label}</Link>
+        {idx < arr.length - 1 && ", "}
+      </span>
+    ))}
+  </span>
+</p>
 
-                </p>
+
+
+
+
                 <Socials>
                   <li className="facebook" data-tooltip="Share on Facebook">
                     <Link to={getValue("FacebookLink") || "#"} target="_blank">
@@ -497,6 +544,11 @@ const DetailInfo = styled.div`
     }
   }
 `;
+const DetailDesc = styled.p`
+color:  #666666;
+font-weight: bold;
+margin-bottom: 15px;
+`
 const DetailList = styled.ul`
   display: flex;
   flex-direction: column;

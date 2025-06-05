@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Bounce, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { usePost } from "@utils/hooks/useCustomMutation";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
@@ -121,7 +121,8 @@ const LoginForm = ({ closeModal }) => {
         {formik.isSubmitting ? "Göndərilir..." : "Giriş"}
       </StyledButton>
 
-      <ForgetPassword href="https://prosolution.ltd/my-account/lost-password/">
+      <ForgetPassword to={ "https://prosolution.ltd/my-account/lost-password/"
+      }>
         Parolunuzu unutmusunuz?
       </ForgetPassword>
     </StyledForm>
@@ -191,7 +192,7 @@ const StyledButton = styled.button`
   }
 `;
 
-const ForgetPassword = styled.a`
+const ForgetPassword = styled(Link)`
   max-width: 50%;
   color: #149295;
   text-decoration: none;

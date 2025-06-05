@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { RiEqualizerLine } from "react-icons/ri";
 import PriceFilter from "@components/site/Category/FilterPrice";
 import ActiveFilter from "@components/site/Category/ActiveFilter";
-import ProcessorSelect from "@components/site/Category/ProcessorSelectIntel";
 import CategoriesSidebar from "@components/site/Blog/CategoriesSideBar";
 import CategoryProductCard, {
   CategoryProductCardSkelaton,
@@ -41,7 +40,6 @@ const Category = () => {
   const minPrice = minPriceRaw !== null && minPriceRaw !== "undefined" ? parseFloat(minPriceRaw) : null;
   const maxPrice = maxPriceRaw !== null && maxPriceRaw !== "undefined" ? parseFloat(maxPriceRaw) : null;
   const featureId = searchParams.get("featureId") || "";
-
   useEffect(() => {
     setLoading(true);
     let url = `${ENDPOINTS.getAllFiltered}?slug=${slug}&search=${search}&take=${take}&skip=${skip}&isDeleted=false&isDiscount=false&featureId=${featureId}`;
@@ -157,7 +155,6 @@ const Category = () => {
                 </li>
                 <li>
                   <Link>
-                    <BoldText></BoldText>
                     {category == undefined ? "/" : `/ ${category} /`}{" "}
                   </Link>
                   <Link> {search}</Link>
@@ -465,6 +462,7 @@ const CategoryCards = styled.div`
   @media (max-width: 930px) {
     justify-content: center;
   }
+
 `;
 const ModalButton = styled.button`
   color: rgba(255, 255, 255, 0.51);
