@@ -8,6 +8,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { toast } from 'react-toastify';
 import { CiHeart } from "react-icons/ci";
 import ProductModal from "../Category/productModal";
+import CountUp from "react-countup";
 
 const pulse = keyframes`
   0% {
@@ -119,11 +120,36 @@ const ProductsCard = ({ item }) => {
             <PriceBox>
               {item.discountPrice > 0 ? (
                 <>
-                  <OldPrice>{item.price * quantity} ₼</OldPrice>
-                  <NewPrice>{item.discountPrice * quantity} ₼</NewPrice>
+                  <OldPrice>
+                    <CountUp
+                      key={`old-${item.price * quantity}`}
+                      start={item.price}
+                      end={item.price * quantity}
+                      duration={1}
+                    />{" "}
+                    ₼
+                  </OldPrice>
+
+                  <NewPrice>
+                    <CountUp
+                      key={`new-${item.discountPrice * quantity}`}
+                      start={item.discountPrice}
+                      end={item.discountPrice * quantity}
+                      duration={1}
+                    />{" "}
+                    ₼
+                  </NewPrice>
                 </>
               ) : (
-                <NewPrice>{item.price * quantity} ₼</NewPrice>
+                <NewPrice>
+                  <CountUp
+                    key={`no-discount-${item.price * quantity}`}
+                    start={item.price}
+                    end={item.price * quantity}
+                    duration={1}
+                  />{" "}
+                  ₼
+                </NewPrice>
               )}
             </PriceBox>
             <ButtonLink to={`/category/${item.detailSlug}`}>
@@ -334,7 +360,7 @@ const OldPrice = styled.p`
   }
 `;
 const NewPrice = styled.p`
-  color: black;
+  color: black !important;
   font-size: 16px;
   font-weight: bold;
   @media (max-width: 1095px) {
