@@ -4,6 +4,7 @@ import Copyright from "./Copyright";
 import About from "./About";
 import Map from "./Map";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
+import PasswordChange from "@components/site/MyAccount/ChangeParol";
 
 const Footer = () => {
   return (
