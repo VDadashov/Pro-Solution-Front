@@ -48,14 +48,13 @@ const pulse = keyframes`
   }
 
 const BlogList = () => {
-  const slug = useParams("slug")
+  const {slug} = useParams()
   const { data: blogs, isLoading } = useGet(
     "blogs",
     `${ENDPOINTS.blogs}?take=10&page=1&order=1&isDeleted=false${
       slug ? `&authorSlug=${slug}` : ""
     }`
   );
-
 
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 3;
