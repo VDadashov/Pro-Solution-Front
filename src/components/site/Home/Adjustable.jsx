@@ -84,9 +84,6 @@ const AdjustableSectionSkeleton = () => {
 const AdjustableSection = ({ headerName }) => {
   const { data: brand, isLoading } = useGet("brand", ENDPOINTS.brand);
   const [brands, setBrands] = React.useState([]);
-  console.log(brands);
-  
-
   
   React.useEffect(() => {
     setBrands(brand?.$values || []);

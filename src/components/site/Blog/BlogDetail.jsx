@@ -167,6 +167,13 @@ const DetailImg = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 250px;
+
+  img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
 `;
 
 const BlogDate = styled.div`

@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
+import { jwtDecode } from "jwt-decode";
 const queryClient = new QueryClient();
 
 function AppContent() {
@@ -29,26 +30,47 @@ function AppContent() {
   }, [isLogin, userShort]);
   useEffect(() => {
     async function getUserSummary() {
-      const token = Cookies.get("token") || sessionStorage.getItem("token") || null;
+      console.log("getUserSummary called");
 
-
+      const token =
+        Cookies.get("token") || sessionStorage.getItem("token") || null;
 
       if (token) {
-            try {
-        const res = await axios.get(ENDPOINTS['is-authenticated'], {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-console.log(res?.data);
-        setUserShort({ name: "emil" });
-        setIsLogin(res);
-      } catch (error) {
-        Cookies.remove("token");
-        sessionStorage.removeItem("token");
-        setIsLogin(false);
-        console.error("Unauthorized access", error);
-      }
+        try {
+          const res = await axios.get(ENDPOINTS["is-authenticated"], {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          const decoded = jwtDecode(token);
+
+          const userShort = {
+            name: decoded[
+              "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+            ],
+            email:
+              decoded[
+                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+              ],
+            givenName:
+              decoded[
+                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"
+              ],
+            surname:
+              decoded[
+                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"
+              ],
+          };
+
+          setUserShort(userShort);
+          setIsLogin(res);
+        } catch (error) {
+          Cookies.remove("token");
+          sessionStorage.removeItem("token");
+          setIsLogin(false);
+          console.error("Unauthorized access", error);
+        }
       } else {
         setIsLogin(false);
       }
@@ -56,8 +78,6 @@ console.log(res?.data);
 
     getUserSummary();
   }, []);
-
-
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -78,8 +98,11 @@ console.log(res?.data);
 }
 
 function App() {
-
-  return <MainProvider><AppContent /></MainProvider>;
+  return (
+    <MainProvider>
+      <AppContent />
+    </MainProvider>
+  );
 }
 
 export default App;
