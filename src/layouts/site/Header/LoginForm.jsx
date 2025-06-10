@@ -29,30 +29,29 @@ const LoginForm = ({ closeModal }) => {
       actions.setSubmitting(true);
 
       loginMutation(values, {
-        onSuccess: async (res) => {
-          const token = await res.token;
+        onSuccess: (res) => {
+          const token = res.token;
 
-          // Store token based on "remember me" option
           if (rememberMe) {
-            Cookies.set("token", token, { expires: res?.expireTime }); // 7 days
+            Cookies.set("token", token, { expires: new Date(res?.expireTime) });
           } else {
             sessionStorage.setItem("token", token);
           }
 
           actions.setSubmitting(false);
           actions.resetForm();
+
           toast.success("Giriş uğurla tamamlandı!", {
-            position: "top-right",  
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            draggable: true,
-            progress: undefined,
+            position: "top-right",
+            autoClose: 2000,
             theme: "colored",
             transition: Bounce,
           });
-          navigate("/");
-          window.location.reload();
+
+          setTimeout(() => {
+            navigate("/");
+            window.location.reload();
+          }, 2000);
         },
         onError: (error) => {
           actions.setSubmitting(false);
@@ -61,10 +60,6 @@ const LoginForm = ({ closeModal }) => {
           toast.error(errorMessage, {
             position: "top-right",
             autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            draggable: true,
-            progress: undefined,
             theme: "colored",
             transition: Bounce,
           });
@@ -85,10 +80,10 @@ const LoginForm = ({ closeModal }) => {
           type="text"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          value={formik.values.userName}
+          value={formik.values.usernameOrEmail}
         />
-        {formik.touched.userName && formik.errors.userName && (
-          <ErrorText>{formik.errors.userName}</ErrorText>
+        {formik.touched.usernameOrEmail && formik.errors.usernameOrEmail && (
+          <ErrorText>{formik.errors.usernameOrEmail}</ErrorText>
         )}
       </StyledFormParagraph>
 
@@ -121,8 +116,7 @@ const LoginForm = ({ closeModal }) => {
         {formik.isSubmitting ? "Göndərilir..." : "Giriş"}
       </StyledButton>
 
-      <ForgetPassword to={ ``
-      }>
+      <ForgetPassword to="/forgot-password">
         Parolunuzu unutmusunuz?
       </ForgetPassword>
     </StyledForm>
