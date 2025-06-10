@@ -16,7 +16,8 @@ import Downloads from "@components/site/MyAccount/Downloads";
 import Address from "@components/site/MyAccount/Address";
 import AccountDetails from "@components/site/MyAccount/AccountDetails";
 import ScrollToTop from "@components/site/common/ScrollToTop/ScrollToTop";
-
+import PasswordChange from "@components/site/MyAccount/ChangeParol";
+import ResetPassword from "@components/site/MyAccount/ResetPassword";
 
 const ROUTES = [
   {
@@ -39,7 +40,6 @@ const ROUTES = [
         path: "/product-category/",
         element: <Category />,
         children: [
-          
           {
             path: ":category",
             element: <Category />,
@@ -85,6 +85,14 @@ const ROUTES = [
             element: <AccountDetails />,
           },
         ],
+      },
+      {
+        path: "/myaccount/lost-password/:token/:email",
+        element: <PasswordChange />,
+      },
+      {
+        path: "/myaccount/lost-password/",
+        element: <ResetPassword />,
       },
       {
         path: "/wishlist",

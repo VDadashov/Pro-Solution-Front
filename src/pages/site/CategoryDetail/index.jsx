@@ -127,12 +127,13 @@ const CategoryDetail = () => {
     }
   }, [slug]);
 
-  useEffect(() => {
-    if (product) {
-      const isLiked = wishlist.some((item) => item.id === product.id);
-      setLiked(isLiked);
-    }
-  }, [wishlist, product]);
+useEffect(() => {
+  if (product) {
+    const isLiked = wishlist.some((item) => item && item.id === product.id);
+    setLiked(isLiked);
+  }
+}, [wishlist, product]);
+
 
   const imageValues = product?.images?.$values || [];
   const mainImage = imageValues.find((img) => img.isMain);

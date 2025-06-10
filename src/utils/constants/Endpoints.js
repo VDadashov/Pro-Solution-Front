@@ -20,10 +20,12 @@ export const ENDPOINTS = {
   contact: `${MAIN_URL}/api/contactus/contact`,
 
 // Authentication Endpoints
-  register: `${MAIN_URL}/api/auth/register`,
+  // register: `${MAIN_URL}/api/auth/register`,
   login: `${MAIN_URL}/api/auth/login`,
   logout: `${MAIN_URL}/api/auth/logout`,
   'is-authenticated': `${MAIN_URL}/api/auth/is-authenticated`,
+forgotpassword:`${MAIN_URL}/api/auth/forgot-password`,
+resetpassword:`${MAIN_URL}/api/auth/reset-password`
 
 
 };
