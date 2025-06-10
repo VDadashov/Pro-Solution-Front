@@ -99,7 +99,7 @@ const ROUTES = [
         element: <Wishlist />,
       },
       {
-        path: "/blog",
+        path: "blog/",
         element: <Blog />,
         children: [
           {
@@ -110,6 +110,11 @@ const ROUTES = [
             path: ":id",
             element: <BlogDetail />,
           },
+          {
+            path: "author/:slug",
+            element: <BlogList />,
+          }
+            
         ],
       },
       {

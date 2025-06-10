@@ -8,6 +8,7 @@ import styled, { keyframes } from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import ProductModal from './productModal';
+import CountUp from 'react-countup';
 
 const pulse = keyframes`
   0% {
@@ -127,11 +128,35 @@ const CategoryProductCard = ({ item }) => {
           <PriceBox>
             {item.discountPrice > 0 ? (
               <>
-                <OldPrice>{item.price * quantity} ₼</OldPrice>
-                <NewPrice>{item.discountPrice * quantity} ₼</NewPrice>
+                <OldPrice>
+                  <CountUp
+                    key={`old-${item.price * quantity}`}
+                    start={item.price}
+                    end={item.price * quantity}
+                    duration={1}
+                  />{" "}
+                  ₼
+                </OldPrice>
+                <NewPrice>
+                  <CountUp
+                    key={`new-${item.discountPrice * quantity}`}
+                    start={item.discountPrice}
+                    end={item.discountPrice * quantity}
+                    duration={1}
+                  />{" "}
+                  ₼
+                </NewPrice>
               </>
             ) : (
-              <NewPrice>{item.price * quantity} ₼</NewPrice>
+              <NewPrice>
+                <CountUp
+                  key={`no-discount-${item.price * quantity}`}
+                  start={item.price}
+                  end={item.price * quantity}
+                  duration={1}
+                />{" "}
+                ₼
+              </NewPrice>
             )}
           </PriceBox>
           <ButtonLink to={`/category/${item.detailSlug}`}>
