@@ -14,7 +14,7 @@ export const ENDPOINTS = {
   partners: `${MAIN_URL}/api/partners/all`,
   about: `${MAIN_URL}/about`,
   register: `${MAIN_URL}/api/auth/register`,
-  blogs: `${MAIN_URL}/api/blogs`,
+  blogs: `${MAIN_URL}/api/blogs/filtered`,
   blogsReviews: `${MAIN_URL}/api/blogs/reviews`,
   authors: `${MAIN_URL}/api/auth/filtered?take=10&page=1&order=5&isActivate=true`,
   contact: `${MAIN_URL}/api/contactus/contact`,

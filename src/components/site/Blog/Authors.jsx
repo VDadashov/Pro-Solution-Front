@@ -4,6 +4,7 @@ import React from "react";
 import styled, { keyframes } from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { Link } from "react-router";
 
 const pulse = keyframes`
     0% {
@@ -30,6 +31,9 @@ const AuthorsSkeleton = ({ index }) => {
     </AuthorsSkeletonWrapper>
   );
 };
+
+
+
 function Authors() {
   const { data: authors, isLoading } = useGet("authors", ENDPOINTS.authors);
   
@@ -39,22 +43,23 @@ function Authors() {
         <h4>MÜƏLLİFLƏR</h4>
         <hr />
       </CategoriesHead>
-     <AuthorsSection>
-  {isLoading ? (
-    <>
-      {Array.from({ length: 15 }).map((_, index) => (
-        <AuthorsSkeleton key={index} />
-      ))}
-    </>
-  ) : (
-    authors?.items?.$values?.map((author, index) => (
-      <StyledButton key={index}>
-        {author.name} {author.surname}
-      </StyledButton>
-    ))
-  )}
-</AuthorsSection>
-
+      <AuthorsSection>
+        {isLoading ? (
+          <>
+            {Array.from({ length: 15 }).map((_, index) => (
+              <AuthorsSkeleton key={index} />
+            ))}
+          </>
+        ) : (
+          authors?.items?.$values?.map((author, index) => (
+            <Link to={`author/${authors.slug}?slug=${authors.slug}`}>
+              <StyledButton key={index}>
+                {author.name} {author.surname}
+              </StyledButton>
+            </Link>
+          ))
+        )}
+      </AuthorsSection>
     </AuthorsWrapper>
   );
 }
