@@ -189,7 +189,7 @@ const StyledImage = styled.img`
 `;
 const ImageContainer = styled.div`
   position: relative;
-  cursor: pointer;
+  cursor: grab;
   &:hover > div {
     top: 85%;
   }

@@ -18,7 +18,13 @@ const About = () => {
 
   return (
     <StyledAbout>
-     <Link to={"/"}> <LayoutLogo logoScr={whiteLogo || "/images/psa-logo-white.png"} /></Link>
+      <Link to={"/"}>
+        {" "}
+        <LayoutLogo
+          imageHeight = "50px"
+          logoScr={whiteLogo || "/images/psa-logo-white.png"}
+        />
+      </Link>
       <StyledAboutText>Satış şöbəsi :{WorkTime}</StyledAboutText>
       <StyledAboutText>
         {phone}
@@ -35,6 +41,7 @@ const StyledAbout = styled.div`
   flex-direction: column;
   padding: 5px 0px;
   max-width: 25%;
+  height: 40%;
   gap: 1.3rem;
   @media (max-width: 550px) {
     max-width: 100%;

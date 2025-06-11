@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useMainContext } from "@Context/MainContext";
+import { Link } from "react-router-dom";
 
 const ActionButtons = ({ openRegister }) => {
      const { contextData: { userShort, isLogin } } = useMainContext();
@@ -17,19 +18,16 @@ const ActionButtons = ({ openRegister }) => {
         </StyledLinkButton>
       </StyledLinkContainer>
       <StyledLoginContainer>
-       {
-        isLogin ? (
-          <StyledLoginButton>
-            {userShort?.name || "Profil"}
-          </StyledLoginButton>
+        {isLogin ? (
+          <StyledLoginButton to="/myaccount/control_panel">
+            <span>{userShort?.name || "Profil"}</span>{" "}
+            <i class="fa-light fa-user"></i>
+          </StyledLoginButton> 
         ) : (
-          <StyledLoginButton
-            onClick={openRegister}
-          >
+          <StyledLoginButton to="#" onClick={openRegister}>
             Giriş / Qeydiyyat
-          </StyledLoginButton>
-        )
-      }
+          </StyledLoginButton> 
+        )}
       </StyledLoginContainer>
     </ButtonContainer>
   );
@@ -59,8 +57,10 @@ export const StyledLinkButton = styled.a`
   color: #fff;
   padding: 6px 15px;
   font-size: 0.97em;
-  // display: flex;
   text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 5px;
   &:hover {
     background-color: #157778;
   }
@@ -78,7 +78,7 @@ const StyledLoginContainer = styled.li`
   }
 `;
 
-const StyledLoginButton = styled.button`
+const StyledLoginButton = styled(Link)`
   border: 1px solid silver;
   color: silver;
   padding: 6px 15px;

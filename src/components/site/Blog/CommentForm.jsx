@@ -39,7 +39,7 @@ function CommentForm({blogId}) {
         onSuccess: (res) => {
           actions.setSubmitting(false);
           actions.resetForm();
-          toast.success("Serhiniz yaradildi", {
+          toast.success("Şərhiniz yaradıldı", {
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
