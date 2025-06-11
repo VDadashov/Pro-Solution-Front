@@ -113,6 +113,10 @@ const ROUTES = [
           {
             path: "author/:slug",
             element: <BlogList />,
+          },
+          {
+            path: "author/:slug/:id",
+            element: <BlogDetail />,
           }
             
         ],
