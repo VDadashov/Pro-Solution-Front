@@ -152,35 +152,62 @@ useEffect(() => {
   const getValue = (key) => {
     return data?.$values?.find((item) => item.key === key)?.value || "";
   };
+
  const getCategoryBreadcrumbs = (array) => {
   const result = [];
 
+//  const getCategoryBreadcrumbs = (array) => {
+//   const result = [];
+//   array.forEach((element) => {
+//     if (element.slug) {
+//       const parts = element.slug.split('/');
+//       let accumulatedPath = '';
+
+//       parts.forEach((part) => {
+//         accumulatedPath += (accumulatedPath ? '/' : '') + part;
+//         result.push({
+//           label: part,
+//           to: '/' + accumulatedPath,
+//         });
+//       });
+//     } else {
+//       result.push({
+//         label: element.title,
+//         to: '/' + element.title,
+//       });
+//     }
+//   });
+// console.log(result)
+//   return result;
+
+// };
+function toKebabCase(str) {
+  return str
+    ?.replace(/([a-z])([A-Z])/g, "$1-$2")
+    .replace(/[\s_]+/g, "-")
+    .toLowerCase();
+}
+
+const getCategoryBreadcrumbs = (array) => {
+  if (!Array.isArray(array)) return [];
+
+  const result = [];
+  let fullPath = "";
 
   array.forEach((element) => {
-    if (element.slug) {
-      const parts = element.slug.split('/');
-      let accumulatedPath = '';
+    const part = toKebabCase(element.title);
+    fullPath += (fullPath ? "/" : "") + part;
 
-      parts.forEach((part) => {
-        accumulatedPath += (accumulatedPath ? '/' : '') + part;
-        result.push({
-          label: part,
-          to: '/' + accumulatedPath,
-        });
-      });
-    } else {
-      result.push({
-        label: element.title,
-        to: '/' + element.title,
-      });
-    }
+    result.push({
+      label: element.title,
+      slug: fullPath,
+      searchTerm: part
+    });
   });
+
   return result;
 
 };
-
-
-
 
   return isLoading ? (
     <DetailSkeleton imageCount={product?.images?.$values?.length} />
@@ -196,18 +223,6 @@ useEffect(() => {
               <Link to={`/product-category/${getCategoryBreadcrumbs(product?.categories?.$values)[0]?.label}`}>{getCategoryBreadcrumbs(product?.categories?.$values)[0]?.label}</Link>
             </li>
           </Nav>
-          <SwitchProduct>
-            <li>
-              <Link>
-                <FaChevronLeft />
-              </Link>
-            </li>
-            <li>
-              <Link>
-                <FaChevronRight />
-              </Link>
-            </li>
-          </SwitchProduct>
         </DetailHead>
 
         <DetailBody>
@@ -368,7 +383,7 @@ useEffect(() => {
   ))}
                   <span> {getCategoryBreadcrumbs(product?.categories?.$values)}</span>
                 </p> */}
-<p>
+{/* <p>
   Kateqoriya:{" "}
   <span>
     {getCategoryBreadcrumbs(product?.categories?.$values).map((item, idx, arr) => (
@@ -378,10 +393,29 @@ useEffect(() => {
       </span>
     ))}
   </span>
+</p> */}
+<p>
+  Kateqoriya:{" "}
+  <span>
+    {getCategoryBreadcrumbs(product?.categories?.$values).map((item, idx, arr) => {
+      const isLast = idx === arr.length - 1;
+
+      const linkTo = {
+        pathname: `/product-category/${item.slug}`,
+        search: isLast
+          ? `?slug=${item.slug}&search=${item.searchTerm}`
+          : `?slug=${item.slug}`
+      };
+
+      return (
+        <span key={idx}>
+          <Link to={linkTo}>{item.label}</Link>
+          {idx < arr.length - 1 && ", "}
+        </span>
+      );
+    })}
+  </span>
 </p>
-
-
-
 
 
                 <Socials>

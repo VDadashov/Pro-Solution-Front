@@ -154,7 +154,7 @@ const Category = () => {
                   <Link>Əsas səhifə </Link>
                 </li>
                 <li>
-                  <Link>
+                  <Link to={slug}>
                     {category == undefined ? "/" : `/ ${category} /`}{" "}
                   </Link>
                   <Link> {search}</Link>
