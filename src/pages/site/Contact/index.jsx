@@ -482,7 +482,6 @@ const Contact = () => {
         message: values.message,
       };
 
-      // console.log("Göndərilən dəyərlər:", finalValues);
 
 
       commentMutation(finalValues, {

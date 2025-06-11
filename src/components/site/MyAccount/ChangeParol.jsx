@@ -25,7 +25,6 @@ const PasswordChange = () => {
   const [showPassword1, setShowPassword1] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
   const { email, token } = useParams();
-console.log(email, token);
 
   const { mutate: resetPassword } = usePost(
     "resetPasswordRequest",
