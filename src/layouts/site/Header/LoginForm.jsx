@@ -121,7 +121,7 @@ const LoginForm = ({ closeModal }) => {
         {formik.isSubmitting ? "Göndərilir..." : "Giriş"}
       </StyledButton>
 
-      <ForgetPassword to={ ``
+      <ForgetPassword to={ "/myaccount/lost-password/"
       }>
         Parolunuzu unutmusunuz?
       </ForgetPassword>
