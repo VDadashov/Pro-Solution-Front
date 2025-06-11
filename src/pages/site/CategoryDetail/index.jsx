@@ -152,7 +152,6 @@ useEffect(() => {
   const getValue = (key) => {
     return data?.$values?.find((item) => item.key === key)?.value || "";
   };
-  // console.log(product?.categories)
  const getCategoryBreadcrumbs = (array) => {
   const result = [];
 
@@ -176,7 +175,6 @@ useEffect(() => {
       });
     }
   });
-console.log(result)
   return result;
 
 };

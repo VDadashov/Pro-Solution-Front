@@ -19,8 +19,8 @@ import Reviews from "./Reviews";
 function BlogDetail() {
   const { id } = useParams();
 
-  const { data } = useGetOne("blogs", ENDPOINTS.blogs, id);
- 
+  const { data } = useGetOne("blogsGetOne", ENDPOINTS.blogsGetOne, id);
+ console.log(data);
   return (
     <BlogDetailWrapper>
       <QuestionContent>
