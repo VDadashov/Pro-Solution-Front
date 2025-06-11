@@ -9,6 +9,7 @@ import MobileNavbar from "./Navbar/MobileNavbar";
 import { Link } from "react-router-dom";
 import LoginRegister from "./LoginRegister";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
+import CartPanel from "./CartPanel";
 
 const StyledHeader = styled.header`
   position: fixed;
@@ -57,6 +58,8 @@ const BarIcon = styled(FaBars)`
 const Header = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
+const [isCartOpen, setIsCartOpen] = useState(false);
+const toggleCart = () => setIsCartOpen(prev => !prev);
   const [showHeader, setShowHeader] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -92,6 +95,7 @@ const Header = () => {
 
   return (
     <>
+    <CartPanel isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} ></CartPanel>
       <LoginRegister $showModal={showModal} closeRegister={closeRegister} />
       <StyledHeader $show={showHeader}>
         <MobileNavbar $isOpenModal={isOpenModal} closeModal={closeModal} />
@@ -109,7 +113,7 @@ const Header = () => {
             <ActionButtons openRegister={openRegister} />
           </StyledTopHeader>
         </LayoutContainer>
-        <Navbar />
+        <Navbar toggleCart={toggleCart}/>
       </StyledHeader>
       <div style={{ height: "140px" }} />
     </>

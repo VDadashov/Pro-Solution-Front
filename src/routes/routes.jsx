@@ -16,6 +16,7 @@ import Downloads from "@components/site/MyAccount/Downloads";
 import Address from "@components/site/MyAccount/Address";
 import AccountDetails from "@components/site/MyAccount/AccountDetails";
 import ScrollToTop from "@components/site/common/ScrollToTop/ScrollToTop";
+import CartFeedBack from "@pages/site/CartFeedBack";
 import PasswordChange from "@components/site/MyAccount/ChangeParol";
 import ResetPassword from "@components/site/MyAccount/ResetPassword";
 
@@ -97,6 +98,10 @@ const ROUTES = [
       {
         path: "/wishlist",
         element: <Wishlist />,
+      },
+      {
+        path:"/feedbackproduct/:token",
+        element:<CartFeedBack/>
       },
       {
         path: "blog/",

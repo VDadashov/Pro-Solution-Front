@@ -9,7 +9,8 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
-import { jwtDecode } from "jwt-decode";
+import { CartProvider } from "./providers/CartProvider";
+import { jwtDecode } from "jwt-decode"
 const queryClient = new QueryClient();
 
 function AppContent() {
@@ -80,6 +81,7 @@ function AppContent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <CartProvider>
       <WishlistProvider>
         <ToastContainer
           position="top-center"
@@ -92,6 +94,7 @@ function AppContent() {
         />
         <RouterProvider router={router} />
       </WishlistProvider>
+      </CartProvider>
     </QueryClientProvider>
   );
 }
