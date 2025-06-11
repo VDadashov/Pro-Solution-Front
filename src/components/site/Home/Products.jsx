@@ -19,47 +19,50 @@ const ProductSection = ({ sectionHeader, display, order ,slug}) => {
       <LayoutContainer>
         <ProductsContainer>
           <ContainerHeader style={{ display: display }}>
-            <ContainerSpan >{sectionHeader}</ContainerSpan>
+            <ContainerSpan>{sectionHeader}</ContainerSpan>
           </ContainerHeader>
           <ProductsMenu>
             <Swiper
               loop={true}
               navigation={true}
               spaceBetween={0}
-              slidesPerView={3}
+              slidesPerView={5}
+              centeredSlides={true}
               modules={[FreeMode, Navigation, Autoplay, Pagination]}
               breakpoints={{
                 0: {
-                  slidesPerView: 1,
+                  slidesPerView: 2,
                 },
                 400: {
+                  slidesPerView: 2,
+                },
+                650: {
                   slidesPerView: 3,
                 },
                 850: {
-                  slidesPerView: 3,
+                  slidesPerView: 2,
+                  spaceBetween: 45,
                 },
                 1024: {
                   slidesPerView: 5,
                 },
               }}
             >
-              {
-                isLoading ? (
-                  <>
-                    {Array.from({ length: 6 }).map((_, index) => (
-                      <SwiperSlide ><ProductsCardSkeleton key={index} /></SwiperSlide>
-                    ))}
-                  </>
-                ) : (
-                  products?.items?.$values.map((item) => (
-
-                    <SwiperSlide key={item.id}>
-                      <ProductsCard item={item} />
+              {isLoading ? (
+                <>
+                  {Array.from({ length: 6 }).map((_, index) => (
+                    <SwiperSlide>
+                      <ProductsCardSkeleton key={index} />
                     </SwiperSlide>
-                  ))
-                )
-              }
-
+                  ))}
+                </>
+              ) : (
+                products?.items?.$values.map((item) => (
+                  <SwiperSlide key={item.id}>
+                    <ProductsCard item={item} />
+                  </SwiperSlide>
+                ))
+              )}
             </Swiper>
           </ProductsMenu>
         </ProductsContainer>

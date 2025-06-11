@@ -19,8 +19,8 @@ import Reviews from "./Reviews";
 function BlogDetail() {
   const { id } = useParams();
 
-  const { data } = useGetOne("blogs", ENDPOINTS.blogs, id);
- 
+  const { data } = useGetOne("blogsGetOne", ENDPOINTS.blogsGetOne, id);
+ console.log(data);
   return (
     <BlogDetailWrapper>
       <QuestionContent>
@@ -167,6 +167,13 @@ const DetailImg = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 250px;
+
+  img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
 `;
 
 const BlogDate = styled.div`

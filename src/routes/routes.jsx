@@ -16,7 +16,9 @@ import Downloads from "@components/site/MyAccount/Downloads";
 import Address from "@components/site/MyAccount/Address";
 import AccountDetails from "@components/site/MyAccount/AccountDetails";
 import ScrollToTop from "@components/site/common/ScrollToTop/ScrollToTop";
-
+import CartFeedBack from "@pages/site/CartFeedBack";
+import PasswordChange from "@components/site/MyAccount/ChangeParol";
+import ResetPassword from "@components/site/MyAccount/ResetPassword";
 
 const ROUTES = [
   {
@@ -39,7 +41,6 @@ const ROUTES = [
         path: "/product-category/",
         element: <Category />,
         children: [
-          
           {
             path: ":category",
             element: <Category />,
@@ -87,11 +88,23 @@ const ROUTES = [
         ],
       },
       {
+        path: "/myaccount/lost-password/:token/:email",
+        element: <PasswordChange />,
+      },
+      {
+        path: "/myaccount/lost-password/",
+        element: <ResetPassword />,
+      },
+      {
         path: "/wishlist",
         element: <Wishlist />,
       },
       {
-        path: "/blog",
+        path:"/feedbackproduct/:token",
+        element:<CartFeedBack/>
+      },
+      {
+        path: "blog/",
         element: <Blog />,
         children: [
           {
@@ -102,6 +115,15 @@ const ROUTES = [
             path: ":id",
             element: <BlogDetail />,
           },
+          {
+            path: "author/:slug",
+            element: <BlogList />,
+          },
+          {
+            path: "author/:slug/:id",
+            element: <BlogDetail />,
+          }
+            
         ],
       },
       {

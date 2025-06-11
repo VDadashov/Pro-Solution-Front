@@ -17,34 +17,32 @@ const pulse = keyframes`
      }
    `;
 
-  //  function toKebabCase(str) {
-  //    return str
-  //      .replace(/([a-z])([A-Z])/g, "$1-$2") // insert dash between camelCase
-  //      .replace(/[\s_]+/g, "-") // replace spaces and underscores with dash
-  //      .toLowerCase(); // lowercase everything
-  //  }
-   
-  const LoadingSkeleton = styled(Skeleton)`
-    animation: ${pulse} 1.5s infinite ease-in-out;
-  `;
+//  function toKebabCase(str) {
+//    return str
+//      .replace(/([a-z])([A-Z])/g, "$1-$2") // insert dash between camelCase
+//      .replace(/[\s_]+/g, "-") // replace spaces and underscores with dash
+//      .toLowerCase(); // lowercase everything
+//  }
 
-  const CategoriesSkeleton = ({ index }) => {
-    const randomWidth = Math.floor(Math.random() * (100 - 50 + 1)) + 50;
-    return (
-      <SidebarWrapper key={`skleton-${index}`}>
-        <CategoriesSection>
-          <LoadingSkeleton width={randomWidth} height={20} />
-        </CategoriesSection>
-      </SidebarWrapper>
-    );
-  };
+const LoadingSkeleton = styled(Skeleton)`
+  animation: ${pulse} 1.5s infinite ease-in-out;
+`;
+
+const CategoriesSkeleton = ({ index }) => {
+  const randomWidth = Math.floor(Math.random() * (100 - 50 + 1)) + 50;
+  return (
+    <SidebarWrapper key={`skleton-${index}`}>
+      <CategoriesSection>
+        <LoadingSkeleton width={randomWidth} height={20} />
+      </CategoriesSection>
+    </SidebarWrapper>
+  );
+};
 const CategoriesSidebar = () => {
   const { data: categories, isLoading } = useGet(
     "categories",
     ENDPOINTS.categories
   );
-
-  
 
   return (
     <SidebarWrapper>
@@ -59,8 +57,10 @@ const CategoriesSidebar = () => {
             ))
           : categories?.$values?.map((category, index) => (
               <React.Fragment key={index}>
-                <Link to={`/product-category/${category.slug}?slug=${category.slug}`}>
-                  {category.title}
+                <Link
+                  to={`/product-category/${category.slug}?slug=${category.slug}`}
+                > 
+                  {category.title} ({category.productCount})
                 </Link>
               </React.Fragment>
             ))}

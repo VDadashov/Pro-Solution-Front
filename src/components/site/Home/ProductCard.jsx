@@ -1,13 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { FaRegHeart } from "react-icons/fa";
 import { WishlistContext } from "@Context/wishlistContext";
 import { keyframes } from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { CiHeart } from "react-icons/ci";
+import { useCart } from "../../../providers/CartProvider"; 
+import ProductModal from "../Category/productModal";
+import CountUp from "react-countup";
 
 const pulse = keyframes`
   0% {
@@ -57,7 +59,16 @@ const ProductsCard = ({ item }) => {
   const { wishlist, addToWishlist } = useContext(WishlistContext);
   const [liked, setLiked] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  
+    const { addToCart } = useCart();
+  const [quantity, setQuantity] = useState(1);
+
+  const decrement = () => {
+    if (quantity > 1) setQuantity(quantity - 1);
+  };
+
+  const increment = () => {
+    setQuantity(quantity + 1);
+  };
 
   useEffect(() => {
     const isLiked = wishlist.some(x => x.id === item.id);
@@ -65,70 +76,164 @@ const ProductsCard = ({ item }) => {
   }, [wishlist, item]);
 
   return (
-    <ProductCard>
-      <ProductCardHeadImage>
-        <ProductCardLink to={`/category/${item.detailSlug}`}>
-          <img
-            src={
-              item.images?.$values?.find((img) => img.isMain)?.imagePath || ""
-            }
-          />
-        </ProductCardLink>
-        <div
-          className="heartIcon"
-          onClick={() => {
-            addToWishlist(item);
-            if (!liked) {
-              toast.success("Product added to wishlist!");
-            } else {
-              toast.error("Product removed from wishlist.");
-            }
-            setLiked(!liked);
-          }}
-        >
-          <CiHeart />
-        </div>
-        <CategoryDetail
-          className="categoryDetail"
-          onClick={() => setShowModal(true)}
-        >
-          <i class="fa-light fa-eye"></i>
-        </CategoryDetail>
-      </ProductCardHeadImage>
+    <>
+      <ProductCard>
+        <ProductCardHeadImage>
+          <ProductCardLink to={`/category/${item.detailSlug}`}>
+            <img
+              src={
+                item.images?.$values?.find((img) => img.isMain)?.imagePath || ""
+              }
+            />
+          </ProductCardLink>
+          <div
+            className="heartIcon"
+            onClick={() => {
+              addToWishlist(item);
+              if (!liked) {
+                toast.success("Product added to wishlist!");
+              } else {
+                toast.error("Product removed from wishlist.");
+              }
+              setLiked(!liked);
+            }}
+          >
+            <CiHeart />
+          </div>
+          <CategoryDetail
+            className="categoryDetail"
+            onClick={() => setShowModal(true)}
+          >
+            <i class="fa-light fa-eye"></i>
+          </CategoryDetail>
+        </ProductCardHeadImage>
 
-      <ProductCardBody>
-        <span>
-          {item.categories?.$values
-            ? item.categories.$values[0]?.title
-            : item.categories?.[0]?.title}
-        </span>
-        <Link to={`/category/${item.detailSlug}`}>
-          <ProductName>{item?.title}</ProductName>
-        </Link>
-        <CardButton>
-          <PriceBox>
-            {item.discountPrice > 0 ? (
-              <>
-                <OldPrice>{item.price} ₼</OldPrice>
-                <NewPrice>{item.discountPrice} ₼</NewPrice>
-              </>
-            ) : (
-              <NewPrice>{item.price} ₼</NewPrice>
-            )}
-          </PriceBox>
-          <CategorySubSection>
+        <ProductCardBody>
+          <span>
+            {item.categories?.$values
+              ? item.categories.$values[0]?.title
+              : item.categories?.[0]?.title}
+          </span>
+          <Link to={`/category/${item.detailSlug}`}>
+            <ProductName>{item?.title}</ProductName>
+          </Link>
+          <CardButton>
+            <PriceBox>
+              {item.discountPrice > 0 ? (
+                <>
+                  <OldPrice>
+                    <CountUp
+                      key={`old-${item.price * quantity}`}
+                      start={item.price}
+                      end={item.price * quantity}
+                      duration={1}
+                    />{" "}
+                    ₼
+                  </OldPrice>
+
+                  <NewPrice>
+                    <CountUp
+                      key={`new-${item.discountPrice * quantity}`}
+                      start={item.discountPrice}
+                      end={item.discountPrice * quantity}
+                      duration={1}
+                    />{" "}
+                    ₼
+                  </NewPrice>
+                </>
+              ) : (
+                <NewPrice>
+                  <CountUp
+                    key={`no-discount-${item.price * quantity}`}
+                    start={item.price}
+                    end={item.price * quantity}
+                    duration={1}
+                  />{" "}
+                  ₼
+                </NewPrice>
+              )}
+            </PriceBox>
             <ButtonLink to={`/category/${item.detailSlug}`}>
               Davamını oxu
             </ButtonLink>
-            <BuyButton>
-              <i class="fa-light fa-bag-shopping"></i>
-            </BuyButton>
-          </CategorySubSection>
-        </CardButton>
-      </ProductCardBody>
-    </ProductCard>
+            <CategorySubSection>
+              <ProductCalculator>
+                <InputDecrement onClick={decrement}>
+                  <i class="fa-regular fa-minus"></i>
+                </InputDecrement>
+                <InputCalculator type="text" value={quantity}></InputCalculator>
+                <InputIncrement onClick={increment}>
+                  <i class="fa-regular fa-plus"></i>
+                </InputIncrement>
+              </ProductCalculator>
+             <BuyButton
+                      onClick={() => {
+                        addToCart(item);
+                        toast.success("Məhsul səbətə əlavə olundu!");
+                      }}
+                    >
+                      <i className="fa-light fa-bag-shopping"></i>
+                    </BuyButton>
+            </CategorySubSection>
+          </CardButton>
+        </ProductCardBody>
+      </ProductCard>
+
+      <ProductModal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        item={item}
+      />
+    </>
   );
 };
+
+const ProductCalculator = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const InputCalculator = styled.input`
+  width: 40px;
+  height: 32px;
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  outline: none;
+  color: rgb(0, 23, 31);
+  padding: 4px 0;
+  text-align: center;
+  font-weight: 400;
+  font-size: 14px;
+
+  @media (max-width: 420px) {
+    width: 25px;
+  }
+`;
+const InputDecrement = styled.button`
+  width: 32px;
+  height: 32px;
+  border-radius: 25% 0 0 25%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-right: none;
+  background-color: white;
+  color: rgb(0, 23, 31);
+  font-weight: 400;
+  font-size: 12px;
+`;
+const InputIncrement = styled.button`
+  width: 32px;
+  height: 32px;
+  border-radius: 0 25% 25% 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-left: none;
+  background-color: white;
+  color: rgb(0, 23, 31);
+  font-weight: 400;
+  font-size: 12px;
+
+
+`;
 
 const ProductCard = styled.div`
   border-radius: 8px;
@@ -137,8 +242,9 @@ const ProductCard = styled.div`
   background-color: #fff;
   transition: all 0.3s ease;
   cursor: pointer;
-  width: 210px;
-  margin: 10px 0;
+  width: 215px;
+  margin: 10px 10px 10px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   &:hover {
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   }
@@ -149,11 +255,18 @@ const ProductCard = styled.div`
   &:hover .categoryDetail {
     opacity: 1;
   }
-  @media (max-width: 930px) {
-    width: 150px;
-  }
   @media (max-width: 1100px) {
     width: 170px;
+  }
+  @media (max-width: 800px) {
+    width: 185px;
+  }
+
+  @media (max-width: 500px) {
+    width: 180px;
+  }
+  @media (max-width: 420px) {
+    width: 160px;
   }
 `;
 
@@ -267,7 +380,7 @@ const OldPrice = styled.p`
   }
 `;
 const NewPrice = styled.p`
-  color: black;
+  color: black !important;
   font-size: 16px;
   font-weight: bold;
   @media (max-width: 1095px) {
@@ -284,6 +397,7 @@ const CategorySubSection = styled.div`
 const ButtonLink = styled(Link)`
   margin-top: 5px;
   width: max-content;
+  margin-bottom: 15px;
   background-color: #149295;
   color: white;
   border: none;

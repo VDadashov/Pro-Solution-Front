@@ -11,6 +11,7 @@ const ProductDetailTabs = ({ product }) => {
   const [activeTab, setActiveTab] = useState('info');
   const [rating, setRating] = useState(0);
   const [reviews, setReviews] = useState(product?.productReviews?.$values||[]); 
+  
   const { mutate: productReviewMutation } = usePost("productsCreateReview", ENDPOINTS.productsCreateReview);
 
   useEffect(() => {
