@@ -30,7 +30,6 @@ function AppContent() {
   }, [isLogin, userShort]);
   useEffect(() => {
     async function getUserSummary() {
-      console.log("getUserSummary called");
 
       const token =
         Cookies.get("token") || sessionStorage.getItem("token") || null;
