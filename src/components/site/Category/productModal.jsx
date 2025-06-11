@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import ReactDOM from "react-dom";
 import "./productModal.scss";
 import "slick-carousel/slick/slick.css";
@@ -7,6 +7,7 @@ import Slider from "react-slick";
 import styled from "styled-components";
 import { FaRegHeart, FaHeart } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { WishlistContext } from "@Context/wishlistContext";
 
 const sliderSettings = {
   dots: true,
@@ -78,6 +79,12 @@ const ProductModal = ({ show, onClose, item }) => {
   const [quantity, setQuantity] = useState(1);
   const [liked, setLiked] = useState(false);
   const modalRootRef = useRef(document.createElement("div"));
+  const { wishlist, addToWishlist } = useContext(WishlistContext);
+
+  useEffect(() => {
+      const isLiked = wishlist.some(x => x.id === item.id);
+      setLiked(isLiked);
+    }, [wishlist, item]);
 
   useEffect(() => {
     const modalRoot = modalRootRef.current;
@@ -136,9 +143,14 @@ const ProductModal = ({ show, onClose, item }) => {
                 </DetailItem>
               ))}
               <WishContainer
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setLiked(true);
+                onClick={() => {
+                  addToWishlist(item);
+                  if (!liked) {
+                    toast.success("Product added to wishlist!");
+                  } else {
+                    toast.error("Product removed from wishlist.");
+                  }
+                  setLiked(!liked);
                 }}
               >
                 <WishIcon>
