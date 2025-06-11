@@ -459,7 +459,7 @@ const getCategoryBreadcrumbs = (array) => {
       <ProductDetailTabs product={product} />
     </DetailWrapper>
   );
-};
+}};
 
 export default CategoryDetail;
 
