@@ -18,12 +18,13 @@ export const ENDPOINTS = {
   blogsReviews: `${MAIN_URL}/api/blogs/reviews`,
   authors: `${MAIN_URL}/api/auth/filtered?take=10&page=1&order=5&isActivate=true`,
   contact: `${MAIN_URL}/api/contactus/contact`,
-
+  basket: `${MAIN_URL}/api/baskets`,
 // Authentication Endpoints
   register: `${MAIN_URL}/api/auth/register`,
   login: `${MAIN_URL}/api/auth/login`,
   logout: `${MAIN_URL}/api/auth/logout`,
   'is-authenticated': `${MAIN_URL}/api/auth/is-authenticated`,
+
 
 
 };

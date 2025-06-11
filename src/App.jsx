@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
+import { CartProvider } from "./providers/CartProvider";
 const queryClient = new QueryClient();
 
 function AppContent() {
@@ -61,6 +62,7 @@ console.log(res?.data);
 
   return (
     <QueryClientProvider client={queryClient}>
+      <CartProvider>
       <WishlistProvider>
         <ToastContainer
           position="top-center"
@@ -73,6 +75,7 @@ console.log(res?.data);
         />
         <RouterProvider router={router} />
       </WishlistProvider>
+      </CartProvider>
     </QueryClientProvider>
   );
 }

@@ -8,6 +8,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { toast, ToastContainer } from 'react-toastify';
 import { CiHeart } from "react-icons/ci";
+import { useCart } from "../../../providers/CartProvider"; 
 
 const pulse = keyframes`
   0% {
@@ -57,7 +58,7 @@ const ProductsCard = ({ item }) => {
   const { wishlist, addToWishlist } = useContext(WishlistContext);
   const [liked, setLiked] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  
+    const { addToCart } = useCart();
 
   useEffect(() => {
     const isLiked = wishlist.some(x => x.id === item.id);
@@ -120,9 +121,14 @@ const ProductsCard = ({ item }) => {
             <ButtonLink to={`/category/${item.detailSlug}`}>
               Davamını oxu
             </ButtonLink>
-            <BuyButton>
-              <i class="fa-light fa-bag-shopping"></i>
-            </BuyButton>
+           <BuyButton
+                      onClick={() => {
+                        addToCart(item);
+                        toast.success("Məhsul səbətə əlavə olundu!");
+                      }}
+                    >
+                      <i className="fa-light fa-bag-shopping"></i>
+                    </BuyButton>
           </CategorySubSection>
         </CardButton>
       </ProductCardBody>

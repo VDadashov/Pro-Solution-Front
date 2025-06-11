@@ -9,6 +9,7 @@ import MobileNavbar from "./Navbar/MobileNavbar";
 import { Link } from "react-router-dom";
 import LoginRegister from "./LoginRegister";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
+import CartPanel from "./CartPanel";
 
 const StyledHeader = styled.header`
   background-color: #fff;
@@ -62,7 +63,8 @@ const Header = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isscrolled, setIsScrolled] = useState(false);
   const [showModal, setShowModal] = useState(false);
-
+const [isCartOpen, setIsCartOpen] = useState(false);
+const toggleCart = () => setIsCartOpen(prev => !prev);
   const openRegister = () => {
     setShowModal(true);
     document.body.style.overflowY = "hidden";
@@ -98,6 +100,7 @@ const Header = () => {
 
   return (
     <>
+    <CartPanel isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} ></CartPanel>
       <LoginRegister $showModal={showModal} closeRegister={closeRegister} />
       <StyledHeader $isscrolled={isscrolled}>
         <MobileNavbar $isOpenModal={isOpenModal} closeModal={closeModal} />
@@ -119,7 +122,7 @@ const Header = () => {
             <ActionButtons openRegister={openRegister} />
           </StyledTopHeader>
         </LayoutContainer>
-        <Navbar />
+        <Navbar toggleCart={toggleCart}/>
       </StyledHeader>
     </>
   );

@@ -8,6 +8,8 @@ import styled, { keyframes } from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import ProductModal from './productModal';
+import { useCart } from "../../../providers/CartProvider"; // yol sənin struktura uyğun olmalıdır
+
 
 const pulse = keyframes`
   0% {
@@ -59,6 +61,8 @@ export const CategoryProductCardSkelaton = () => {
 
 const CategoryProductCard = ({ item }) => {
   const { wishlist, addToWishlist } = useContext(WishlistContext);
+  const { addToCart } = useCart();
+
   const [liked, setLiked] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -129,9 +133,15 @@ const CategoryProductCard = ({ item }) => {
             <ButtonLink to={`/category/${item.detailSlug}`}>
               Davamını oxu
             </ButtonLink>
-            <BuyButton>
-              <i class="fa-light fa-bag-shopping"></i>
-            </BuyButton>
+           <BuyButton
+            onClick={() => {
+              addToCart(item);
+              toast.success("Məhsul səbətə əlavə olundu!");
+            }}
+          >
+            <i className="fa-light fa-bag-shopping"></i>
+          </BuyButton>
+
           </CategorySubSection>
         </CardButton>
       </CategoryCard>
