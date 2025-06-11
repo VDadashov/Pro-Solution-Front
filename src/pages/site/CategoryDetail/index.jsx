@@ -153,6 +153,9 @@ useEffect(() => {
     return data?.$values?.find((item) => item.key === key)?.value || "";
   };
 
+ const getCategoryBreadcrumbs = (array) => {
+  const result = [];
+
 //  const getCategoryBreadcrumbs = (array) => {
 //   const result = [];
 //   array.forEach((element) => {
@@ -203,6 +206,7 @@ const getCategoryBreadcrumbs = (array) => {
   });
 
   return result;
+
 };
 
   return isLoading ? (

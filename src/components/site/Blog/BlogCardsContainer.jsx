@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
-import moment from "moment"
+import moment from "moment";
 import styled, { keyframes } from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -19,51 +19,67 @@ const pulse = keyframes`
      }
    `;
 
-  const LoadingSkeleton = styled(Skeleton)`
-    animation: ${pulse} 1.5s infinite ease-in-out;
-  `;
+const LoadingSkeleton = styled(Skeleton)`
+  animation: ${pulse} 1.5s infinite ease-in-out;
+`;
 
-  const BlogSkeleton= ({index})=>{
-    return (
-      <BlogCardsContainer key={`skeleton-${index}`}>
-        <BlogCard>
-          <BlogDetail>
-            <div>
-              <LoadingSkeleton width={"40px"} height={"40px"} />
-            </div>
-            <BlogImg>
-              <LoadingSkeleton width={"220px"} height={"150px"} />
-            </BlogImg>
-          </BlogDetail>
-          <BlogContent>
-            <Question>
-              <LoadingSkeleton width={"90px"} height={20} />
-            </Question>
-            <hr />
+const BlogSkeleton = ({ index }) => {
+  return (
+    <BlogCardsContainer key={`skeleton-${index}`}>
+      <BlogCard>
+        <BlogDetail>
+          <div>
+            <LoadingSkeleton width={"40px"} height={"40px"} />
+          </div>
+          <BlogImg>
+            <LoadingSkeleton width={"220px"} height={"150px"} />
+          </BlogImg>
+        </BlogDetail>
+        <BlogContent>
+          <Question>
             <LoadingSkeleton width={"90px"} height={20} />
-          </BlogContent>
-        </BlogCard>
-      </BlogCardsContainer>
-    );
-  }
+          </Question>
+          <hr />
+          <LoadingSkeleton width={"90px"} height={20} />
+        </BlogContent>
+      </BlogCard>
+    </BlogCardsContainer>
+  );
+};
 
 const BlogList = () => {
-  const {slug} = useParams()
-  const { data: blogs, isLoading } = useGet(
-    "blogs",
-    `${ENDPOINTS.blogs}?take=10&page=1&order=1&isDeleted=false${
-      slug ? `&authorSlug=${slug}` : ""
-    }`
-  );
+  const { slug } = useParams();
+
+  const [blogs, setBlogs] = useState([]);
+  const [isLoading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let url = `${ENDPOINTS.blogs}?take=10&page=1&order=1&isDeleted=false`;
+    if (slug) {
+      url += `&AuthorSlug=${slug}`;
+    }
+
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        setBlogs(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching blogs:", error);
+        setLoading(false);
+      });
+  }, [slug]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 3;
-
-  const totalPages = Math.ceil(blogs?.length / postsPerPage);
+  const totalPages = Math.ceil(blogs?.items?.$values?.length / postsPerPage);
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = blogs?.items?.$values?.slice(indexOfFirstPost, indexOfLastPost);
-  
+  const currentPosts = blogs?.items?.$values?.slice(
+    indexOfFirstPost,
+    indexOfLastPost
+  );
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -73,9 +89,9 @@ const BlogList = () => {
         {isLoading ? (
           <>
             {Array.from({ length: 3 }).map((_, index) => (
-              <BlogSkeleton key={index}/>
+              <BlogSkeleton key={index} />
             ))}
-          </> 
+          </>
         ) : (
           currentPosts?.map((blog, index) => (
             <BlogCard key={index}>
@@ -137,16 +153,14 @@ const BlogCardsContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 30vh;
-  gap:50px;
-  // background-color:green;
+  min-height: 100vh;
+  gap: 50px;
 
-    @media (max-width:850px){
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:100px;
-
+  @media (max-width: 850px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 100px;
   }
 `;
 
@@ -156,8 +170,8 @@ const BlogContent = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-// background-color:green;
-width:200px;
+  // background-color:green;
+  width: 200px;
   hr {
     width: 30px;
     border-top: 3px solid lightgray;
@@ -178,7 +192,6 @@ const BlogDetail = styled.div`
   @media (max-width: 600px) {
     width: 100%;
   }
-    
 `;
 const BlogDate = styled(Link)`
   display: flex;
@@ -238,8 +251,8 @@ const BlogCard = styled.div`
   align-items: center;
   padding-left: 50px;
   padding-right: 50px;
-  position:relative;
-  // background-color:yellow; 
+  position: relative;
+  // background-color:yellow;
 
   &:hover ${BlogDate} {
     background-color: #149295;
@@ -249,10 +262,9 @@ const BlogCard = styled.div`
     flex-direction: column;
     padding: 0;
     width: 100%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   @media (max-width: 650px) {
     gap: 10px;

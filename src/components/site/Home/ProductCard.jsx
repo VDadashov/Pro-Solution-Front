@@ -7,6 +7,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { toast } from 'react-toastify';
 import { CiHeart } from "react-icons/ci";
+import { useCart } from "../../../providers/CartProvider"; 
 import ProductModal from "../Category/productModal";
 import CountUp from "react-countup";
 
@@ -58,6 +59,7 @@ const ProductsCard = ({ item }) => {
   const { wishlist, addToWishlist } = useContext(WishlistContext);
   const [liked, setLiked] = useState(false);
   const [showModal, setShowModal] = useState(false);
+    const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
 
   const decrement = () => {
@@ -67,7 +69,6 @@ const ProductsCard = ({ item }) => {
   const increment = () => {
     setQuantity(quantity + 1);
   };
-  
 
   useEffect(() => {
     const isLiked = wishlist.some(x => x.id === item.id);
@@ -165,9 +166,14 @@ const ProductsCard = ({ item }) => {
                   <i class="fa-regular fa-plus"></i>
                 </InputIncrement>
               </ProductCalculator>
-              <BuyButton>
-                <i class="fa-light fa-bag-shopping"></i>
-              </BuyButton>
+             <BuyButton
+                      onClick={() => {
+                        addToCart(item);
+                        toast.success("Məhsul səbətə əlavə olundu!");
+                      }}
+                    >
+                      <i className="fa-light fa-bag-shopping"></i>
+                    </BuyButton>
             </CategorySubSection>
           </CardButton>
         </ProductCardBody>

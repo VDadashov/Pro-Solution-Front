@@ -10,7 +10,6 @@ import {
   Autoplay,
 } from "swiper/modules";
 
-
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -42,24 +41,20 @@ const BannerSkeleton = () => {
         <BannerContainer>
           <SwiperContainer>
             <Swiper
-                navigation={true}
-                pagination={{ clickable: true }}
-                loop={true}
-                spaceBetween={0}
-                slidesPerView={1}
-                modules={[FreeMode, Navigation, Autoplay, Pagination]}
-                autoplay={{ delay: 2000, disableOnInteraction: false }}
-              >
-                {
-                  Array.from({length:1}).map((_,index)=>(
-  <SwiperSlide key={index}>
-                    <LoadingSkeleton width={"100%"} height={"100%"}/>
-                  </SwiperSlide>
-                  ))
-                }
-                
-             
-              </Swiper>
+              navigation={true}
+              pagination={{ clickable: true }}
+              loop={true}
+              spaceBetween={0}
+              slidesPerView={1}
+              modules={[FreeMode, Navigation, Autoplay, Pagination]}
+              autoplay={{ delay: 2000, disableOnInteraction: false }}
+            >
+              {Array.from({ length: 1 }).map((_, index) => (
+                <SwiperSlide key={index}>
+                  <LoadingSkeleton width={"100%"} height={"100%"} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </SwiperContainer>
         </BannerContainer>
       </LayoutContainer>
@@ -67,14 +62,14 @@ const BannerSkeleton = () => {
   );
 };
 
-
 const Banner = () => {
-  const { data: sliders,isLoading } = useGet("sliders", ENDPOINTS.sliders);
+  const { data: sliders, isLoading } = useGet("sliders", ENDPOINTS.sliders);
+
   return (
     <BannerSection>
       <LayoutContainer>
         <BannerContainer>
-      <SwiperContainer>
+          <SwiperContainer>
             {isLoading || !sliders?.$values?.length ? (
               <BannerSkeleton />
             ) : (
@@ -101,7 +96,6 @@ const Banner = () => {
   );
 };
 
-
 const BannerSection = styled.section`
   padding: 20px 0px;
 `;
@@ -117,9 +111,8 @@ const BannerContainer = styled.div`
 
 const SwiperContainer = styled.div`
   max-width: 75%;
-    @media(max-width:850px){
-max-width: 100%;
-
+  @media (max-width: 850px) {
+    max-width: 100%;
   }
   .swiper-pagination-bullet {
     background-color: transparent;
@@ -152,7 +145,7 @@ max-width: 100%;
   .swiper-button-prev:hover {
     background-color: rgba(0, 0, 0, 0.5);
   }
-    @media (max-width: 850px) {
+  @media (max-width: 850px) {
     .swiper-button-next,
     .swiper-button-prev {
       font-size: 1.2rem;

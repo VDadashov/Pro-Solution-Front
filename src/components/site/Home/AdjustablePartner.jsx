@@ -35,10 +35,9 @@ const LoadingSkeleton = styled(Skeleton)`
   animation: ${pulse} 1.5s infinite ease-in-out;
 `;
 
-const AdjustablePartnerSectionSkeleton=()=>{
-
-  return(
-<AdjustableContainer>
+const AdjustablePartnerSectionSkeleton = () => {
+  return (
+    <AdjustableContainer>
       <LayoutContainer>
         <BrandBox>
           <BrandsAndPartners>
@@ -68,8 +67,7 @@ const AdjustablePartnerSectionSkeleton=()=>{
                 },
               }}
             >
-             
-                  {Array.from({ length: 6 }).map((_, index) => (
+              {Array.from({ length: 6 }).map((_, index) => (
                 <SwiperSlide key={index}>
                   <ImageContainer>
                     <LoadingSkeleton width={"100%"} height={"100%"} />
@@ -81,11 +79,10 @@ const AdjustablePartnerSectionSkeleton=()=>{
         </BrandBox>
       </LayoutContainer>
     </AdjustableContainer>
-
-  )
-}
+  );
+};
 const AdjustablePartnerSection = ({ headerName }) => {
-  const { data: partners,isLoading } = useGet("partners", ENDPOINTS.partners);
+  const { data: partners, isLoading } = useGet("partners", ENDPOINTS.partners);
 
   return (
     <AdjustableContainer>

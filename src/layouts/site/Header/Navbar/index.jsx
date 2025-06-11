@@ -8,13 +8,18 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { WishlistContext } from "@Context/wishlistContext";
+import { FaShoppingCart } from "react-icons/fa";
+import { useCart } from "../../../../providers/CartProvider"; 
+import CartPanel from "../CartPanel"; 
 
-const Navbar = () => {
+const Navbar = ({toggleCart}) => {
   const location = useLocation();
   const [iscrolled, setIsScrolled] = useState(false);
   const { wishlist } = useContext(WishlistContext);
   const { data: categories } = useGet("categories", ENDPOINTS.categories);
   const navigate = useNavigate();
+  const { cartItems } = useCart(); 
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,6 +44,7 @@ const Navbar = () => {
   const isHomePage = location.pathname === "/";
  
   return (
+     <>
     <NavigationBar>
       <StyledNavbarContainer>
         <NavContainer>
@@ -112,6 +118,7 @@ const Navbar = () => {
               </StyledNavigationLi>
             </HeaderNav>
           </NavLeft>
+          <Buttons>
           <NavbarLink to={"/wishlist"} activeclassname="active">
             <WishlistButton>
               <WishlistText>
@@ -125,11 +132,67 @@ const Navbar = () => {
               <HeartIcon />
             </WishlistButton>
           </NavbarLink>
+          <CartButton onClick={toggleCart}>
+  <CartText>
+    Səbət
+    {cartItems.length > 0 && (
+      <CartLength>{cartItems.length}</CartLength>
+    )}
+  </CartText>
+  <FaShoppingCart />
+          </CartButton>
+
+          </Buttons>
         </NavContainer>
       </StyledNavbarContainer>
+
     </NavigationBar>
+
+     </>
   );
 };
+
+const CartButton = styled.button`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #149295;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-left: 10px;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: #157778;
+  }
+`;
+const CartText = styled.span`
+  font-weight: bold;
+  margin-right: 5px;
+`;
+const CartLength = styled.span`
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: #fff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+`;
+const Buttons = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
 
 const NavbarLink = styled(NavLink)`
   &.active {
@@ -146,6 +209,8 @@ const StyledNavbarContainer = styled.div`
 `;
 
 const NavigationBar = styled.nav`
+position: relative;
+// overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;

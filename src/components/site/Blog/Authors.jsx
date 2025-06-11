@@ -52,7 +52,7 @@ function Authors() {
           </>
         ) : (
           authors?.items?.$values?.map((author, index) => (
-            <Link to={`author/${authors.slug}?slug=${authors.slug}`}>
+            <Link to={`author/${author.slug}?slug=${author.slug}`}>
               <StyledButton key={index}>
                 {author.name} {author.surname}
               </StyledButton>
