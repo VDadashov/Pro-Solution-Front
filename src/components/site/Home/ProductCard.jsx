@@ -168,7 +168,7 @@ const ProductsCard = ({ item }) => {
               </ProductCalculator>
              <BuyButton
                       onClick={() => {
-                        addToCart(item);
+                        addToCart(item, quantity);
                         toast.success("Məhsul səbətə əlavə olundu!");
                       }}
                     >
