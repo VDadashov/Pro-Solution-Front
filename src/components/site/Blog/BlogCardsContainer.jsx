@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import moment from "moment"
@@ -48,14 +48,22 @@ const pulse = keyframes`
   }
 
 const BlogList = () => {
-  const { data: blogs, isLoading } = useGet("blogs", ENDPOINTS.blogs);
+  const {slug} = useParams()
+  const { data: blogs, isLoading } = useGet(
+    "blogs",
+    `${ENDPOINTS.blogs}?take=10&page=1&order=1&isDeleted=false${
+      slug ? `&authorSlug=${slug}` : ""
+    }`
+  );
+
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 3;
 
   const totalPages = Math.ceil(blogs?.length / postsPerPage);
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = blogs?.$values?.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPosts = blogs?.items?.$values?.slice(indexOfFirstPost, indexOfLastPost);
+  
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -67,7 +75,7 @@ const BlogList = () => {
             {Array.from({ length: 3 }).map((_, index) => (
               <BlogSkeleton key={index}/>
             ))}
-          </>
+          </> 
         ) : (
           currentPosts?.map((blog, index) => (
             <BlogCard key={index}>

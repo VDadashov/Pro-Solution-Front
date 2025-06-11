@@ -59,7 +59,7 @@ const CategoriesSidebar = () => {
               <React.Fragment key={index}>
                 <Link
                   to={`/product-category/${category.slug}?slug=${category.slug}`}
-                >
+                > 
                   {category.title} ({category.productCount})
                 </Link>
               </React.Fragment>
