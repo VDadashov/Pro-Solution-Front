@@ -153,9 +153,8 @@ const BlogCardsContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 30vh;
+  min-height: 100vh;
   gap: 50px;
-  // background-color:green;
 
   @media (max-width: 850px) {
     display: flex;
