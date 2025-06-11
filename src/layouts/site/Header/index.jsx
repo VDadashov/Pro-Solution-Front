@@ -11,21 +11,17 @@ import LoginRegister from "./LoginRegister";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
 
 const StyledHeader = styled.header`
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
-  position: ${(props) => (props.$isscrolled ? "fixed" : "relative")};
-  top: ${(props) => (props.$isscrolled ? "0" : "20px")};
-  z-index: 2;
+  position: fixed;
+  top: 0;
   width: 100%;
-  opacity: ${(props) => (props.$isscrolled ? 1 : 1)};
+  z-index: 10;
+  background-color: #fff;
   transform: ${(props) =>
-    props.$isscrolled ? "translateY(0)" : "translateY(-20px)"};
-  transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
-  box-shadow: ${({ $isscrolled }) =>
-    $isscrolled ? "rgba(0, 0, 0, 0.24) 0px 3px 8px" : "none"};
+    props.$show ? "translateY(0)" : "translateY(-100%)"};
+  transition: transform 0.4s ease-in-out;
+  box-shadow: ${(props) =>
+    props.$show ? "rgba(0, 0, 0, 0.24) 0px 3px 8px" : "none"};
 `;
-
 
 
 const StyledTopHeader = styled.div`
@@ -55,13 +51,14 @@ const SideBarOpener = styled.a`
 `;
 
 const BarIcon = styled(FaBars)`
- font-size: 24px;
+  font-size: 24px;
 `;
 
 const Header = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [isscrolled, setIsScrolled] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showHeader, setShowHeader] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   const openRegister = () => {
     setShowModal(true);
@@ -73,45 +70,38 @@ const Header = () => {
     document.body.style.overflowY = "auto";
   };
 
-  const closeModal = () => {
-    setIsOpenModal(false);
-  };
-
-  const openModal = () => {
-    setIsOpenModal(true);
-  };
-
-  const handleScroll = () => {
-    if (window.scrollY > 150) {
-      setIsScrolled(true);
-    } else {
-      setIsScrolled(false);
-    }
-  };
+  const closeModal = () => setIsOpenModal(false);
+  const openModal = () => setIsOpenModal(true);
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > 200 || currentScrollY < 200) {
+        setShowHeader(true); // Aşağı scroll: göstər
+      } else {
+        setShowHeader(false); // Yuxarı scroll: gizlə
+      }
+
+      setLastScrollY(currentScrollY);
     };
-  }, []);
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   return (
     <>
       <LoginRegister $showModal={showModal} closeRegister={closeRegister} />
-      <StyledHeader $isscrolled={isscrolled}>
+      <StyledHeader $show={showHeader}>
         <MobileNavbar $isOpenModal={isOpenModal} closeModal={closeModal} />
         <LayoutContainer>
           <StyledTopHeader>
-            <SideBarOpener
-              onClick={() => openModal()}
-              $isOpenModal={isOpenModal}
-            >
+            <SideBarOpener onClick={openModal}>
               <BarIcon />
             </SideBarOpener>
             <HeaderLeft>
               <Link to={"/"}>
-
                 <LayoutLogo logoScr={"/images/logo.png"} imageHeight="50px" />
               </Link>
               <Search />
@@ -121,6 +111,7 @@ const Header = () => {
         </LayoutContainer>
         <Navbar />
       </StyledHeader>
+      <div style={{ height: "140px" }} />
     </>
   );
 };
