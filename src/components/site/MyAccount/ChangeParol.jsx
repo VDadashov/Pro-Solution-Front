@@ -110,7 +110,7 @@ const PasswordChange = () => {
                 {!showPassword2 ? <FiEyeOff size={20} /> : <FiEye size={20} />}
               </ToggleIcon>
             </InputWrapper>
-          </InputGroup>
+          </InputGroup> 
         </Form>
         <Button type="button" onClick={formik.handleSubmit}>Qeyd et</Button>
       </Content>
