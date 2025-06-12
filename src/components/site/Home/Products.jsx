@@ -31,20 +31,27 @@ const ProductSection = ({ sectionHeader, display, order ,slug}) => {
               modules={[FreeMode, Navigation, Autoplay, Pagination]}
               breakpoints={{
                 0: {
-                  slidesPerView: 2,
+                  slidesPerView: 1,
                 },
-                400: {
+                420: {
                   slidesPerView: 2,
+                  spaceBetween: 10,
                 },
                 650: {
                   slidesPerView: 3,
+                  spaceBetween: 15,
                 },
-                850: {
-                  slidesPerView: 2,
-                  spaceBetween: 45,
+                768: {
+                  slidesPerView: 4,
+                  spaceBetween: 15,
                 },
+                // 850: {
+                //   slidesPerView: 3,
+                //   spaceBetween: 15,
+                // },
                 1024: {
                   slidesPerView: 5,
+                  spaceBetween: 15,
                 },
               }}
             >
@@ -74,7 +81,7 @@ const ProductSection = ({ sectionHeader, display, order ,slug}) => {
 const SectionContainer = styled.section`
   width: 100%;
   padding: 10px 0px 30px;
-
+// background-color: blue;
   .swiper-button-next,
   .swiper-button-prev {
     color: black;
@@ -125,10 +132,13 @@ const SectionContainer = styled.section`
 
 const ProductsContainer = styled.div`
   width: 100%;
+  // background-color: red;
 `;
 
 const ProductsMenu = styled.div`
   padding: 10px 0px;
+  // background-color: green;
+  width: 100%;
 `;
 
 const ContainerHeader = styled.h3`

@@ -249,20 +249,77 @@ const ProductCard = styled.div`
   &:hover .categoryDetail {
     opacity: 1;
   }
-  @media (max-width: 1100px) {
-    width: 170px;
+  @media (max-width: 1200px) {
+    width: 90%;
+    margin: 10px auto;
   }
-  @media (max-width: 800px) {
-    width: 185px;
+  // @media (max-width: 800px) {
+  //   width: 185px;
+  // }
+
+  // @media (max-width: 500px) {
+  //   width: 180px;
+  // }
+  @media (max-width: 420px) {
+    width: 70%;
   }
 
-  @media (max-width: 500px) {
-    width: 180px;
-  }
-  @media (max-width: 420px) {
-    width: 160px;
-  }
+  margin: 10px auto;
 `;
+
+// const ProductCard = styled.div`
+//   width: clamp(160px, 18vw, 220px);
+//   flex-shrink: 0;
+//   margin: clamp(8px, 1.2vw, 16px);
+//   padding: clamp(10px, 1.5vw, 20px);
+//   border-radius: 8px;
+//   background-color: #fff;
+//   transition: all 0.3s ease;
+//   cursor: pointer;
+//   overflow: hidden;
+//   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+
+//   &:hover {
+//     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+//   }
+
+//   &:hover img {
+//     transform: scale(1.05);
+//   }
+
+//   &:hover .categoryDetail {
+//     opacity: 1;
+//   }
+// `;
+
+// const ProductCard = styled.div`
+//   // width: calc(100vw / 6); /* Ekrana görə 6 kartlıq yer ayırırıq */
+//   // max-width: 220px;
+//   // min-width: 160px;
+
+//   // margin: calc(100vw / 100); /* təxminən 1% boşluq */
+//   // padding: calc(100vw / 80); /* təxminən 1.25% boşluq */
+
+//   border-radius: 8px;
+//   overflow: hidden;
+//   background-color: #fff;
+//   transition: all 0.3s ease;
+//   cursor: pointer;
+//   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+
+//   &:hover {
+//     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+//   }
+
+//   &:hover img {
+//     transform: scale(1.05);
+//   }
+
+//   &:hover .categoryDetail {
+//     opacity: 1;
+//   }
+// `;
+
 
 const ProductName = styled.h5`
   max-width: 100%;
