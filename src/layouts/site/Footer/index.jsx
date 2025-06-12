@@ -31,7 +31,7 @@ const StyledFooter = styled.footer`
 const StyledFooterTop = styled.div`
   width: 100%;
   display: flex;
-  padding: 20px 110px 40px 110px;
+  padding: 20px 60px 40px 60px;
   align-items: center;
   @media (max-width: 550px) {
     flex-direction: column;
