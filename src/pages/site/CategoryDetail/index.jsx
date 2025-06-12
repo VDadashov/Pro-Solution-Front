@@ -414,7 +414,7 @@ const breadcrumbs = getCategoryBreadcrumbs(product?.categories?.$values);
       <ProductDetailTabs product={product} />
     </DetailWrapper>
   );
-}};
+};
 
 export default CategoryDetail;
 

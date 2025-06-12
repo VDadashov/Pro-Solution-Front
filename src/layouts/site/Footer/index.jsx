@@ -31,16 +31,16 @@ const StyledFooter = styled.footer`
 const StyledFooterTop = styled.div`
   width: 100%;
   display: flex;
-  padding: 20px 110px 40px 110px;
+  padding: 20px 10px 20px 10px;
   align-items: center;
-  @media (max-width: 550px) {
+  @media (max-width: 600px) {
     flex-direction: column;
     gap: 10px;
   }
 `;
 
 const StyledQuarterSpace = styled.div`
-  width: 25%;
+  width: 20%;
 `;
 
 const StyledSmallSpace = styled.div`
