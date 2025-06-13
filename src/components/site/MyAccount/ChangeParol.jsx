@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useFormik } from "formik";
 import { usePost } from "@utils/hooks/useCustomMutation";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
@@ -21,12 +21,13 @@ const validatePassword = (password) => {
   return null;
 };
 
-const PasswordChange = () => {
+const ChangeParol = () => {
   const [showPassword1, setShowPassword1] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
   const { email, token } = useParams();
+  const navigate = useNavigate()
 
-  const { mutate: resetPassword } = usePost(
+  const { mutate: resetPasswordMutation } = usePost(
     "resetPasswordRequest",
     ENDPOINTS.resetpassword
   );
@@ -49,7 +50,7 @@ const PasswordChange = () => {
         return;
       }
 
-      resetPassword(
+      resetPasswordMutation(
         {
           email,
           token,
@@ -57,14 +58,18 @@ const PasswordChange = () => {
         },
         {
           onSuccess: () => {
-            toast.success("Parol uğurla dəyişdirildi.");
+            navigate("/")
+
+            toast.success("Parol uğurla dəyişdirildi.")
+
           },
           onError: () => {
             toast.error("Xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.");
-              
+
           },
         }
       );
+
     },
   });
 
@@ -74,7 +79,8 @@ const PasswordChange = () => {
       <Content>
         <InfoText>Yeni parolu aşağıda daxil et.</InfoText>
         <Form onSubmit={formik.handleSubmit}>
-          <InputGroup>
+          <FormInput>
+            <InputGroup>
             <Label htmlFor="newPassword">Yeni parol *</Label>
             <InputWrapper>
               <Input
@@ -110,25 +116,32 @@ const PasswordChange = () => {
                 {!showPassword2 ? <FiEyeOff size={20} /> : <FiEye size={20} />}
               </ToggleIcon>
             </InputWrapper>
-          </InputGroup> 
+          </InputGroup>
+          </FormInput>
+          <Button type="submit" >Qeyd et</Button>
         </Form>
-        <Button type="button" onClick={formik.handleSubmit}>Qeyd et</Button>
       </Content>
     </Container>
   );
 };
 
-export default PasswordChange;
+export default ChangeParol;
 
 
 
 const Container = styled.div`
  margin: 0 auto;
 `;
-const Content=styled.div`
+const Content = styled.div`
 padding:10px 30px ;
 `
-
+const FormInput=styled.div`
+ display: flex;
+   display: flex;
+ align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+`
 
 const Title = styled.h2`
 display: block;
@@ -149,9 +162,9 @@ const InfoText = styled.p`
 
 const Form = styled.form`
   display: flex;
- align-items: center;
-  gap: 40px;
-  flex-wrap: wrap;
+  flex-direction: column;
+
+
 `;
 
 const InputGroup = styled.div`
@@ -209,5 +222,6 @@ const Button = styled.button`
   border: none;
   margin-top: 20px;
   cursor: pointer;
+  align-self: flex-start ;
   font-size: 16px;
 `;

@@ -176,7 +176,6 @@ const getCategoryBreadcrumbs = (array) => {
   
 };
 const breadcrumbs = getCategoryBreadcrumbs(product?.categories?.$values);
-
   return isLoading ? (
     <DetailSkeleton imageCount={product?.images?.$values?.length} />
   ) : (
