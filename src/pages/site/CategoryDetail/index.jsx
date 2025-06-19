@@ -24,7 +24,8 @@ import { useGet } from "@utils/hooks/useCustomQuery";
 import { keyframes } from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-
+import '../../../components/site/Category/productModal.scss'
+import { useCart } from "../../../providers/CartProvider";
 const pulse = keyframes`
   0% {
     opacity: 1;
@@ -108,6 +109,10 @@ const CategoryDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { slug } = useParams();
   const { wishlist, addToWishlist } = useContext(WishlistContext);
+  const [quantity, setQuantity] = useState(1);
+    const { addToCart } = useCart();
+ const increment = () => setQuantity((prev) => prev + 1);
+  const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -348,7 +353,39 @@ const breadcrumbs = getCategoryBreadcrumbs(product?.categories?.$values);
                       <Blue>istək siyahısına əlavə edin</Blue>
                     )}
                   </WishText>
+                   
                 </WishContainer>
+                  <div className="productModal__add-to-card">
+                                <div className="productModal__count">
+                                  <button className="productModal__qty-minus" onClick={decrement}>
+                                    <i className="fa-solid fa-minus"></i>
+                                  </button>
+                                  <input
+                                    id="productModal--count"
+                                    type="number"
+                                    min="1"
+                                    value={quantity}
+                                    onChange={(e) => {
+                                      const value = parseInt(e.target.value);
+                                      setQuantity(isNaN(value) || value < 1 ? 1 : value);
+                                    }}
+                                  />
+                                  <button className="productModal__qty-plus" onClick={increment}>
+                                    <i className="fa-regular fa-plus"></i>
+                                  </button>
+                                </div>
+                  
+                                <button
+                                  className="productModal__add-to-card__btn"
+                                  onClick={() => {
+                                    addToCart(product, quantity);
+                                    toast.success("Məhsul səbətə əlavə olundu!");
+                                    
+                                  }}
+                                >
+                                  Add To Cart
+                                </button>
+                              </div>
               </DetailList>
               <DetailFoot>
 <p>
@@ -669,7 +706,7 @@ const WishContainer = styled.li`
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  padding-bottom: 0px;
+  padding-top: 30px;
   gap: 10px;
 `;
 const WishIcon = styled.i`
