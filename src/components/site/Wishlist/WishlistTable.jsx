@@ -1,6 +1,7 @@
 import { WishlistContext } from "@Context/wishlistContext";
 import React, { useContext } from "react";
 import { IoClose } from "react-icons/io5";
+import { Link } from "react-router";
 import styled from "styled-components";
 
 const WishlistTables = () => {
@@ -26,8 +27,8 @@ const WishlistTables = () => {
                 <DeleteWishlist onClick={() => addToWishlist(item)}>
                   <IoClose />
                 </DeleteWishlist>
-                <ProductImage src="./images/laptop.webp" />
-                <ProductName>{item.title}</ProductName>
+                <ProductImage src={item.images?.$values?.[0]?.imagePath}/>
+                <ProductName to={`/category/${item.detailSlug}`}>{item.title}</ProductName>
               </ProductNameTd>
               <ProductData style={{ color: "#000000" }}>
                 <DelTag>{item?.price}</DelTag> {item?.discountPrice} ₼
@@ -95,7 +96,7 @@ const ProductNameTd = styled.td`
   gap: 20px;
 `;
 
-const ProductName = styled.p`
+const ProductName = styled(Link)`
   color: #149295;
   cursor: pointer;
   &:hover {
