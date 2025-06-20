@@ -17,40 +17,63 @@ const About = () => {
   const whiteLogo = getValue("WhiteLogo");
 
   return (
-    <StyledAbout>
-      <Link to={"/"}>
+    <FooterAbout>
+    <FooterAboutLogo>
+    <Link to={"/"}>
         {" "}
         <LayoutLogo
-          imageHeight = "50px"
+          imageHeight = "60px"
           logoScr={whiteLogo || "/images/psa-logo-white.png"}
         />
       </Link>
       <StyledAboutText>Satış şöbəsi :{WorkTime}</StyledAboutText>
+    </FooterAboutLogo>
+ 
+    <StyledAbout>
+     
+
       <StyledAboutText>
         {phone}
         <StyledBr />
-        <Email href={`mailto:${email}`}>{email}</Email>
+        <StyledBr />
+        <Email href={`mailto:${email}`}>{email}</Email> 
+        <StyledBr />
+        <StyledBr />
       </StyledAboutText>
+
       <StyledAboutText>{address}</StyledAboutText>
-    </StyledAbout>
+      </StyledAbout>
+    </FooterAbout>
   );
 };
-
-const StyledAbout = styled.div`
+const FooterAbout = styled.div`
   display: flex;
-  flex-direction: column;
   padding: 5px 0px;
-  width: 50%;
-  height: 180px;
+  align-items: center;
   gap: 1.3rem;
-  @media (max-width: 550px) {
+  @media (max-width: 600px) {
     max-width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 `;
+const FooterAboutLogo=styled.div`
+width: 100%;
+display: flex;
+flex-direction: column;
+gap: 20px;
+`
+const StyledAbout=styled.div`
+  flex-direction: column;
+
+`
+
 
 const StyledAboutText = styled.p`
   color: #f1f1f1;
-  width: 100%;
+
+  /* width: 100%; */
 `;
 
 const StyledBr = styled.br``;

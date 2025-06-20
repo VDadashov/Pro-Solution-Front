@@ -19,6 +19,9 @@ const ResetPassword = () => {
       Forgetpassword(values, {
         onSuccess: () => {
           actions.resetForm();
+
+
+          
           alert("Şifrə sıfırlama linki göndərildi.");
         },
         onError: () => {

@@ -24,7 +24,8 @@ import { useGet } from "@utils/hooks/useCustomQuery";
 import { keyframes } from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-
+import '../../../components/site/Category/productModal.scss'
+import { useCart } from "../../../providers/CartProvider";
 const pulse = keyframes`
   0% {
     opacity: 1;
@@ -108,6 +109,10 @@ const CategoryDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { slug } = useParams();
   const { wishlist, addToWishlist } = useContext(WishlistContext);
+  const [quantity, setQuantity] = useState(1);
+    const { addToCart } = useCart();
+ const increment = () => setQuantity((prev) => prev + 1);
+  const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -153,34 +158,6 @@ useEffect(() => {
     return data?.$values?.find((item) => item.key === key)?.value || "";
   };
 
- const getCategoryBreadcrumbs = (array) => {
-  const result = [];
-
-//  const getCategoryBreadcrumbs = (array) => {
-//   const result = [];
-//   array.forEach((element) => {
-//     if (element.slug) {
-//       const parts = element.slug.split('/');
-//       let accumulatedPath = '';
-
-//       parts.forEach((part) => {
-//         accumulatedPath += (accumulatedPath ? '/' : '') + part;
-//         result.push({
-//           label: part,
-//           to: '/' + accumulatedPath,
-//         });
-//       });
-//     } else {
-//       result.push({
-//         label: element.title,
-//         to: '/' + element.title,
-//       });
-//     }
-//   });
-// console.log(result)
-//   return result;
-
-// };
 function toKebabCase(str) {
   return str
     ?.replace(/([a-z])([A-Z])/g, "$1-$2")
@@ -190,25 +167,20 @@ function toKebabCase(str) {
 
 const getCategoryBreadcrumbs = (array) => {
   if (!Array.isArray(array)) return [];
-
   const result = [];
-  let fullPath = "";
-
+  
   array.forEach((element) => {
     const part = toKebabCase(element.title);
-    fullPath += (fullPath ? "/" : "") + part;
-
     result.push({
-      label: element.title,
-      slug: fullPath,
-      searchTerm: part
+      label: element?.title,
+      slug: element?.slug,
+      searchTerm: part 
     });
   });
-
   return result;
-
+  
 };
-
+const breadcrumbs = getCategoryBreadcrumbs(product?.categories?.$values);
   return isLoading ? (
     <DetailSkeleton imageCount={product?.images?.$values?.length} />
   ) : (
@@ -220,8 +192,16 @@ const getCategoryBreadcrumbs = (array) => {
               <Link to="/">Əsas səhifə</Link> /
             </li>
             <li>
-              <Link to={`/product-category/${getCategoryBreadcrumbs(product?.categories?.$values)[0]?.label}`}>{getCategoryBreadcrumbs(product?.categories?.$values)[0]?.label}</Link>
-            </li>
+  <Link
+    to={{
+      pathname: `/product-category/${breadcrumbs[0]?.slug}`,
+      search: `?slug=${breadcrumbs[0]?.slug}&search=${breadcrumbs[0]?.searchTerm}`,
+    }}
+  >
+    {breadcrumbs[0]?.label}
+  </Link>
+</li>
+
           </Nav>
         </DetailHead>
 
@@ -373,33 +353,46 @@ const getCategoryBreadcrumbs = (array) => {
                       <Blue>istək siyahısına əlavə edin</Blue>
                     )}
                   </WishText>
+                   
                 </WishContainer>
+                  <div className="productModal__add-to-card">
+                                <div className="productModal__count">
+                                  <button className="productModal__qty-minus" onClick={decrement}>
+                                    <i className="fa-solid fa-minus"></i>
+                                  </button>
+                                  <input
+                                    id="productModal--count"
+                                    type="number"
+                                    min="1"
+                                    value={quantity}
+                                    onChange={(e) => {
+                                      const value = parseInt(e.target.value);
+                                      setQuantity(isNaN(value) || value < 1 ? 1 : value);
+                                    }}
+                                  />
+                                  <button className="productModal__qty-plus" onClick={increment}>
+                                    <i className="fa-regular fa-plus"></i>
+                                  </button>
+                                </div>
+                  
+                                <button
+                                  className="productModal__add-to-card__btn"
+                                  onClick={() => {
+                                    addToCart(product, quantity);
+                                    toast.success("Məhsul səbətə əlavə olundu!");
+                                    
+                                  }}
+                                >
+                                  Add To Cart
+                                </button>
+                              </div>
               </DetailList>
               <DetailFoot>
-                {/* <p>
-                  Kateqoriya:{" "}
-                  {product?.categories?.$values?.map((item, index) => (
-    <span key={index}>{item.title} </span>
-  ))}
-                  <span> {getCategoryBreadcrumbs(product?.categories?.$values)}</span>
-                </p> */}
-{/* <p>
-  Kateqoriya:{" "}
-  <span>
-    {getCategoryBreadcrumbs(product?.categories?.$values).map((item, idx, arr) => (
-      <span key={idx}>
-        <Link to={`/product-category${item.to}`}>{item.label}</Link>
-        {idx < arr.length - 1 && ", "}
-      </span>
-    ))}
-  </span>
-</p> */}
 <p>
   Kateqoriya:{" "}
   <span>
     {getCategoryBreadcrumbs(product?.categories?.$values).map((item, idx, arr) => {
       const isLast = idx === arr.length - 1;
-
       const linkTo = {
         pathname: `/product-category/${item.slug}`,
         search: isLast
@@ -416,8 +409,6 @@ const getCategoryBreadcrumbs = (array) => {
     })}
   </span>
 </p>
-
-
                 <Socials>
                   <li className="facebook" data-tooltip="Share on Facebook">
                     <Link to={getValue("FacebookLink") || "#"} target="_blank">
@@ -459,7 +450,7 @@ const getCategoryBreadcrumbs = (array) => {
       <ProductDetailTabs product={product} />
     </DetailWrapper>
   );
-}};
+};
 
 export default CategoryDetail;
 
@@ -468,6 +459,9 @@ const DetailWrapper = styled.section`
 `;
 const Wrapper = styled.div`
   padding-top: 2rem;
+   @media (max-width: 850px){
+    padding-top:0;
+   }
 `;
 const DetailHead = styled.div`
   display: flex;
@@ -478,6 +472,7 @@ const DetailHead = styled.div`
   @media (max-width: 850px) {
     width: 100%;
     flex-direction: column;
+    text-align: center;
     gap: 10px;
     margin: 0px;
     justify-content: center;
@@ -529,7 +524,7 @@ const DetailBody = styled.div`
   }
 `;
 const DetailCard = styled.div`
-  width: 45%;
+  width: 44%;
   display: flex;
   gap: 30px;
   position: relative;
@@ -539,13 +534,15 @@ const DetailCard = styled.div`
   }
 `;
 const DetailInfo = styled.div`
-  width: 35%;
+  width: 38%;
   @media (max-width: 851px) {
     width: 100%;
-    padding-left: 1rem;
+    /* padding-left: 1rem; */
     h2 {
       font-size: 22px;
       font-weight: 700;
+         word-break: break-word;
+    white-space: normal;
     }
   }
 
@@ -581,6 +578,8 @@ const DetailDesc = styled.p`
 color:  #666666;
 font-weight: bold;
 margin-bottom: 15px;
+     word-break: break-word;
+    white-space: normal;
 `
 const DetailList = styled.ul`
   display: flex;
@@ -707,7 +706,7 @@ const WishContainer = styled.li`
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  padding-bottom: 0px;
+  padding-top: 30px;
   gap: 10px;
 `;
 const WishIcon = styled.i`
@@ -783,7 +782,7 @@ const MainImageWrapper = styled.div`
 `;
 const ZoomIcon = styled.div`
   position: absolute;
-  bottom: 0;
+  bottom: 2rem;
   left: 10px;
   pointer-events: all;
   display: flex;
@@ -800,7 +799,7 @@ const ZoomIcon = styled.div`
     color: white;
     border: none;
   }
-  @media (max-width: 565px) {
+  @media (max-width: 865px) {
     bottom: 0;
   }
 `;
@@ -848,7 +847,8 @@ const ArrowRight = styled(ArrowLeft)`
 const LikeIcon = styled.div`
   position: absolute;
   right: 10px;
-  top: 0px;
+  opacity: 0;
+  top: 10px;
   font-size: 24px;
   background-color: transparent;
   border: 1px solid gray;
@@ -867,10 +867,13 @@ const LikeIcon = styled.div`
   }
   @media (max-width: 951px) {
     right: 60px;
+    top: 0;
+    opacity: 1;
   }
   @media (max-width: 565px) {
     right: 10px;
     font-size: 20px;
+      /* opacity: 1; */
   }
 `;
 
