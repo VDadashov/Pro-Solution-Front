@@ -31,7 +31,7 @@ const LoginRegisterContainer = styled.div`
   position: fixed;
   display: flex;
   opacity: 1 !important;
-  z-index: 3;
+  z-index: 100;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -95,7 +95,7 @@ const LoginBackground = styled.div`
   height: 100vh;
   width: 100%;
   background-color: #0b0b0b;
-  z-index: 3;
+  z-index: 100;
   display: flex;
   align-items: start;
 `;

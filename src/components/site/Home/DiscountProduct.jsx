@@ -101,6 +101,9 @@ const TextBox = styled.div`
   align-items: center;
   text-align: center;
   font-family: Nunito-Regular400;
+  @media (max-width: 650px) {
+    width: 90%;
+  }
 `;
 
 const ContainerHeader = styled.h2`
@@ -162,11 +165,11 @@ const TimerBox = styled.div`
 `;
 
 const StyledStrong = styled.strong`
-  opacity: 0.7;
-  font-size: 35%;
-  margin-top: 4px;
+  // opacity: 0.9;
+  font-size: 55%;
+  margin-top: 0px;
   @media (max-width: 350px) {
-    font-size: 25%;
+    font-size: 30%;
   }
 `;
 
