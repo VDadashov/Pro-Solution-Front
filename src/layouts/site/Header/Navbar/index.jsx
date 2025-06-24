@@ -139,7 +139,7 @@ const Navbar = ({toggleCart}) => {
       <CartLength>{cartItems.length}</CartLength>
     )}
   </CartText>
-  <FaShoppingCart />
+  <FaShoppingCart style={{fontSize: "16px"}} />
           </CartButton>
 
           </Buttons>
@@ -163,14 +163,22 @@ const CartButton = styled.button`
   cursor: pointer;
   padding: 10px;
   border-radius: 5px;
-  font-size: 16px;
   margin-left: 10px;
   transition: background-color 0.3s ease;
+  align-items: center;
   &:hover {
     background-color: #157778;
   }
+
 `;
 const CartText = styled.span`
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  text-decoration: none;
+  font-family: "Nunito-Regular400";
+  font-size: 13px;
   font-weight: bold;
   margin-right: 5px;
 `;
