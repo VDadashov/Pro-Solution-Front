@@ -87,12 +87,12 @@ const Register = styled.div`
 const LoginBackground = styled.div`
   overflow-y: hidden;
   overflow-x: hidden;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   opacity: 0.6;
-  height: 100vh;
+  height: 100%;
   width: 100%;
   background-color: #0b0b0b;
   z-index: 100;
