@@ -98,7 +98,7 @@ const ProductsLi = styled.li`
   }
 `;
 const CategoryListContainer = styled.div`
-  z-index: 2;
+  z-index: 1000;
   display: ${({ className }) => (className === "hoverable" ? "none" : "block")};
   position: absolute;
   box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.15);
@@ -119,7 +119,6 @@ const CategoryListContainer = styled.div`
 `;
 
 const CategoryList = styled.ul`
-  // position: relative;
   &::-webkit-scrollbar {
     width: 3px;
   }
@@ -136,7 +135,7 @@ const CategoryList = styled.ul`
   }
   overflow-y: scroll;
   
-  height:500px;
+  height:min-content;
 `;
 
 const ArrowDown = styled(IoIosArrowDown)`

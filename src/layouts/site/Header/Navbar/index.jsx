@@ -1,88 +1,80 @@
-import React, { useContext} from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 import { FaRegHeart } from "react-icons/fa";
-import {  NavLink  } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import { WishlistContext } from "@Context/wishlistContext";
 import { FaShoppingCart } from "react-icons/fa";
-import { useCart } from "../../../../providers/CartProvider"; 
-import CartPanel from "../CartPanel"; 
-import CategoryComponent from "./CategoryList"
-const Navbar = ({toggleCart}) => {
-
+import { useCart } from "../../../../providers/CartProvider";
+import CartPanel from "../CartPanel";
+import CategoryComponent from "./CategoryList";
+const Navbar = ({ toggleCart }) => {
   const { wishlist } = useContext(WishlistContext);
- 
-  const { cartItems } = useCart(); 
 
+  const { cartItems } = useCart();
 
-
-
- 
   return (
-     <>
-    <NavigationBar>
-      <StyledNavbarContainer>
-        <NavContainer>
-          <NavLeft>
-            <HeaderNav>
-             <CategoryComponent />
-              <StyledNavigationLi>
-                <NavbarLink to={"/discount"} activeclassname="active">
-                  <SeperaterLine>
-                    <SeperatorLineBorder>Endirimlər</SeperatorLineBorder>
-                  </SeperaterLine>
-                </NavbarLink>
-              </StyledNavigationLi>
-              <StyledNavigationLi>
-                <NavbarLink to={"/blog"} activeclassname="active">
-                  <SeperaterLine>
-                    <SeperatorLineBorder>Bloq</SeperatorLineBorder>
-                  </SeperaterLine>
-                </NavbarLink>
-              </StyledNavigationLi>
-              <StyledNavigationLi>
-                <NavbarLink to={"/contact"} activeclassname="active">
-                  <SeperaterLine>
-                    <SeperatorLineBorder>Əlaqə</SeperatorLineBorder>
-                  </SeperaterLine>
-                </NavbarLink>
-              </StyledNavigationLi>
-            </HeaderNav>
-          </NavLeft>
-          <Buttons>
-          <NavbarLink to={"/wishlist"} activeclassname="active">
-            <WishlistButton>
-              <WishlistText>
-                Seçilmişlər
-                {wishlist.length > 0 ? (
-                  <WishlistLength>{wishlist.length}</WishlistLength>
-                ) : (
-                  <></>
-                )}
-              </WishlistText>
-              <HeartIcon />
-            </WishlistButton>
-          </NavbarLink>
-          <CartButton onClick={toggleCart}>
-  <CartText>
-    Səbət
-    {cartItems.length > 0 && (
-      <CartLength>{cartItems.length}</CartLength>
-    )}
-  </CartText>
-  <FaShoppingCart style={{fontSize: "16px"}} />
-          </CartButton>
-
-          </Buttons>
-        </NavContainer>
-      </StyledNavbarContainer>
-
-    </NavigationBar>
-
-     </>
+    <>
+      <NavigationBar>
+        <StyledNavbarContainer>
+          <NavContainer>
+            <NavLeft>
+              <HeaderNav>
+                <CategoryComponent />
+                <StyledNavigationLi>
+                  <NavbarLink to={"/discount"} activeclassname="active">
+                    <SeperaterLine>
+                      <SeperatorLineBorder>Endirimlər</SeperatorLineBorder>
+                    </SeperaterLine>
+                  </NavbarLink>
+                </StyledNavigationLi>
+                <StyledNavigationLi>
+                  <NavbarLink to={"/blog"} activeclassname="active">
+                    <SeperaterLine>
+                      <SeperatorLineBorder>Bloq</SeperatorLineBorder>
+                    </SeperaterLine>
+                  </NavbarLink>
+                </StyledNavigationLi>
+                <StyledNavigationLi>
+                  <NavbarLink to={"/contact"} activeclassname="active">
+                    <SeperaterLine>
+                      <SeperatorLineBorder>Əlaqə</SeperatorLineBorder>
+                    </SeperaterLine>
+                  </NavbarLink>
+                </StyledNavigationLi>
+              </HeaderNav>
+            </NavLeft>
+            <Buttons>
+              <NavbarLink to={"/wishlist"} activeclassname="active">
+                <WishlistButton>
+                  <WishlistText>
+                    Seçilmişlər
+                    {wishlist.length > 0 ? (
+                      <WishlistLength>{wishlist.length}</WishlistLength>
+                    ) : (
+                      <></>
+                    )}
+                  </WishlistText>
+                  <HeartIcon />
+                </WishlistButton>
+              </NavbarLink>
+              <CartButton onClick={toggleCart}>
+                <CartText>
+                  Səbət
+                  {cartItems.length > 0 && (
+                    <CartLength>{cartItems.length}</CartLength>
+                  )}
+                </CartText>
+                <FaShoppingCart style={{ fontSize: "16px" }} />
+              </CartButton>
+            </Buttons>
+          </NavContainer>
+        </StyledNavbarContainer>
+      </NavigationBar>
+    </>
   );
 };
 
@@ -103,7 +95,6 @@ const CartButton = styled.button`
   &:hover {
     background-color: #157778;
   }
-
 `;
 const CartText = styled.span`
   box-sizing: border-box;
@@ -151,8 +142,8 @@ const StyledNavbarContainer = styled.div`
 `;
 
 const NavigationBar = styled.nav`
-position: relative;
-// overflow: hidden;
+  position: relative;
+  // overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -183,9 +174,6 @@ const HeaderNav = styled.ul`
   align-items: center;
   height: 100%;
 `;
-
-
-
 
 const StyledNavigationLi = styled.li`
   height: 100%;
@@ -228,6 +216,7 @@ const WishlistButton = styled.button`
   gap: 5px;
   border: 1px solid rgba(0, 0, 0, 0.05);
   cursor: pointer;
+  font-size: 13px;
   &:hover {
     background-color: #157778;
   }
@@ -252,8 +241,6 @@ const WishlistLength = styled.span`
 const WishlistText = styled.span`
   font-weight: bolder;
 `;
-
-
 
 const HeartIcon = styled(FaRegHeart)`
   height: 100%;
