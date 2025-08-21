@@ -21,8 +21,7 @@ const LoginForm = ({ closeModal }) => {
     },
     validationSchema: Yup.object({
       usernameOrEmail: Yup.string()
-        .max(20, "20 simvoldan çox olmamalıdır")
-        .required("İstifadəçi adı tələb olunur"),
+        .required("İstifadəçi adı və ya email  tələb olunur"),
       password: Yup.string().required("Parol tələb olunur"),
     }),
     onSubmit: (values, actions) => {
@@ -117,7 +116,7 @@ const LoginForm = ({ closeModal }) => {
       </StyledButton>
 
 
-      <ForgetPassword to="/forgot-password">
+      <ForgetPassword to="/forgot-password" onClick={()=>closeModal()}>
         Parolunuzu unutmusunuz?
       </ForgetPassword>
     </StyledForm>

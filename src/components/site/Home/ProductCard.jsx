@@ -109,11 +109,11 @@ const ProductsCard = ({ item }) => {
         </ProductCardHeadImage>
 
         <ProductCardBody>
-          <span>
+          <Title>
             {item.categories?.$values
               ? item.categories.$values[0]?.title
               : item.categories?.[0]?.title}
-          </span>
+          </Title>
           <Link to={`/category/${item.detailSlug}`}>
             <ProductName>{item?.title}</ProductName>
           </Link>
@@ -168,7 +168,7 @@ const ProductsCard = ({ item }) => {
               </ProductCalculator>
              <BuyButton
                       onClick={() => {
-                        addToCart(item);
+                        addToCart(item, quantity);
                         toast.success("Məhsul səbətə əlavə olundu!");
                       }}
                     >
@@ -255,20 +255,19 @@ const ProductCard = styled.div`
   &:hover .categoryDetail {
     opacity: 1;
   }
-  @media (max-width: 1100px) {
-    width: 170px;
-  }
-  @media (max-width: 800px) {
-    width: 185px;
+  @media (max-width: 1200px) {
+    width: 90%;
+    margin: 10px auto;
   }
 
-  @media (max-width: 500px) {
-    width: 180px;
-  }
   @media (max-width: 420px) {
-    width: 160px;
+    width: 70%;
   }
+
+  margin: 10px auto;
 `;
+
+
 
 const ProductName = styled.h5`
   max-width: 100%;
@@ -340,15 +339,7 @@ const ProductCardBody = styled.div`
     line-height: 0.9;
     padding: 5px;
   }
-  span {
-    font-size: 13px;
-    color: gray;
-    opacity: 0.7;
-    @media (max-width: 997px) {
-      font-size: 10px;
-      font-weight: 600;
-    }
-  }
+
 
   h5 {
     @media (max-width: 997px) {
@@ -358,6 +349,17 @@ const ProductCardBody = styled.div`
   }
 
 `;
+
+const  Title=styled.span `
+ font-size: 13px;
+    opacity: 0.7;
+    @media (max-width: 997px) {
+      font-size: 10px;
+      font-weight: 600;
+    }
+`
+   
+  
 const CardButton = styled.div`
   margin-top: auto;
   display: flex;

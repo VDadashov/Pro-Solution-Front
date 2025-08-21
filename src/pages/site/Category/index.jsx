@@ -151,13 +151,13 @@ const Category = () => {
             <div className="category-links">
               <ul>
                 <li>
-                  <Link>Əsas səhifə </Link>
+                  <Link to={"/"}>Əsas səhifə </Link>
                 </li>
                 <li>
-                  <Link>
-                    {category == undefined ? "/" : `/ ${category} /`}{" "}
-                  </Link>
-                  <Link> {search}</Link>
+                  <Link to={{ pathname: `/product-category/${category}`, search: `?slug=${slug}` }}>
+  {category === undefined ? "/" : `/${category}/`}
+</Link>
+                  <span> {search}</span>
                 </li>
 
               </ul>
@@ -166,7 +166,6 @@ const Category = () => {
             <ResponsiveFilter onClick={() => setShowFilter(true)}>
               <i><RiEqualizerLine /></i>
               <p>Filtr</p>
-
             </ResponsiveFilter>
 
             <CategorySelect>
@@ -376,6 +375,13 @@ const CategoryHead = styled.div`
       text-transform: uppercase;
       font-size: 1.15em;
     }
+    li span{
+        color: hsla(0, 0%, 40%, 0.7);
+      font-weight: 400;
+      line-height: 1.2;
+      text-transform: uppercase;
+      font-size: 1.15em;
+    }
   }
 
   .category-select {
@@ -386,7 +392,7 @@ const CategoryHead = styled.div`
     justify-content: center;
     align-items: center;
   }
-  .category-links ul {
+  /* .category-links ul {
     display: flex;
     gap: 10px;
     li a {
@@ -396,7 +402,7 @@ const CategoryHead = styled.div`
       text-transform: uppercase;
       font-size: 1.15em;
     }
-  }
+  } */
 `;
 const CategorySelect = styled.div`
   display: flex;

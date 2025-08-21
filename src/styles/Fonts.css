@@ -4,6 +4,11 @@
 }
 
 @font-face {
+    font-family: "Manrope-Regular";
+    src: url("/fonts/Manrope-Regular.ttf");
+}
+
+@font-face {
     font-family: "Manrope-Bold";
     src: url("/fonts/Manrope-Bold.ttf");
 }
