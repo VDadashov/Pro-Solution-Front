@@ -10,7 +10,6 @@ import Loading from "@components/site/common/Loading/Loading";
 const Home = () => {
   return (
     <>
-      {/* <Loading /> */}
       <MainSection>
         <Banner />
         <ProductSection slug={""} sectionHeader={"Ən Çox Satılanlar"}  order={13}  />

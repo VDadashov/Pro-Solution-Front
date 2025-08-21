@@ -79,7 +79,7 @@ const Banner = () => {
                 loop={true}
                 spaceBetween={0}
                 slidesPerView={1}
-                modules={[FreeMode, Navigation, Autoplay, Pagination]}
+                modules={[FreeMode, Navigation, Pagination]}
                 autoplay={{ delay: 2000, disableOnInteraction: false }}
               >
                 {sliders.$values.map((item) => (
@@ -138,13 +138,15 @@ const SwiperContainer = styled.div`
   .swiper-button-next::after,
   .swiper-button-prev::after {
     font-size: 2rem;
-    color: #fff;
+    color: rgba(0, 0, 0, 0.3);
   }
 
   .swiper-button-next:hover,
   .swiper-button-prev:hover {
     background-color: rgba(0, 0, 0, 0.5);
   }
+
+
   @media (max-width: 850px) {
     .swiper-button-next,
     .swiper-button-prev {
@@ -176,6 +178,8 @@ const SwiperContainer = styled.div`
 
 const StyledImage = styled.img`
   width: 100%;
+  height: 500px;
+  object-fit: contain;
 `;
 
 export default Banner;

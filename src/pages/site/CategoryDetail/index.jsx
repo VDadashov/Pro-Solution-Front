@@ -9,11 +9,13 @@ import {
   FaLinkedin,
   FaChevronLeft,
   FaChevronRight,
+  FaCheckCircle,
 } from "react-icons/fa";
 import { TfiEmail } from "react-icons/tfi";
 import { IoCloseOutline } from "react-icons/io5";
 import { FiZoomIn } from "react-icons/fi";
 import { FaRegHeart, FaXTwitter } from "react-icons/fa6";
+import { MdOutlineInventory2 } from "react-icons/md";
 import { Link, useParams } from "react-router-dom";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import ProductDetailTabs from "@components/site/CategoryDetail/ProductDetailTabs";
@@ -26,6 +28,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import '../../../components/site/Category/productModal.scss'
 import { useCart } from "../../../providers/CartProvider";
+
 const pulse = keyframes`
   0% {
     opacity: 1;
@@ -106,12 +109,15 @@ const CategoryDetail = () => {
   const [isZoomed, setIsZoomed] = useState(false);
   const [liked, setLiked] = useState(false);
   const [product, setProduct] = useState(null);
+  console.log("product", product);
+  
   const [isLoading, setIsLoading] = useState(true);
   const { slug } = useParams();
   const { wishlist, addToWishlist } = useContext(WishlistContext);
   const [quantity, setQuantity] = useState(1);
-    const { addToCart } = useCart();
- const increment = () => setQuantity((prev) => prev + 1);
+  const { addToCart } = useCart();
+  
+  const increment = () => setQuantity((prev) => prev + 1);
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   useEffect(() => {
@@ -132,13 +138,12 @@ const CategoryDetail = () => {
     }
   }, [slug]);
 
-useEffect(() => {
-  if (product) {
-    const isLiked = wishlist.some((item) => item && item.id === product.id);
-    setLiked(isLiked);
-  }
-}, [wishlist, product]);
-
+  useEffect(() => {
+    if (product) {
+      const isLiked = wishlist.some((item) => item && item.id === product.id);
+      setLiked(isLiked);
+    }
+  }, [wishlist, product]);
 
   const imageValues = product?.images?.$values || [];
   const mainImage = imageValues.find((img) => img.isMain);
@@ -152,35 +157,37 @@ useEffect(() => {
   const prevImage = () => {
     setSelectedIndex((prev) => (prev - 1 + images.length) % images.length);
   };
+  
   const { data } = useGet("settings", ENDPOINTS.settings);
 
   const getValue = (key) => {
     return data?.$values?.find((item) => item.key === key)?.value || "";
   };
 
-function toKebabCase(str) {
-  return str
-    ?.replace(/([a-z])([A-Z])/g, "$1-$2")
-    .replace(/[\s_]+/g, "-")
-    .toLowerCase();
-}
+  function toKebabCase(str) {
+    return str
+      ?.replace(/([a-z])([A-Z])/g, "$1-$2")
+      .replace(/[\s_]+/g, "-")
+      .toLowerCase();
+  }
 
-const getCategoryBreadcrumbs = (array) => {
-  if (!Array.isArray(array)) return [];
-  const result = [];
-  
-  array.forEach((element) => {
-    const part = toKebabCase(element.title);
-    result.push({
-      label: element?.title,
-      slug: element?.slug,
-      searchTerm: part 
+  const getCategoryBreadcrumbs = (array) => {
+    if (!Array.isArray(array)) return [];
+    const result = [];
+    
+    array.forEach((element) => {
+      const part = toKebabCase(element.title);
+      result.push({
+        label: element?.title,
+        slug: element?.slug,
+        searchTerm: part 
+      });
     });
-  });
-  return result;
+    return result;
+  };
   
-};
-const breadcrumbs = getCategoryBreadcrumbs(product?.categories?.$values);
+  const breadcrumbs = getCategoryBreadcrumbs(product?.categories?.$values);
+  
   return isLoading ? (
     <DetailSkeleton imageCount={product?.images?.$values?.length} />
   ) : (
@@ -192,16 +199,15 @@ const breadcrumbs = getCategoryBreadcrumbs(product?.categories?.$values);
               <Link to="/">Əsas səhifə</Link> /
             </li>
             <li>
-  <Link
-    to={{
-      pathname: `/product-category/${breadcrumbs[0]?.slug}`,
-      search: `?slug=${breadcrumbs[0]?.slug}&search=${breadcrumbs[0]?.searchTerm}`,
-    }}
-  >
-    {breadcrumbs[0]?.label}
-  </Link>
-</li>
-
+              <Link
+                to={{
+                  pathname: `/product-category/${breadcrumbs[0]?.slug}`,
+                  search: `?slug=${breadcrumbs[0]?.slug}&search=${breadcrumbs[0]?.searchTerm}`,
+                }}
+              >
+                {breadcrumbs[0]?.label}
+              </Link>
+            </li>
           </Nav>
         </DetailHead>
 
@@ -301,147 +307,174 @@ const breadcrumbs = getCategoryBreadcrumbs(product?.categories?.$values);
               </Modal>
             )}
           </DetailCard>
+          
           <DetailInfo>
             <div className="DetailInfoHead">
-              <h2> {product?.title}</h2>
-              <DetailDesc>{product?.description}</DetailDesc>
+              <ProductHeader>
+                <h2>{product?.title}</h2>
+                {product?.brandName && (
+                  <BrandBadge>
+                    <span>{product.brandName}</span>
+                  </BrandBadge>
+                )}
+              </ProductHeader>
+              
+              {product?.description && (
+                <DetailDesc>{product?.description}</DetailDesc>
+              )}
+              
+              <StockStatus inStock={product?.inStock}>
+                <StockIcon>
+                  {product?.inStock ? <FaCheckCircle /> : <MdOutlineInventory2 />}
+                </StockIcon>
+                <StockText>
+                  {product?.inStock ? "Stokda mövcuddur" : "Stokda yoxdur"}
+                </StockText>
+              </StockStatus>
+              
               <hr />
-              <div className="price">
+              
+              <PriceSection>
                 {product?.discountPrice > 0 ? (
                   <>
-                    <p className="old">{product?.price} ₼</p>
-                    <p className="new">{product.discountPrice} ₼</p>
+                    <OriginalPrice>{product?.price} ₼</OriginalPrice>
+                    <CurrentPrice>{product.discountPrice} ₼</CurrentPrice>
+                    <DiscountBadge>
+                      -{Math.round(((product.price - product.discountPrice) / product.price) * 100)}%
+                    </DiscountBadge>
                   </>
                 ) : (
-                  <p className="new">{product?.price} ₼</p>
+                  <CurrentPrice>{product?.price} ₼</CurrentPrice>
                 )}
-              </div>
+              </PriceSection>
+              
               <DetailList>
                 {product?.featureOptionItems?.$values?.map((item) => (
                   <DetailItem key={item.id || item.name}>
-                    <p>{item.featureOption?.name} :</p>
-                    <span>{item?.name}</span>
-                    <span>{item?.parent?.name}</span>
+                    <FeatureLabel>{item.featureOption?.name}:</FeatureLabel>
+                    <FeatureValue>
+                      {item?.name} {item?.parent?.name}
+                    </FeatureValue>
                   </DetailItem>
                 ))}
-                <WishContainer
-                  onClick={() => {
-                    setLiked(true);
-                    addToWishlist(product);
-                  }}
-                >
-                  <WishIcon>
-                    {liked ? (
-                      <FaHeart style={{ color: "black" }} />
-                    ) : (
-                      <FaRegHeart />
-                    )}
-                  </WishIcon>
-
-                  <WishText>
-                    {liked ? (
-                      <>
-                        <Gray>Məhsul əlavə edildi</Gray>
-                        <BrowseLink
-                          to="/wishlist"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          istək siyahısına baxın
-                        </BrowseLink>
-                      </>
-                    ) : (
-                      <Blue>istək siyahısına əlavə edin</Blue>
-                    )}
-                  </WishText>
-                   
-                </WishContainer>
-                  <div className="productModal__add-to-card">
-                                <div className="productModal__count">
-                                  <button className="productModal__qty-minus" onClick={decrement}>
-                                    <i className="fa-solid fa-minus"></i>
-                                  </button>
-                                  <input
-                                    id="productModal--count"
-                                    type="number"
-                                    min="1"
-                                    value={quantity}
-                                    onChange={(e) => {
-                                      const value = parseInt(e.target.value);
-                                      setQuantity(isNaN(value) || value < 1 ? 1 : value);
-                                    }}
-                                  />
-                                  <button className="productModal__qty-plus" onClick={increment}>
-                                    <i className="fa-regular fa-plus"></i>
-                                  </button>
-                                </div>
+                
+                <ActionSection>
+                  <WishContainer
+                    onClick={() => {
+                      setLiked(true);
+                      addToWishlist(product);
+                    }}
+                  >
+                    <WishIcon>
+                      {liked ? (
+                        <FaHeart style={{ color: "#e74c3c" }} />
+                      ) : (
+                        <FaRegHeart />
+                      )}
+                    </WishIcon>
+                    <WishText>
+                      {liked ? (
+                        <>
+                          <Gray>Məhsul əlavə edildi</Gray>
+                          <BrowseLink
+                            to="/wishlist"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            istək siyahısına baxın
+                          </BrowseLink>
+                        </>
+                      ) : (
+                        <Blue>istək siyahısına əlavə edin</Blue>
+                      )}
+                    </WishText>
+                  </WishContainer>
                   
-                                <button
-                                  className="productModal__add-to-card__btn"
-                                  onClick={() => {
-                                    addToCart(product, quantity);
-                                    toast.success("Məhsul səbətə əlavə olundu!");
-                                    
-                                  }}
-                                >
-                                  Add To Cart
-                                </button>
-                              </div>
+                  <CartSection>
+                    <QuantityControl>
+                      <QuantityButton onClick={decrement}>
+                        <i className="fa-solid fa-minus"></i>
+                      </QuantityButton>
+                      <QuantityInput
+                        type="number"
+                        min="1"
+                        value={quantity}
+                        onChange={(e) => {
+                          const value = parseInt(e.target.value);
+                          setQuantity(isNaN(value) || value < 1 ? 1 : value);
+                        }}
+                      />
+                      <QuantityButton onClick={increment}>
+                        <i className="fa-regular fa-plus"></i>
+                      </QuantityButton>
+                    </QuantityControl>
+                    
+                    <AddToCartButton
+                      disabled={!product?.inStock}
+                      onClick={() => {
+                        if (product?.inStock) {
+                          addToCart(product, quantity);
+                          toast.success("Məhsul səbətə əlavə olundu!");
+                        } else {
+                          toast.error("Məhsul stokda mövcud deyil!");
+                        }
+                      }}
+                    >
+                      {product?.inStock ? "Səbətə əlavə et" : "Stokda yoxdur"}
+                    </AddToCartButton>
+                  </CartSection>
+                </ActionSection>
               </DetailList>
+              
               <DetailFoot>
-<p>
-  Kateqoriya:{" "}
-  <span>
-    {getCategoryBreadcrumbs(product?.categories?.$values).map((item, idx, arr) => {
-      const isLast = idx === arr.length - 1;
-      const linkTo = {
-        pathname: `/product-category/${item.slug}`,
-        search: isLast
-          ? `?slug=${item.slug}&search=${item.searchTerm}`
-          : `?slug=${item.slug}`
-      };
+                <CategoryInfo>
+                  Kateqoriya:{" "}
+                  <span>
+                    {getCategoryBreadcrumbs(product?.categories?.$values).map((item, idx, arr) => {
+                      const isLast = idx === arr.length - 1;
+                      const linkTo = {
+                        pathname: `/product-category/${item.slug}`,
+                        search: isLast
+                          ? `?slug=${item.slug}&search=${item.searchTerm}`
+                          : `?slug=${item.slug}`
+                      };
 
-      return (
-        <span key={idx}>
-          <Link to={linkTo}>{item.label}</Link>
-          {idx < arr.length - 1 && ", "}
-        </span>
-      );
-    })}
-  </span>
-</p>
+                      return (
+                        <span key={idx}>
+                          <Link to={linkTo}>{item.label}</Link>
+                          {idx < arr.length - 1 && ", "}
+                        </span>
+                      );
+                    })}
+                  </span>
+                </CategoryInfo>
+                
                 <Socials>
                   <li className="facebook" data-tooltip="Share on Facebook">
                     <Link to={getValue("FacebookLink") || "#"} target="_blank">
                       <FaFacebookF />
                     </Link>
                   </li>
-
                   <li className="twitter" data-tooltip="Share on Twitter">
-
                     <Link to="#" target="_blank">
                       <FaXTwitter />
                     </Link>
                   </li>
-
                   <li className="email" data-tooltip="Send via Email">
                     <Link to={`mailto:${getValue("SupportEmail") || "support@example.com"}`} target="_blank">
                       <TfiEmail />
                     </Link>
                   </li>
-
                   <li className="pinterest" data-tooltip="Pin it on Pinterest">
                     <Link to="#" target="_blank">
                       <FaPinterest />
                     </Link>
                   </li>
-
                   <li className="linkedin" data-tooltip="Share on LinkedIn">
                     <Link to={getValue("LinkedInLink") || "#"} target="_blank">
                       <FaLinkedin />
                     </Link>
                   </li>
                 </Socials>
-
               </DetailFoot>
             </div>
           </DetailInfo>
@@ -454,15 +487,19 @@ const breadcrumbs = getCategoryBreadcrumbs(product?.categories?.$values);
 
 export default CategoryDetail;
 
+// Enhanced Styled Components
 const DetailWrapper = styled.section`
   min-height: 100vh;
+  background-color: #fafafa;
 `;
+
 const Wrapper = styled.div`
   padding-top: 2rem;
-   @media (max-width: 850px){
-    padding-top:0;
-   }
+  @media (max-width: 850px) {
+    padding-top: 0;
+  }
 `;
+
 const DetailHead = styled.div`
   display: flex;
   justify-content: space-between;
@@ -477,8 +514,10 @@ const DetailHead = styled.div`
     margin: 0px;
     justify-content: center;
     align-items: center;
+    padding: 1rem;
   }
 `;
+
 const Nav = styled.ul`
   display: flex;
   gap: 10px;
@@ -488,41 +527,34 @@ const Nav = styled.ul`
     line-height: 1.2;
     text-transform: uppercase;
     font-size: 1.15em;
-  }
-`;
-const SwitchProduct = styled.ul`
-  display: flex;
-  gap: 5px;
-  li {
-    display: flex;
-
-    a {
-      text-align: center;
-      font-size: 12px;
-      font-weight: 100;
-      color: #c0c0c0;
-      padding: 6px;
-      border: 2px solid #c0c0c0;
-      border-radius: 50%;
-      &:hover {
-        background-color: teal;
-        color: white;
-      }
+    transition: color 0.3s ease;
+    
+    &:hover {
+      color: #149295;
     }
   }
 `;
+
 const DetailBody = styled.div`
   display: flex;
   justify-content: center;
   gap: 3rem;
   margin: 0 auto;
   max-width: 80%;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  
   @media (max-width: 851px) {
     flex-direction: column;
     margin-top: 2rem;
     gap: 30px;
+    margin: 1rem;
+    padding: 1rem;
   }
 `;
+
 const DetailCard = styled.div`
   width: 44%;
   display: flex;
@@ -533,109 +565,297 @@ const DetailCard = styled.div`
     width: 100%;
   }
 `;
+
 const DetailInfo = styled.div`
   width: 38%;
   @media (max-width: 851px) {
     width: 100%;
-    /* padding-left: 1rem; */
-    h2 {
-      font-size: 22px;
-      font-weight: 700;
-         word-break: break-word;
-    white-space: normal;
-    }
   }
+`;
 
+const ProductHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 15px;
+  
   h2 {
-    color: teal;
-    font-weight: bold;
-    margin-bottom: 15px;
-  }
-  hr {
-    width: 40px;
-    border: 2px solid #dede;
-    margin-bottom: 5px;
-  }
-  .price {
-    align-items: baseline;
-    margin-bottom: 20px;
-    display: flex;
-    gap: 20px;
-    .old {
-      text-decoration: line-through;
-      color: gray;
-      font-weight: 400;
-      font-size: 24px;
-    }
-    .new {
-      font-size: 24px;
-      color: #111;
-      font-weight: 700;
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 1.3;
+    word-break: break-word;
+    white-space: normal;
+    margin: 0;
+    
+    @media (max-width: 851px) {
+      font-size: 22px;
     }
   }
 `;
+
+const BrandBadge = styled.div`
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  
+  span {
+    background: linear-gradient(135deg, #149295 0%, #0f7a7c 100%);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(20, 146, 149, 0.3);
+  }
+`;
+
+const StockStatus = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 15px 0;
+  background: ${props => props.inStock 
+    ? 'linear-gradient(135deg, #e8f5e8 0%, #d4f1d4 100%)' 
+    : 'linear-gradient(135deg, #ffeaea 0%, #ffe0e0 100%)'};
+  border-left: 4px solid ${props => props.inStock ? '#27ae60' : '#e74c3c'};
+`;
+
+const StockIcon = styled.div`
+  color: ${props => props.inStock ? '#27ae60' : '#e74c3c'};
+  font-size: 16px;
+`;
+
+const StockText = styled.span`
+  color: ${props => props.inStock ? '#27ae60' : '#e74c3c'};
+  font-weight: 600;
+  font-size: 14px;
+`;
+
 const DetailDesc = styled.p`
-color:  #666666;
-font-weight: bold;
-margin-bottom: 15px;
-     word-break: break-word;
-    white-space: normal;
-`
+  color: #666666;
+  font-weight: 500;
+  margin-bottom: 20px;
+  line-height: 1.6;
+  word-break: break-word;
+  white-space: normal;
+`;
+
+const PriceSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+`;
+
+const OriginalPrice = styled.p`
+  text-decoration: line-through;
+  color: #95a5a6;
+  font-weight: 400;
+  font-size: 20px;
+  margin: 0;
+`;
+
+const CurrentPrice = styled.p`
+  font-size: 28px;
+  color: #2c3e50;
+  font-weight: 700;
+  margin: 0;
+`;
+
+const DiscountBadge = styled.span`
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+`;
+
 const DetailList = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 `;
 
 const DetailItem = styled.li`
-  padding-bottom: 10px;
+  padding: 12px 0;
   display: flex;
-  color: #666666;
-  gap: 20px;
-  font-size: 0.9em;
-  line-height: 1.3;
-  border-bottom: 1px solid #ececec;
-  text-align: left;
-  p {
-    font-weight: bolder;
-    font-size: 16px;
-    color: #777777;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  line-height: 1.4;
+  border-bottom: 1px solid #ecf0f1;
+  
+  @media (max-width: 851px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
   }
 `;
+
+const FeatureLabel = styled.p`
+  font-weight: 600;
+  color: #34495e;
+  margin: 0;
+  min-width: 140px;
+`;
+
+const FeatureValue = styled.span`
+  color: #7f8c8d;
+  font-weight: 500;
+`;
+
+const ActionSection = styled.div`
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 2px solid #ecf0f1;
+`;
+
+const WishContainer = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 25px;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: #f8f9fa;
+  }
+`;
+
+const WishIcon = styled.i`
+  font-size: 22px;
+  color: #e74c3c;
+`;
+
+const WishText = styled.span`
+  font-size: 16px;
+  font-weight: 500;
+`;
+
+const CartSection = styled.div`
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+`;
+
+const QuantityControl = styled.div`
+  display: flex;
+  align-items: center;
+  border: 2px solid #ecf0f1;
+  border-radius: 8px;
+  overflow: hidden;
+`;
+
+const QuantityButton = styled.button`
+  background: #f8f9fa;
+  border: none;
+  padding: 12px 15px;
+  cursor: pointer;
+  color: #495057;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: #149295;
+    color: white;
+  }
+  
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+`;
+
+const QuantityInput = styled.input`
+  border: none;
+  padding: 12px 15px;
+  text-align: center;
+  width: 60px;
+  font-size: 16px;
+  font-weight: 600;
+  
+  &:focus {
+    outline: none;
+  }
+`;
+
+const AddToCartButton = styled.button`
+  background: ${props => props.disabled 
+    ? 'linear-gradient(135deg, #bdc3c7 0%, #95a5a6 100%)' 
+    : 'linear-gradient(135deg, #149295 0%, #0f7a7c 100%)'};
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(20, 146, 149, 0.3);
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(20, 146, 149, 0.4);
+  }
+`;
+
 const DetailFoot = styled.div`
-  p {
-    margin-top: 5px;
-    margin-bottom: 15px;
-    color: #777777;
-    font-size: 12.8px;
-  }
-  span {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #ecf0f1;
+`;
+
+const CategoryInfo = styled.p`
+  margin-bottom: 20px;
+  color: #7f8c8d;
+  font-size: 14px;
+  font-weight: 500;
+  
+  span a {
     color: #149295;
-    font-size: 12.8px;
+    text-decoration: none;
+    font-weight: 600;
+    
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `;
+
 const Socials = styled.ul`
   display: flex;
   align-items: center;
-  gap: 2px;
-  min-height: 3vh;
+  gap: 8px;
 
   li {
     position: relative;
-    border: 2px solid #c0c0c0;
-    color: #c0c0c0;
+    border: 2px solid #bdc3c7;
+    color: #7f8c8d;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     font-size: 16px;
     cursor: pointer;
-    transition: 0.3s ease;
+    transition: all 0.3s ease;
 
     &:hover {
       color: white;
+      transform: translateY(-2px);
     }
 
     &::after {
@@ -644,83 +864,50 @@ const Socials = styled.ul`
       bottom: 120%;
       left: 50%;
       transform: translateX(-50%);
-      background-color: black;
+      background-color: #2c3e50;
       color: white;
-      padding: 6px 10px;
+      padding: 8px 12px;
       white-space: nowrap;
       font-size: 12px;
+      border-radius: 4px;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease;
       z-index: 1;
     }
 
-    &::before {
-      content: "";
-      position: absolute;
-      bottom: 97%;
-      left: 50%;
-      transform: translateX(-50%);
-      border-width: 5px;
-      border-style: solid;
-      border-color: black transparent transparent transparent;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      z-index: 1;
-    }
-
-    &:hover::after,
-    &:hover::before {
+    &:hover::after {
       opacity: 1;
     }
   }
 
   .facebook:hover {
-    background-color: #446084;
-    border-color: #446084;
+    background-color: #3b5998;
+    border-color: #3b5998;
   }
 
   .twitter:hover {
-    background-color: #000000;
-    border-color: #000000;
+    background-color: #1da1f2;
+    border-color: #1da1f2;
   }
 
   .email:hover {
-    background-color: #000000;
-    border-color: #000000;
+    background-color: #34495e;
+    border-color: #34495e;
   }
 
   .pinterest:hover {
-    background-color: #cf2e2e;
-    border-color: #cf2e2e;
+    background-color: #bd081c;
+    border-color: #bd081c;
   }
 
   .linkedin:hover {
-    background-color: #0693e3;
-    border-color: #0693e3;
-  }
-`;
-const WishContainer = styled.li`
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  padding-top: 30px;
-  gap: 10px;
-`;
-const WishIcon = styled.i`
-  font-size: 20px;
-  color: black;
-`;
-const WishText = styled.span`
-  font-size: 16px;
-  color: #149295;
-  &:hover {
-    color: black;
+    background-color: #0077b5;
+    border-color: #0077b5;
   }
 `;
 
+// Keep all other existing styled components (ThumbnailList, Thumbnail, MainImageWrapper, etc.)
 const ThumbnailList = styled.div`
   display: flex;
   flex-direction: column;
@@ -729,16 +916,17 @@ const ThumbnailList = styled.div`
   overflow-y: auto;
   padding-right: 7px;
   &::-webkit-scrollbar {
-    width: 2px;
+    width: 4px;
   }
 
   &::-webkit-scrollbar-track {
     background: rgba(240, 240, 240, 0.8);
+    border-radius: 4px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: rgba(204, 204, 204, 0.83);
-    border-radius: 3px;
+    background-color: #149295;
+    border-radius: 4px;
   }
 
   @media (max-width: 851px) {
@@ -747,7 +935,7 @@ const ThumbnailList = styled.div`
     overflow-x: auto;
 
     &::-webkit-scrollbar {
-      height: 6px;
+      height: 4px;
     }
   }
 `;
@@ -756,13 +944,22 @@ const Thumbnail = styled.img`
   width: 100px;
   height: 100px;
   object-fit: contain;
-  border: 1px solid ${({ active }) => (active ? " #666666" : "none")};
+  border: 2px solid ${({ active }) => (active ? "#149295" : "#ecf0f1")};
+  border-radius: 8px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-color: #149295;
+    transform: scale(1.05);
+  }
+  
   @media (max-width: 851px) {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
   }
 `;
+
 const MainImageWrapper = styled.div`
   position: relative;
   width: 450px;
@@ -770,6 +967,9 @@ const MainImageWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  background: #fafafa;
+  border-radius: 12px;
+  overflow: hidden;
 
   &:hover div {
     opacity: 1;
@@ -777,43 +977,57 @@ const MainImageWrapper = styled.div`
 
   @media (max-width: 851px) {
     width: 100%;
-    height: auto;
+    height: 400px;
   }
 `;
+
 const ZoomIcon = styled.div`
   position: absolute;
   bottom: 2rem;
-  left: 10px;
+  left: 15px;
   pointer-events: all;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #c0c0c0;
-  color: #c0c0c0;
-  padding: 8px;
-  font-size: 24px;
+  border: 2px solid #bdc3c7;
+  color: #7f8c8d;
+  background: white;
+  padding: 10px;
+  font-size: 20px;
   border-radius: 50%;
   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  
   &:hover {
     background-color: #149295;
     color: white;
-    border: none;
+    border-color: #149295;
+    transform: scale(1.1);
   }
+  
   @media (max-width: 865px) {
-    bottom: 0;
+    bottom: 10px;
+    left: 10px;
   }
 `;
+
 const ImgWrap = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
 `;
+
 const MainImage = styled.img`
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
-  border-radius: 6px;
+  border-radius: 8px;
 `;
+
 const HoverIcons = styled.div`
   position: absolute;
   top: 0;
@@ -825,121 +1039,198 @@ const HoverIcons = styled.div`
   align-items: center;
   justify-content: space-between;
   transition: 0.3s ease;
+  pointer-events: none;
+  
+  @media (max-width: 851px) {
+    opacity: 1;
+  }
 `;
+
 const ArrowLeft = styled.div`
   pointer-events: all;
-  color: gray;
+  color: white;
+  background: rgba(0, 0, 0, 0.6);
   border-radius: 50%;
-  font-size: 26px;
-  margin-left: 10px;
+  font-size: 24px;
+  margin-left: 15px;
   cursor: pointer;
+  padding: 12px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: rgba(20, 146, 149, 0.9);
+    transform: scale(1.1);
+  }
+  
   @media (max-width: 851px) {
-    margin-left: 20px;
+    margin-left: 10px;
+    font-size: 20px;
+    padding: 10px;
   }
 `;
+
 const ArrowRight = styled(ArrowLeft)`
   margin-left: 0;
-  margin-right: 10px;
+  margin-right: 15px;
+  
   @media (max-width: 851px) {
-    margin-right: 20px;
+    margin-right: 10px;
   }
 `;
+
 const LikeIcon = styled.div`
   position: absolute;
-  right: 10px;
-  opacity: 0;
-  top: 10px;
-  font-size: 24px;
-  background-color: transparent;
-  border: 1px solid gray;
+  right: 15px;
+  top: 15px;
+  font-size: 22px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 2px solid #bdc3c7;
   border-radius: 50%;
-  padding: 8px;
+  padding: 10px;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: all 0.3s ease;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
+  pointer-events: all;
+  
   &:hover {
-    background-color: #b20000;
+    background-color: #e74c3c;
     color: white;
-    border-color: #b20000;
+    border-color: #e74c3c;
+    transform: scale(1.1);
   }
+  
   @media (max-width: 951px) {
-    right: 60px;
-    top: 0;
+    right: 15px;
+    top: 15px;
     opacity: 1;
+    background-color: white;
   }
+  
   @media (max-width: 565px) {
     right: 10px;
-    font-size: 20px;
-      /* opacity: 1; */
+    top: 10px;
+    font-size: 18px;
+    padding: 8px;
   }
 `;
 
 const BrowseLink = styled(Link)`
   text-decoration: none;
   color: #149295;
+  font-weight: 600;
+  margin-left: 5px;
+  
   &:hover {
-    color: black;
+    color: #0f7a7c;
+    text-decoration: underline;
   }
 `;
-const Gray = styled.p`
-  color: gray;
+
+const Gray = styled.span`
+  color: #7f8c8d;
+  font-weight: 500;
 `;
+
 const Blue = styled.span`
   color: #149295;
+  font-weight: 600;
 `;
+
 const Modal = styled.div`
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  @media (max-width: 951px) {
-  }
+  backdrop-filter: blur(5px);
 `;
+
 const ModalArrowLeft = styled.div`
   position: absolute;
   top: 50%;
-  left: 20px;
+  left: 30px;
   transform: translateY(-50%);
-  font-size: 1rem;
+  font-size: 24px;
   color: white;
   cursor: pointer;
   z-index: 10;
   user-select: none;
-  transition: 0.3s;
+  transition: all 0.3s ease;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 15px;
+  border-radius: 50%;
+  
+  &:hover {
+    background: rgba(20, 146, 149, 0.8);
+    transform: translateY(-50%) scale(1.1);
+  }
+  
   @media (max-width: 951px) {
-    color: white;
-    left: 5px;
+    left: 10px;
+    font-size: 20px;
+    padding: 12px;
   }
 `;
+
 const ModalArrowRight = styled(ModalArrowLeft)`
   left: auto;
-  right: 20px;
+  right: 30px;
 
   @media (max-width: 951px) {
-    color: white;
-    right: 5px;
+    right: 10px;
   }
 `;
+
 const ModalBtn = styled.div`
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 30px;
+  right: 30px;
   color: white;
-  font-size: 28px;
+  font-size: 24px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
+  
+  @media (max-width: 951px) {
+    top: 20px;
+    right: 20px;
+    font-size: 20px;
+  }
 `;
-const CloseBtn = styled.div``;
-const ZoomBtn = styled.div``;
+
+const CloseBtn = styled.div`
+  background: rgba(0, 0, 0, 0.5);
+  padding: 12px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: rgba(231, 76, 60, 0.8);
+    transform: scale(1.1);
+  }
+`;
+
+const ZoomBtn = styled.div`
+  background: rgba(0, 0, 0, 0.5);
+  padding: 12px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: rgba(20, 146, 149, 0.8);
+    transform: scale(1.1);
+  }
+`;
+
 const ModalImage = styled.img`
-  max-width: 90%;
-  max-height: 90%;
-`;
+  max-width: 85%;
+  max-height: 85%;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+`
