@@ -55,11 +55,23 @@ const BarIcon = styled(FaBars)`
   font-size: 24px;
 `;
 
+const HeaderSpacer = styled.div`
+  height: 140px;
+
+  @media (max-width: 576px) {
+    height: 40px;
+  }
+
+    @media (max-width: 400px) {
+    height: 0px;
+  }
+`;
+
 const Header = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
-const [isCartOpen, setIsCartOpen] = useState(false);
-const toggleCart = () => setIsCartOpen(prev => !prev);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const toggleCart = () => setIsCartOpen(prev => !prev);
   const [showHeader, setShowHeader] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -95,7 +107,7 @@ const toggleCart = () => setIsCartOpen(prev => !prev);
 
   return (
     <>
-    <CartPanel isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} ></CartPanel>
+      <CartPanel isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} ></CartPanel>
       <LoginRegister $showModal={showModal} closeRegister={closeRegister} />
       <StyledHeader $show={showHeader}>
         <MobileNavbar $isOpenModal={isOpenModal} closeModal={closeModal} />
@@ -113,9 +125,9 @@ const toggleCart = () => setIsCartOpen(prev => !prev);
             <ActionButtons openRegister={openRegister} />
           </StyledTopHeader>
         </LayoutContainer>
-        <Navbar toggleCart={toggleCart}/>
+        <Navbar toggleCart={toggleCart} />
       </StyledHeader>
-      <div style={{ height: "140px" }} />
+      <HeaderSpacer />
     </>
   );
 };

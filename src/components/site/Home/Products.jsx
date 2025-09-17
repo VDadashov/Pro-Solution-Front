@@ -27,7 +27,7 @@ const ProductSection = ({ sectionHeader, display, order ,slug}) => {
               navigation={true}
               spaceBetween={0}
               slidesPerView={5}
-              centeredSlides={true}
+              centeredSlides={false}
               modules={[FreeMode, Navigation, Autoplay, Pagination]}
               breakpoints={{
                 0: {
@@ -81,7 +81,7 @@ const ProductSection = ({ sectionHeader, display, order ,slug}) => {
 const SectionContainer = styled.section`
   width: 100%;
   padding: 10px 0px 30px;
-// background-color: blue;
+background-color: blue;
   .swiper-button-next,
   .swiper-button-prev {
     color: black;
