@@ -125,6 +125,7 @@ const CategoryDetail = () => {
       try {
         const res = await fetch(`${ENDPOINTS.productsSlug}/${slug}`);
         const data = await res.json();
+        
         setProduct(data);
       } catch (error) {
         console.error("Product fetch error:", error);
@@ -550,7 +551,7 @@ const DetailBody = styled.div`
     flex-direction: column;
     margin-top: 2rem;
     gap: 30px;
-    margin: 1rem;
+    margin: 1rem auto;
     padding: 1rem;
   }
 `;
@@ -1056,25 +1057,32 @@ const ArrowLeft = styled.div`
   cursor: pointer;
   padding: 12px;
   transition: all 0.3s ease;
-  
+
   &:hover {
     background: rgba(20, 146, 149, 0.9);
     transform: scale(1.1);
   }
-  
+
   @media (max-width: 851px) {
     margin-left: 10px;
-    font-size: 20px;
+    font-size: 15px;
     padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;
 
 const ArrowRight = styled(ArrowLeft)`
   margin-left: 0;
   margin-right: 15px;
-  
+
   @media (max-width: 851px) {
     margin-right: 10px;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;
 
