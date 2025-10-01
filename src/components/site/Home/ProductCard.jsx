@@ -109,11 +109,6 @@ const ProductsCard = ({ item }) => {
         </ProductCardHeadImage>
 
         <ProductCardBody>
-          {/* <Title>
-            {item.categories?.$values
-              ? item.categories.$values[0]?.title
-              : item.categories?.[0]?.title}
-          </Title> */}
           <Link to={`/category/${item.detailSlug}`}>
             <ProductName>{item?.title}</ProductName>
           </Link>
