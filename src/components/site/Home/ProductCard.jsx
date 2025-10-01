@@ -255,8 +255,8 @@ const ProductCard = styled.div`
     margin: 10px auto;
   }
 
-  @media (max-width: 420px) {
-    width: 70%;
+  @media (max-width: 400px) {
+    width: 65%;
   }
 
   margin: 10px auto;
@@ -294,6 +294,10 @@ const ProductCardHeadImage = styled.div`
   }
   @media (max-width: 900px) {
     height: 140px;
+
+    img{
+      object-fit: contain;
+    }
   }
 
   .heartIcon {
