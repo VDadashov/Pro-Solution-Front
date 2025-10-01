@@ -33,9 +33,8 @@ const ProductSection = ({ sectionHeader, display, order ,slug}) => {
                 0: {
                   slidesPerView: 1,
                 },
-                420: {
+                400: {
                   slidesPerView: 2,
-                  spaceBetween: 10,
                 },
                 650: {
                   slidesPerView: 3,
@@ -45,10 +44,6 @@ const ProductSection = ({ sectionHeader, display, order ,slug}) => {
                   slidesPerView: 4,
                   spaceBetween: 15,
                 },
-                // 850: {
-                //   slidesPerView: 3,
-                //   spaceBetween: 15,
-                // },
                 1024: {
                   slidesPerView: 5,
                   spaceBetween: 15,
@@ -81,7 +76,6 @@ const ProductSection = ({ sectionHeader, display, order ,slug}) => {
 const SectionContainer = styled.section`
   width: 100%;
   padding: 10px 0px 30px;
-background-color: blue;
   .swiper-button-next,
   .swiper-button-prev {
     color: black;
