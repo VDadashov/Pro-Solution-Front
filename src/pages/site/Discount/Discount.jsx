@@ -117,6 +117,10 @@ const CategoryWrapper = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 580px) {
+    margin-top: 50px;
+  }
 `;
 
 const CategoryContent = styled.div`
