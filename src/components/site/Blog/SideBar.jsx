@@ -1,13 +1,13 @@
 import React from 'react'
 import styled from 'styled-components';
 import Authors from "@components/site/Blog/Authors";
-import CategoriesSidebar from "@components/site/Blog/CategoriesSidebar";
+import CategoriesSideBar from "./CategoriesSideBar";
 
 function SideBar() {
   return (
     <Sidebar>
       <Authors />
-      <CategoriesSidebar />
+      <CategoriesSideBar />
     </Sidebar>
   );
 }
