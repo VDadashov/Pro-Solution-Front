@@ -9,9 +9,7 @@ import { useGetOne } from "@utils/hooks/useCustomQuery";
 
 const CartPanel = ({ isOpen, onClose }) => {
   const {data: whatsappNumber} = useGetOne("getWhatsappNumber", `${ENDPOINTS.setting}`, "e88768cc-6d17-45d1-a6e0-cb96d15032b2"); 
-  console.log(whatsappNumber?.value);
   const {data: whatsappMessage} = useGetOne("getWhatsappMessage", `${ENDPOINTS.setting}`,"8a911ba1-b76e-4225-a96f-9a11e50681a4");
-  console.log(whatsappMessage?.value);
   const { cartItems, updateQuantity, removeFromCart, clearCart, getTotalPrice } = useCart();
 
   // Scroll kilidi

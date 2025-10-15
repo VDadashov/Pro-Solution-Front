@@ -6,6 +6,9 @@ import Map from "./Map";
 import { LayoutContainer } from "@styles/common/LayoutContainer";
 
 const Footer = () => {
+
+  
+
   return (
     <StyledFooter>
       <LayoutContainer>
