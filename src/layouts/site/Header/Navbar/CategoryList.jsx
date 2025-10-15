@@ -72,7 +72,7 @@ const CategoryComponent = () => {
                             item.title
                           )}/${toKebabCase(categoryItem.title)}?slug=${
                             categoryItem.slug
-                          }`
+                          }&search=${categoryItem.title}`
                         );
                       }}
                     >

@@ -42,7 +42,7 @@ const Category = () => {
   const featureId = searchParams.get("featureId") || "";
   useEffect(() => {
     setLoading(true);
-    let url = `${ENDPOINTS.getAllFiltered}?slug=${slug}&search=${search}&take=${take}&skip=${skip}&isDeleted=false&isDiscount=false&featureId=${featureId}`;
+    let url = `${ENDPOINTS.getAllFiltered}?slug=${slug}&take=${take}&skip=${skip}&isDeleted=false&isDiscount=false&featureId=${featureId}`;
     if (minPrice !== null) url += `&minPrice=${minPrice}`;
     if (maxPrice !== null) url += `&maxPrice=${maxPrice}`;
     if (order !== null) url += `&order=${order}`;
