@@ -305,6 +305,7 @@ import styled from "styled-components";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { usePost } from "@utils/hooks/useCustomMutation";
+import { useGet } from "@utils/hooks/useCustomQuery";
 import { ENDPOINTS } from "@utils/constants/Endpoints";
 import { toast, Bounce } from "react-toastify";
 
@@ -444,6 +445,7 @@ const Button = styled.button`
 
 const Contact = () => {
   const { mutate: commentMutation } = usePost("contactForm", ENDPOINTS.contact);
+  const { data: settingsData, isLoading: settingsLoading } = useGet("settings", ENDPOINTS.settings);
 
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -516,24 +518,48 @@ const Contact = () => {
     },
   });
 
+  // Extract contact information from settings data
+  const getValue = (key) => {
+    return settingsData?.$values?.find((item) => item.key === key)?.value || "";
+  };
+
+  const salesDirector = getValue('SalesDirector') || 'Teymur Şirəliyev';
+  const salesDirectorNumber = getValue('SalesDirectorNumber') || '+994-70-327-90-94';
+  const salesDirectorEmail = getValue('SalesDirectorEmail') || 'sh.teymur@prosolution.ltd';
+  const salesManager = getValue('SalesManager') || 'Fizuli Tağıyev';
+  const salesManagerNumber = getValue('SalesManagerNumber') || '+994-70-329-90-94';
+  const salesManagerEmail = getValue('SalesManagerEmail') || 't.fizuli@prosolution.ltd';
+
+  if (settingsLoading) {
+    return (
+      <Container>
+        <ContactWrapper>
+          <div style={{ textAlign: 'center', padding: '50px', color: '#149295' }}>
+            Yüklənir...
+          </div>
+        </ContactWrapper>
+      </Container>
+    );
+  }
+
   return (
     <Container>
       <ContactWrapper>
         <ContactInfoContainer>
           <ContactInfo>
-            <Title>Teymur Şirəliyev</Title>
+            <Title>{salesDirector}</Title>
             <Position>Satış Direktoru</Position>
-            <Number href="tel:+994703279094">+994-70-327-90-94</Number>
-            <Email href="mailto:sh.teymur@prosolution.ltd">
-              sh.teymur@prosolution.ltd
+            <Number href={`tel:${salesDirectorNumber.replace(/[^0-9+]/g, '')}`}>{salesDirectorNumber}</Number>
+            <Email href={`mailto:${salesDirectorEmail}`}>
+              {salesDirectorEmail}
             </Email>
           </ContactInfo>
           <ContactInfo>
-            <Title>Fizuli Tağıyev</Title>
+            <Title>{salesManager}</Title>
             <Position>Satış Meneceri</Position>
-            <Number href="tel:+994703279094">+994-70-329-90-94</Number>
-            <Email href="mailto:t.fizuli@prosolution.ltd">
-              t.fizuli@prosolution.ltd
+            <Number href={`tel:${salesManagerNumber.replace(/[^0-9+]/g, '')}`}>{salesManagerNumber}</Number>
+            <Email href={`mailto:${salesManagerEmail}`}>
+              {salesManagerEmail}
             </Email>
           </ContactInfo>
         </ContactInfoContainer>

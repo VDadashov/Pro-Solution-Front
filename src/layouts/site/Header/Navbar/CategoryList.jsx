@@ -169,6 +169,7 @@ const CategoryElement = styled.li`
   align-items: center;
   font-size: 0.9em;
   cursor: pointer;
+  position: relative;
 
   &:hover {
     background-color: #f5f5f5;
@@ -182,16 +183,27 @@ const CategoryElement = styled.li`
 const SubCategoryList = styled.ul`
   display: none;
   position: absolute;
-  padding-top: 15px;
+  padding-top: 0;
   box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.15);
   color: hsla(0, 0%, 40%, 0.85);
   background-color: #ffffff;
-  left: 100%;
+  left: calc(100% - 5px);
   top: 0;
   height: 100%;
   width: 110%;
   cursor: default;
   overflow-y: scroll;
+  
+  /* Add invisible bridge to prevent hover gap */
+  &::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 0;
+    width: 5px;
+    height: 100%;
+    background: transparent;
+  }
 
   &::-webkit-scrollbar {
     width: 3px;
