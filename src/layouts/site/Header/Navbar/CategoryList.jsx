@@ -118,7 +118,9 @@ const CategoryListContainer = styled.div`
   color: hsla(0, 0%, 40%, 0.85);
   top: 100%;
   left: 0;
-  width: 100%;
+  /* Fixed width so layout is consistent regardless of item count */
+  width: 260px;
+  background-color: #ffffff;
 
   &.hoverable {
     opacity: 0;
@@ -133,22 +135,9 @@ const CategoryListContainer = styled.div`
 `;
 
 const CategoryList = styled.ul`
-  &::-webkit-scrollbar {
-    width: 3px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #149295;
-    border-radius: 3px;
-    height: 50px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background-color: rgb(245, 245, 245);
-  }
-
-  overflow-y: scroll;
-  height: min-content;
+  /* No internal scrollbar for main category list */
+  overflow-y: visible;
+  height: auto;
 `;
 
 const ArrowDown = styled(IoIosArrowDown)`
@@ -169,7 +158,8 @@ const CategoryElement = styled.li`
   align-items: center;
   font-size: 0.9em;
   cursor: pointer;
-  position: relative;
+  /* No relative positioning so submenus align to the container top */
+  position: static;
 
   &:hover {
     background-color: #f5f5f5;
@@ -187,32 +177,29 @@ const SubCategoryList = styled.ul`
   box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.15);
   color: hsla(0, 0%, 40%, 0.85);
   background-color: #ffffff;
-  left: calc(100% - 5px);
+  /* Open to the side with a small gap, without overlapping the parent */
+  left: calc(100% + 1px);
   top: 0;
-  height: 100%;
-  width: 110%;
+  /* Match parent container height so all submenus have equal length */
+  min-height: 100%;
+  height: auto;
+  /* Fixed width for consistent look */
+  width: 280px;
+  border-left: 1px solid #ececec;
   cursor: default;
-  overflow-y: scroll;
-  
-  /* Add invisible bridge to prevent hover gap */
+  /* Show full subcategory without a scrollbar */
+  overflow-y: visible;
+  z-index: 1002;
+
+  /* Invisible hover bridge to avoid losing hover between columns */
   &::before {
     content: '';
     position: absolute;
-    left: -5px;
+    left: -8px;
     top: 0;
-    width: 5px;
+    width: 8px;
     height: 100%;
     background: transparent;
-  }
-
-  &::-webkit-scrollbar {
-    width: 3px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #149295;
-    border-radius: 3px;
-    height: 50px;
   }
 `;
 
@@ -221,7 +208,7 @@ const SubCategoryElement = styled.li`
   font-size: 16px;
   background-color: #ffffff;
   padding: 10px 15px;
-  margin: 0 25px;
+  margin: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
