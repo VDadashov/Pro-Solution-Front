@@ -7,6 +7,7 @@ import ProductSection from '../Home/Products';
 import { ENDPOINTS } from '@utils/constants/Endpoints';
 import { usePost } from '@utils/hooks/useCustomMutation';
 import { Bounce, toast } from 'react-toastify';
+
 const ProductDetailTabs = ({ product }) => {
   const [activeTab, setActiveTab] = useState('info');
   const [rating, setRating] = useState(0);
